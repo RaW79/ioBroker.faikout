@@ -5,23 +5,66 @@
     "news": {
       "0.1.5": {
         "en": "Schedule modes, adapter title fix, language detection fix",
-        "de": "Zeitplan-Modi, Adapter-Titel korrigiert, Spracherkennung behoben"
+        "de": "Zeitplan-Modi, Adapter-Titel korrigiert, Spracherkennung behoben",
+        "ru": "Режимы расписания, исправление заголовка адаптера, исправление определения языка",
+        "pt": "Modos de agendamento, correcção do título do adaptador, correcção da detecção de idioma",
+        "nl": "Planningsmodi, correctie adaptertitel, correctie taaldetectie",
+        "fr": "Modes de planification, correction du titre de l'adaptateur, correction de la détection de la langue",
+        "it": "Modalità di pianificazione, correzione del titolo dell'adattatore, correzione del rilevamento della lingua",
+        "es": "Modos de programación, corrección del título del adaptador, corrección de la detección de idioma",
+        "pl": "Tryby harmonogramu, poprawka tytułu adaptera, poprawka wykrywania języka",
+        "uk": "Режими розкладу, виправлення заголовка адаптера, виправлення визначення мови",
+        "zh-cn": "计划模式，适配器标题修复，语言检测修复"
       },
       "0.1.4": {
         "en": "Full bilingual UI (EN/DE) for all admin tabs",
-        "de": "Vollstaendige zweisprachige Oberflaeche (EN/DE) fuer alle Admin-Tabs"
+        "de": "Vollstaendige zweisprachige Oberflaeche (EN/DE) fuer alle Admin-Tabs",
+        "ru": "Полный двуязычный интерфейс (EN/DE) для всех вкладок администратора",
+        "pt": "Interface bilingue completa (EN/DE) para todos os separadores de administração",
+        "nl": "Volledige tweetalige UI (EN/DE) voor alle beheertabs",
+        "fr": "Interface entièrement bilingue (EN/DE) pour tous les onglets d'administration",
+        "it": "Interfaccia completamente bilingue (EN/DE) per tutte le schede di amministrazione",
+        "es": "Interfaz completamente bilingüe (EN/DE) para todas las pestañas de administración",
+        "pl": "Pełny dwujęzyczny interfejs (EN/DE) dla wszystkich kart administracyjnych",
+        "uk": "Повністю двомовний інтерфейс (EN/DE) для всіх вкладок адміністратора",
+        "zh-cn": "所有管理标签页的完整双语界面（EN/DE）"
       }
     },
     "titleLang": {
       "en": "Faikout AC",
-      "de": "Faikout AC"
+      "de": "Faikout AC",
+      "ru": "Faikout AC",
+      "pt": "Faikout AC",
+      "nl": "Faikout AC",
+      "fr": "Faikout AC",
+      "it": "Faikout AC",
+      "es": "Faikout AC",
+      "pl": "Faikout AC",
+      "uk": "Faikout AC",
+      "zh-cn": "Faikout AC"
     },
     "desc": {
       "en": "Adapter for Faikout Daikin MQTT bridge",
-      "de": "Adapter fuer Faikout Daikin MQTT-Bridge"
+      "de": "Adapter fuer Faikout Daikin MQTT-Bridge",
+      "ru": "Адаптер для MQTT-моста Faikout Daikin",
+      "pt": "Adaptador para a ponte MQTT Faikout Daikin",
+      "nl": "Adapter voor Faikout Daikin MQTT-brug",
+      "fr": "Adaptateur pour le pont MQTT Faikout Daikin",
+      "it": "Adattatore per il bridge MQTT Faikout Daikin",
+      "es": "Adaptador para el puente MQTT Faikout Daikin",
+      "pl": "Adapter dla mostu MQTT Faikout Daikin",
+      "uk": "Адаптер для MQTT-мосту Faikout Daikin",
+      "zh-cn": "Faikout Daikin MQTT 桥接适配器"
     },
-    "authors": ["RWS <wizmann@gmx.de>"],
-    "keywords": ["faikout", "daikin", "climate-control", "mqtt"],
+    "authors": [
+      "RWS <wizmann@gmx.de>"
+    ],
+    "keywords": [
+      "faikout",
+      "daikin",
+      "climate-control",
+      "mqtt"
+    ],
     "platform": "Javascript/Node.js",
     "icon": "faikout.png",
     "extIcon": "https://raw.githubusercontent.com/RaW79/ioBroker.faikout-ac/main/admin/faikout.png",
@@ -43,10 +86,14 @@
       "link": "https://opensource.org/licenses/MIT"
     },
     "dependencies": [
-      { "js-controller": ">=6.0.11" }
+      {
+        "js-controller": ">=6.0.11"
+      }
     ],
     "globalDependencies": [
-      { "admin": ">=7.6.17" }
+      {
+        "admin": ">=7.6.17"
+      }
     ]
   },
   "native": {
@@ -60,18 +107,39 @@
     "demandOutdoorTempId": "",
     "demandRoomTempId": "",
     "demandCurve": [
-      { "temp": -5, "demand": 80 },
-      { "temp":  0, "demand": 75 },
-      { "temp":  5, "demand": 65 },
-      { "temp": 10, "demand": 55 },
-      { "temp": 15, "demand": 30 }
+      {
+        "temp": -5,
+        "demand": 80
+      },
+      {
+        "temp": 0,
+        "demand": 75
+      },
+      {
+        "temp": 5,
+        "demand": 65
+      },
+      {
+        "temp": 10,
+        "demand": 55
+      },
+      {
+        "temp": 15,
+        "demand": 30
+      }
     ],
     "demandLogLevel": "basic",
     "demandMaxDemand": 95,
     "demandBoostEnabled": true,
     "demandBoostStages": [
-      { "deviation": 0.3, "boost": 5  },
-      { "deviation": 0.6, "boost": 10 }
+      {
+        "deviation": 0.3,
+        "boost": 5
+      },
+      {
+        "deviation": 0.6,
+        "boost": 10
+      }
     ],
     "demandTaperEnabled": true,
     "demandTaperMax": 15,
@@ -79,8 +147,12 @@
     "demandHeatbackNormal": 3,
     "demandHeatbackGuard": 6
   },
-  "encryptedNative": ["mqttPassword"],
-  "protectedNative": ["mqttPassword"],
+  "encryptedNative": [
+    "mqttPassword"
+  ],
+  "protectedNative": [
+    "mqttPassword"
+  ],
   "instanceObjects": [
     {
       "_id": "info",

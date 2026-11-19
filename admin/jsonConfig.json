@@ -19,7 +19,8 @@
             "fontSize": "32px",
             "fontFamily": "xkcd Script, cursive",
             "letterSpacing": "-1px"
-          }
+          },
+          "sm": 12
         },
         "info_desc": {
           "type": "staticText",
@@ -29,7 +30,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "div_design": {
           "type": "divider"
@@ -44,7 +46,8 @@
             "fontWeight": "bold",
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
-          }
+          },
+          "sm": 12
         },
         "info_design_1": {
           "type": "staticText",
@@ -54,7 +57,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_design_2": {
           "type": "staticText",
@@ -65,7 +69,8 @@
           "style": {
             "fontWeight": "bold",
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_design_3": {
           "type": "staticText",
@@ -75,7 +80,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "div_prereq": {
           "type": "divider"
@@ -90,7 +96,8 @@
             "fontWeight": "bold",
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
-          }
+          },
+          "sm": 12
         },
         "info_prereq_1": {
           "type": "staticText",
@@ -100,7 +107,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_prereq_2": {
           "type": "staticText",
@@ -110,7 +118,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_prereq_3": {
           "type": "staticText",
@@ -120,7 +129,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "div_setup": {
           "type": "divider"
@@ -135,7 +145,8 @@
             "fontWeight": "bold",
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
-          }
+          },
+          "sm": 12
         },
         "info_setup_1": {
           "type": "staticText",
@@ -145,7 +156,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_1b": {
           "type": "staticText",
@@ -155,7 +167,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_1c": {
           "type": "staticText",
@@ -165,7 +178,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_2": {
           "type": "staticText",
@@ -175,7 +189,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_3": {
           "type": "staticText",
@@ -185,7 +200,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_4": {
           "type": "staticText",
@@ -195,7 +211,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_5": {
           "type": "staticText",
@@ -205,14 +222,16 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_gap": {
           "type": "staticText",
           "label": {
             "en": " ",
             "de": " "
-          }
+          },
+          "sm": 12
         },
         "info_setup_6": {
           "type": "staticText",
@@ -222,7 +241,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_setup_7": {
           "type": "staticText",
@@ -232,7 +252,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "div_states": {
           "type": "divider"
@@ -247,7 +268,8 @@
             "fontWeight": "bold",
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
-          }
+          },
+          "sm": 12
         },
         "info_states_1": {
           "type": "staticText",
@@ -257,7 +279,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_states_2": {
           "type": "staticText",
@@ -267,7 +290,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_states_3": {
           "type": "staticText",
@@ -277,7 +301,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_states_4": {
           "type": "staticText",
@@ -287,7 +312,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_states_5": {
           "type": "staticText",
@@ -297,7 +323,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "div_options": {
           "type": "divider"
@@ -312,7 +339,8 @@
             "fontWeight": "bold",
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
-          }
+          },
+          "sm": 12
         },
         "info_options_config_head": {
           "type": "staticText",
@@ -322,7 +350,8 @@
           },
           "style": {
             "fontWeight": "bold"
-          }
+          },
+          "sm": 12
         },
         "info_options_config_1": {
           "type": "staticText",
@@ -332,7 +361,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_options_envset_head": {
           "type": "staticText",
@@ -342,7 +372,8 @@
           },
           "style": {
             "fontWeight": "bold"
-          }
+          },
+          "sm": 12
         },
         "info_options_envset_1": {
           "type": "staticText",
@@ -352,7 +383,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_options_envset_2": {
           "type": "staticText",
@@ -362,7 +394,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "info_options_envset_3": {
           "type": "staticText",
@@ -372,7 +405,8 @@
           },
           "style": {
             "fontSize": "15px"
-          }
+          },
+          "sm": 12
         },
         "div_version": {
           "type": "divider"
@@ -387,7 +421,8 @@
             "fontSize": "11px",
             "color": "#aaa",
             "textAlign": "right"
-          }
+          },
+          "sm": 12
         }
       }
     },
@@ -458,7 +493,16 @@
               "attr": "group",
               "title": {
                 "en": "Multi-split group",
-                "de": "Multisplit-Gruppe"
+                "de": "Multisplit-Gruppe",
+                "ru": "Группа мультисплит",
+                "pt": "Grupo multi-split",
+                "nl": "Multi-split groep",
+                "fr": "Groupe multi-split",
+                "it": "Gruppo multi-split",
+                "es": "Grupo multi-split",
+                "pl": "Grupa multi-split",
+                "uk": "Група мультиспліт",
+                "zh-cn": "多联机组"
               },
               "width": "140px",
               "default": "",
@@ -467,42 +511,96 @@
                   "value": "",
                   "label": {
                     "en": "Single-Split",
-                    "de": "Single-Split"
+                    "de": "Single-Split",
+                    "ru": "Single-Split",
+                    "pt": "Single-Split",
+                    "nl": "Single-Split",
+                    "fr": "Single-Split",
+                    "it": "Single-Split",
+                    "es": "Single-Split",
+                    "pl": "Single-Split",
+                    "uk": "Single-Split",
+                    "zh-cn": "单联机"
                   }
                 },
                 {
                   "value": "A",
                   "label": {
                     "en": "Group A",
-                    "de": "Gruppe A"
+                    "de": "Gruppe A",
+                    "ru": "Группа A",
+                    "pt": "Grupo A",
+                    "nl": "Groep A",
+                    "fr": "Groupe A",
+                    "it": "Gruppo A",
+                    "es": "Grupo A",
+                    "pl": "Grupa A",
+                    "uk": "Група A",
+                    "zh-cn": "组 A"
                   }
                 },
                 {
                   "value": "B",
                   "label": {
                     "en": "Group B",
-                    "de": "Gruppe B"
+                    "de": "Gruppe B",
+                    "ru": "Группа B",
+                    "pt": "Grupo B",
+                    "nl": "Groep B",
+                    "fr": "Groupe B",
+                    "it": "Gruppo B",
+                    "es": "Grupo B",
+                    "pl": "Grupa B",
+                    "uk": "Група B",
+                    "zh-cn": "组 B"
                   }
                 },
                 {
                   "value": "C",
                   "label": {
                     "en": "Group C",
-                    "de": "Gruppe C"
+                    "de": "Gruppe C",
+                    "ru": "Группа C",
+                    "pt": "Grupo C",
+                    "nl": "Groep C",
+                    "fr": "Groupe C",
+                    "it": "Gruppo C",
+                    "es": "Grupo C",
+                    "pl": "Grupa C",
+                    "uk": "Група C",
+                    "zh-cn": "组 C"
                   }
                 },
                 {
                   "value": "D",
                   "label": {
                     "en": "Group D",
-                    "de": "Gruppe D"
+                    "de": "Gruppe D",
+                    "ru": "Группа D",
+                    "pt": "Grupo D",
+                    "nl": "Groep D",
+                    "fr": "Groupe D",
+                    "it": "Gruppo D",
+                    "es": "Grupo D",
+                    "pl": "Grupa D",
+                    "uk": "Група D",
+                    "zh-cn": "组 D"
                   }
                 },
                 {
                   "value": "E",
                   "label": {
                     "en": "Group E",
-                    "de": "Gruppe E"
+                    "de": "Gruppe E",
+                    "ru": "Группа E",
+                    "pt": "Grupo E",
+                    "nl": "Groep E",
+                    "fr": "Groupe E",
+                    "it": "Gruppo E",
+                    "es": "Grupo E",
+                    "pl": "Grupa E",
+                    "uk": "Група E",
+                    "zh-cn": "组 E"
                   }
                 }
               ]
