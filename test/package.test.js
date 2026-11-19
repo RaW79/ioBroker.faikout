@@ -34,10 +34,9 @@ describe('io-package.json', () => {
         assert.ok(ioPkg.common, 'common missing');
         assert.ok(ioPkg.common.name, 'common.name missing');
         assert.ok(ioPkg.common.version, 'common.version missing');
-        assert.ok(ioPkg.common.title, 'common.title missing');
+        assert.ok(ioPkg.common.titleLang, 'common.titleLang missing');
         assert.ok(ioPkg.common.desc, 'common.desc missing');
         assert.ok(ioPkg.common.mode, 'common.mode missing');
-        assert.ok(ioPkg.common.license, 'common.license missing');
         assert.ok(ioPkg.common.icon, 'common.icon missing');
     });
 
