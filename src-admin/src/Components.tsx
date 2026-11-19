@@ -603,14 +603,16 @@ function DemandTabs(props) {
     function renderInfoTab() {
         var sec = function (title, text) {
             return h('div', { style: { marginBottom: '14px' } },
-                h('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, title),
+                h('div', { style: { fontWeight: 'bold', fontSize: '22px', fontFamily: 'xkcd Script, cursive', marginBottom: '4px' } }, title),
                 h('div', { style: { lineHeight: '1.6' } }, text)
             );
         };
-        return h('div', { style: { maxWidth: '680px', padding: '4px 0' } },
+        return h('div', { style: { maxWidth: '680px', padding: '4px 0', fontSize: '15px' } },
             sec('Funktionsprinzip',
                 'Die Bedarfsregelung steuert die Klimaanlage anhand der Außentemperatur (Witterungsführung). ' +
-                'Ein höherer Demand-Wert bedeutet mehr Heizleistung. Die Regelung läuft im Adapter.'),
+                'Ein höherer Demand-Wert bedeutet mehr Heizleistung. Die Regelung läuft im Adapter. ' +
+                'Die Funktion ist ausgelegt und getestet für den Betrieb mit aktiver AutoControl-Funktion des Faikout (Thermostatmodus deaktiviert). ' +
+                'Andere Betriebsverfahren können grundsätzlich funktionieren, sind jedoch für die Bedarfsregelung im Adapter unzureichend getestet.'),
             sec('Basiskennlinie',
                 'Ordnet der Außentemperatur einen Basis-Demand-Wert zu. Stützpunkte werden linear interpoliert; außerhalb der Stützpunkte wird der Randwert gehalten. ' +
                 'Min. und Max. Bedarf begrenzen den Ausgabebereich zusätzlich. Die Stützpunkte bzw. Basiskennlinie ist individuell für den Raum zu bestimmen und anzupassen.'),
@@ -1270,11 +1272,11 @@ function HumidityTabs(props) {
     function renderInfoTab() {
         var sec = function (title, text) {
             return h('div', { style: { marginBottom: '14px' } },
-                h('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, title),
+                h('div', { style: { fontWeight: 'bold', fontSize: '22px', fontFamily: 'xkcd Script, cursive', marginBottom: '4px' } }, title),
                 h('div', { style: { lineHeight: '1.6' } }, text)
             );
         };
-        return h('div', { style: { maxWidth: '680px', padding: '4px 0' } },
+        return h('div', { style: { maxWidth: '680px', padding: '4px 0', fontSize: '15px' } },
             sec('Was ist Feuchte-Regelung?',
                 'Die Feuchte-Regelung schützt vor Schimmelbildung durch Überwachung des Taupunktabstands. ' +
                 'Unterschreitet der Abstand zwischen Raumtemperatur und Taupunkt einen konfigurierten Schwellwert, ' +
