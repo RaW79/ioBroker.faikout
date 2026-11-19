@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "news": {
+      "0.1.6": {
+        "en": "Repochecker fixes: translations, node:http, this.setTimeout, prettier config",
+        "de": "Repochecker-Korrekturen: Uebersetzungen, node:http, this.setTimeout, Prettier-Konfiguration",
+        "ru": "Исправления репочекера: переводы, node:http, this.setTimeout, конфигурация Prettier",
+        "pt": "Correcções do repochecker: traduções, node:http, this.setTimeout, configuração Prettier",
+        "nl": "Repochecker-correcties: vertalingen, node:http, this.setTimeout, Prettier-configuratie",
+        "fr": "Corrections du repochecker: traductions, node:http, this.setTimeout, configuration Prettier",
+        "it": "Correzioni repochecker: traduzioni, node:http, this.setTimeout, configurazione Prettier",
+        "es": "Correcciones del repochecker: traducciones, node:http, this.setTimeout, configuración Prettier",
+        "pl": "Poprawki repochecker: tłumaczenia, node:http, this.setTimeout, konfiguracja Prettier",
+        "uk": "Виправлення репочекера: переклади, node:http, this.setTimeout, конфігурація Prettier",
+        "zh-cn": "修复repochecker问题：翻译、node:http、this.setTimeout、Prettier配置"
+      },
       "0.1.5": {
         "en": "Schedule modes, adapter title fix, language detection fix",
         "de": "Zeitplan-Modi, Adapter-Titel korrigiert, Spracherkennung behoben",

@@ -1,0 +1,2203 @@
+{
+  "faikout-ac.0.info": {
+    "_id": "faikout-ac.0.info",
+    "type": "channel",
+    "common": {
+      "name": "Information",
+      "role": "info"
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "ts": 1795130976843,
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    },
+    "user": "system.user.admin"
+  },
+  "faikout-ac.0.info.connection": {
+    "_id": "faikout-ac.0.info.connection",
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Connection",
+        "de": "Verbindung"
+      },
+      "role": "indicator.connected",
+      "type": "boolean",
+      "read": true,
+      "write": false,
+      "def": false
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "ts": 1795130976849,
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    },
+    "user": "system.user.admin"
+  },
+  "faikout-ac.0.1OG": {
+    "type": "channel",
+    "common": {
+      "name": "Faikout"
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834460,
+    "_id": "faikout-ac.0.1OG",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info": {
+    "type": "channel",
+    "common": {
+      "name": "Device Information"
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834465,
+    "_id": "faikout-ac.0.1OG.info",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info.deviceId": {
+    "type": "state",
+    "common": {
+      "name": "Device ID",
+      "type": "string",
+      "role": "info.address",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834472,
+    "_id": "faikout-ac.0.1OG.info.deviceId",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info.appName": {
+    "type": "state",
+    "common": {
+      "name": "App Name",
+      "type": "string",
+      "role": "info.name",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834483,
+    "_id": "faikout-ac.0.1OG.info.appName",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info.ip": {
+    "type": "state",
+    "common": {
+      "name": "IP Address",
+      "type": "string",
+      "role": "info.ip",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834499,
+    "_id": "faikout-ac.0.1OG.info.ip",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info.connection": {
+    "type": "state",
+    "common": {
+      "name": "Connection",
+      "type": "boolean",
+      "role": "indicator.connection",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834511,
+    "_id": "faikout-ac.0.1OG.info.connection",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info.lastUpdate": {
+    "type": "state",
+    "common": {
+      "name": "Last Update",
+      "type": "number",
+      "role": "date",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834521,
+    "_id": "faikout-ac.0.1OG.info.lastUpdate",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.topics": {
+    "type": "channel",
+    "common": {
+      "name": "MQTT Topics"
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834532,
+    "_id": "faikout-ac.0.1OG.topics",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.topics.state": {
+    "type": "state",
+    "common": {
+      "name": "State topic prefix",
+      "type": "string",
+      "role": "text",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834536,
+    "_id": "faikout-ac.0.1OG.topics.state",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.topics.command": {
+    "type": "state",
+    "common": {
+      "name": "Command topic prefix",
+      "type": "string",
+      "role": "text",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834544,
+    "_id": "faikout-ac.0.1OG.topics.command",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.topics.setting": {
+    "type": "state",
+    "common": {
+      "name": "Setting topic prefix",
+      "type": "string",
+      "role": "text",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834555,
+    "_id": "faikout-ac.0.1OG.topics.setting",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.topics.prefixApp": {
+    "type": "state",
+    "common": {
+      "name": "Prefix app name",
+      "type": "boolean",
+      "role": "indicator",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834568,
+    "_id": "faikout-ac.0.1OG.topics.prefixApp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.topics.prefixHost": {
+    "type": "state",
+    "common": {
+      "name": "Prefix host name",
+      "type": "boolean",
+      "role": "indicator",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834574,
+    "_id": "faikout-ac.0.1OG.topics.prefixHost",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.power": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Power on/off",
+        "de": "Ein/Aus"
+      },
+      "type": "boolean",
+      "role": "switch.power",
+      "read": true,
+      "write": true
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886182,
+    "_id": "faikout-ac.0.1OG.power",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.swingv": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "name": {
+        "en": "Vertical swing",
+        "de": "Vertikales Schwingen"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886191,
+    "_id": "faikout-ac.0.1OG.swingv",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.swingh": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "name": {
+        "en": "Horizontal swing",
+        "de": "Horizontales Schwingen"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886196,
+    "_id": "faikout-ac.0.1OG.swingh",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.mode": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Operating mode (H/C/F/D/A)",
+        "de": "Betriebsmodus (H/C/F/D/A)"
+      },
+      "type": "string",
+      "role": "value.mode",
+      "read": true,
+      "write": true,
+      "states": {
+        "H": "Heat",
+        "C": "Cool",
+        "A": "Auto",
+        "D": "Dry",
+        "F": "Fan"
+      }
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886202,
+    "_id": "faikout-ac.0.1OG.mode",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.fan": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Fan mode (e.g. 1-5/A/Q)",
+        "de": "Lüftermodus (z.B. 1-5/A/Q)"
+      },
+      "type": "string",
+      "role": "value.speed",
+      "read": true,
+      "write": true,
+      "states": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "A": "A",
+        "Q": "Q"
+      }
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795131026889,
+    "_id": "faikout-ac.0.1OG.fan",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.econo": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "name": {
+        "en": "Economy mode",
+        "de": "Eco-Modus"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886219,
+    "_id": "faikout-ac.0.1OG.econo",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.powerful": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "name": {
+        "en": "Powerful mode",
+        "de": "Powerful-Modus"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886225,
+    "_id": "faikout-ac.0.1OG.powerful",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Demand/compressor load",
+        "de": "Bedarf/Kompressorleistung"
+      },
+      "type": "number",
+      "role": "level",
+      "read": true,
+      "write": true,
+      "unit": "%",
+      "min": 0,
+      "max": 100
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886229,
+    "_id": "faikout-ac.0.1OG.demand",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.autot": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Target temperature (Faikout)",
+        "de": "Solltemperatur (Faikout)"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": true,
+      "write": true,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886232,
+    "_id": "faikout-ac.0.1OG.autot",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.autor": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Hysteresis (Faikout)",
+        "de": "Hysterese (Faikout)"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": true,
+      "write": true,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886237,
+    "_id": "faikout-ac.0.1OG.autor",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.outside": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Outdoor temperature",
+        "de": "Außentemperatur"
+      },
+      "type": "number",
+      "role": "value.temperature",
+      "read": true,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886241,
+    "_id": "faikout-ac.0.1OG.outside",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.home": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Indoor temperature",
+        "de": "Innentemperatur"
+      },
+      "type": "number",
+      "role": "value.temperature",
+      "read": true,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886245,
+    "_id": "faikout-ac.0.1OG.home",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.liquid": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Refrigerant temperature",
+        "de": "Kältemitteltemperatur"
+      },
+      "type": "number",
+      "role": "value.temperature",
+      "read": true,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886248,
+    "_id": "faikout-ac.0.1OG.liquid",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.inlet": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Inlet temperature",
+        "de": "Ansaugtemperatur"
+      },
+      "type": "number",
+      "role": "value.temperature",
+      "read": true,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886252,
+    "_id": "faikout-ac.0.1OG.inlet",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.temp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Setpoint (Daikin internal)",
+        "de": "Sollwert (Daikin intern)"
+      },
+      "type": "number",
+      "role": "value.temperature",
+      "read": true,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886255,
+    "_id": "faikout-ac.0.1OG.temp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.comp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Compressor speed",
+        "de": "Kompressordrehzahl"
+      },
+      "type": "number",
+      "role": "value.speed",
+      "read": true,
+      "write": false,
+      "unit": "Hz"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886260,
+    "_id": "faikout-ac.0.1OG.comp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.fanrpm": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Fan speed",
+        "de": "Lüfterdrehzahl"
+      },
+      "type": "number",
+      "role": "value.speed",
+      "read": true,
+      "write": false,
+      "unit": "RPM"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886264,
+    "_id": "faikout-ac.0.1OG.fanrpm",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.consumption": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Power consumption",
+        "de": "Leistungsaufnahme"
+      },
+      "type": "number",
+      "role": "value.power.consumption",
+      "read": true,
+      "write": false,
+      "unit": "W"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886268,
+    "_id": "faikout-ac.0.1OG.consumption",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.hum": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Humidity",
+        "de": "Luftfeuchtigkeit"
+      },
+      "type": "number",
+      "role": "value.humidity",
+      "read": true,
+      "write": false,
+      "unit": "%"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886284,
+    "_id": "faikout-ac.0.1OG.hum",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.anglev": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Vertical vane angle",
+        "de": "Vertikaler Luftwinkel"
+      },
+      "type": "number",
+      "role": "value",
+      "read": true,
+      "write": false,
+      "unit": "°"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886288,
+    "_id": "faikout-ac.0.1OG.anglev",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.angleh": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Horizontal vane angle",
+        "de": "Horizontaler Luftwinkel"
+      },
+      "type": "number",
+      "role": "value",
+      "read": true,
+      "write": false,
+      "unit": "°"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886292,
+    "_id": "faikout-ac.0.1OG.angleh",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.comfort": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "name": {
+        "en": "Comfort mode",
+        "de": "Comfort-Modus"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886296,
+    "_id": "faikout-ac.0.1OG.comfort",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.autoe": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "name": {
+        "en": "Auto mode active",
+        "de": "Auto-Funktion aktiv"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886301,
+    "_id": "faikout-ac.0.1OG.autoe",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.autop": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": true,
+      "write": true,
+      "name": {
+        "en": "Auto power on/off active",
+        "de": "Auto Ein/Aus aktiv"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886305,
+    "_id": "faikout-ac.0.1OG.autop",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.auto0": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Timer off time",
+        "de": "Timer Ausschaltzeit"
+      },
+      "type": "string",
+      "role": "text",
+      "read": true,
+      "write": true
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886308,
+    "_id": "faikout-ac.0.1OG.auto0",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.auto1": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Timer on time",
+        "de": "Timer Einschaltzeit"
+      },
+      "type": "string",
+      "role": "text",
+      "read": true,
+      "write": true
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886312,
+    "_id": "faikout-ac.0.1OG.auto1",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.autob": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "BLE reference device (MAC)",
+        "de": "BLE-Referenzgerät (MAC)"
+      },
+      "type": "string",
+      "role": "text",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886317,
+    "_id": "faikout-ac.0.1OG.autob",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.antifreeze": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Anti-freeze active",
+        "de": "Frostschutz aktiv"
+      },
+      "type": "boolean",
+      "role": "indicator",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886321,
+    "_id": "faikout-ac.0.1OG.antifreeze",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.env": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Room temperature",
+        "de": "Raumtemperatur"
+      },
+      "type": "number",
+      "role": "value.temperature",
+      "read": true,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886327,
+    "_id": "faikout-ac.0.1OG.env",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.env_set": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Room temperature (send control reference)",
+        "de": "Raumtemperatur (Regelreferenz senden)"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": false,
+      "write": true,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886330,
+    "_id": "faikout-ac.0.1OG.env_set",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.restart": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Restart device",
+        "de": "Gerät neu starten"
+      },
+      "type": "boolean",
+      "role": "button",
+      "read": false,
+      "write": true
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886333,
+    "_id": "faikout-ac.0.1OG.restart",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.ble": {
+    "type": "channel",
+    "common": {
+      "name": "BLE Sensor"
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794774834682,
+    "_id": "faikout-ac.0.1OG.ble",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.ble.temp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "BLE temperature",
+        "de": "BLE Temperatur"
+      },
+      "type": "number",
+      "role": "value.temperature",
+      "read": true,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886337,
+    "_id": "faikout-ac.0.1OG.ble.temp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.ble.hum": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "BLE humidity",
+        "de": "BLE Luftfeuchtigkeit"
+      },
+      "type": "number",
+      "role": "value.humidity",
+      "read": true,
+      "write": false,
+      "unit": "%"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886342,
+    "_id": "faikout-ac.0.1OG.ble.hum",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.ble.bat": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "BLE battery level",
+        "de": "BLE Batteriestand"
+      },
+      "type": "number",
+      "role": "value.battery",
+      "read": true,
+      "write": false,
+      "unit": "%"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886344,
+    "_id": "faikout-ac.0.1OG.ble.bat",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.ble.volt": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "BLE battery voltage",
+        "de": "BLE Batteriespannung"
+      },
+      "type": "number",
+      "role": "value.voltage",
+      "read": true,
+      "write": false,
+      "unit": "V"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886347,
+    "_id": "faikout-ac.0.1OG.ble.volt",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.Whheating": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Heating energy (cumulative)",
+        "de": "Heizenergie (kumuliert)"
+      },
+      "type": "number",
+      "role": "value.energy.consumed",
+      "read": true,
+      "write": false,
+      "unit": "Wh"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886272,
+    "_id": "faikout-ac.0.1OG.Whheating",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.Whcooling": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Cooling energy (cumulative)",
+        "de": "Kühlenergie (kumuliert)"
+      },
+      "type": "number",
+      "role": "value.energy.consumed",
+      "read": true,
+      "write": false,
+      "unit": "Wh"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886276,
+    "_id": "faikout-ac.0.1OG.Whcooling",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.Whoutside": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Outdoor unit energy meter",
+        "de": "Außengerät Energiezähler"
+      },
+      "type": "number",
+      "role": "value.energy.consumed",
+      "read": true,
+      "write": false,
+      "unit": "Wh"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886279,
+    "_id": "faikout-ac.0.1OG.Whoutside",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config": {
+    "type": "channel",
+    "common": {
+      "name": "Device Configuration"
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794829267508,
+    "_id": "faikout-ac.0.1OG.config",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.heatback": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Heat pull-back",
+        "de": "Heat pull-back"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886349,
+    "_id": "faikout-ac.0.1OG.config.heatback",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.heatover": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Heat push-over",
+        "de": "Heat push-over"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886351,
+    "_id": "faikout-ac.0.1OG.config.heatover",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.coolback": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Cool pull-back",
+        "de": "Cool pull-back"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886352,
+    "_id": "faikout-ac.0.1OG.config.coolback",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.coolover": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Cool push-over",
+        "de": "Cool push-over"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886354,
+    "_id": "faikout-ac.0.1OG.config.coolover",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.tcontrol": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Control message timeout",
+        "de": "Control-Timeout"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "s"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886356,
+    "_id": "faikout-ac.0.1OG.config.tcontrol",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.thermref": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Inlet/home blend ratio",
+        "de": "Inlet/Home-Blend-Verhältnis"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "%"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886358,
+    "_id": "faikout-ac.0.1OG.config.thermref",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.tmin": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Min temperature limit",
+        "de": "Min-Temperatur"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886360,
+    "_id": "faikout-ac.0.1OG.config.tmin",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.tmax": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Max temperature limit",
+        "de": "Max-Temperatur"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886362,
+    "_id": "faikout-ac.0.1OG.config.tmax",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.tcoolmin": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Min temp limit (cooling)",
+        "de": "Min-Temperatur Kühlen"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886364,
+    "_id": "faikout-ac.0.1OG.config.tcoolmin",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.theatmax": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Max temp limit (heating)",
+        "de": "Max-Temperatur Heizen"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886366,
+    "_id": "faikout-ac.0.1OG.config.theatmax",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.frosttemp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Frost protection",
+        "de": "Frostschutz"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886370,
+    "_id": "faikout-ac.0.1OG.config.frosttemp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.minoutside": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Min outdoor temperature",
+        "de": "Min-Außentemperatur"
+      },
+      "type": "number",
+      "role": "level.temperature",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886373,
+    "_id": "faikout-ac.0.1OG.config.minoutside",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.switchtemp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Switch-point offset",
+        "de": "Schaltpunkt-Offset"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886381,
+    "_id": "faikout-ac.0.1OG.config.switchtemp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.pushtemp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Push-point offset",
+        "de": "Push-Offset"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "°C"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886383,
+    "_id": "faikout-ac.0.1OG.config.pushtemp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.reporting": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Status report interval",
+        "de": "Report-Intervall"
+      },
+      "type": "number",
+      "role": "level",
+      "read": false,
+      "write": false,
+      "unit": "s"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886385,
+    "_id": "faikout-ac.0.1OG.config.reporting",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.lockmode": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": false,
+      "write": false,
+      "name": {
+        "en": "Lock heating/cooling mode",
+        "de": "Heiz-/Kühlmodus sperren"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886387,
+    "_id": "faikout-ac.0.1OG.config.lockmode",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl": {
+    "type": "channel",
+    "common": {
+      "name": {
+        "en": "Demand Control",
+        "de": "Bedarfsregelung"
+      }
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124756,
+    "_id": "faikout-ac.0.1OG.demand_ctrl",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl.active": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Demand control active",
+        "de": "Bedarfsregelung aktiv"
+      },
+      "type": "boolean",
+      "role": "indicator",
+      "read": true,
+      "write": false,
+      "def": false
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124760,
+    "_id": "faikout-ac.0.1OG.demand_ctrl.active",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl.demand_calc": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Calculated demand",
+        "de": "Berechneter Bedarf"
+      },
+      "type": "number",
+      "unit": "%",
+      "role": "value",
+      "read": true,
+      "write": false,
+      "min": 0,
+      "max": 100
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124766,
+    "_id": "faikout-ac.0.1OG.demand_ctrl.demand_calc",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl.override_active": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Manual override active",
+        "de": "Manuelle Übersteuerung aktiv"
+      },
+      "type": "boolean",
+      "role": "switch",
+      "read": true,
+      "write": true,
+      "def": false
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124769,
+    "_id": "faikout-ac.0.1OG.demand_ctrl.override_active",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl.override_value": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Manual override demand",
+        "de": "Manueller Bedarfswert"
+      },
+      "type": "number",
+      "unit": "%",
+      "role": "level",
+      "read": true,
+      "write": true,
+      "min": 0,
+      "max": 100,
+      "def": 50
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124773,
+    "_id": "faikout-ac.0.1OG.demand_ctrl.override_value",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl.guard_active": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Guard active",
+        "de": "Guard aktiv"
+      },
+      "type": "boolean",
+      "role": "indicator",
+      "read": true,
+      "write": false,
+      "def": false
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124778,
+    "_id": "faikout-ac.0.1OG.demand_ctrl.guard_active",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl.outdoor_temp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Outdoor temperature (used)",
+        "de": "Verwendete Außentemperatur"
+      },
+      "type": "number",
+      "unit": "°C",
+      "role": "value.temperature",
+      "read": true,
+      "write": false
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124782,
+    "_id": "faikout-ac.0.1OG.demand_ctrl.outdoor_temp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.demand_ctrl.room_temp": {
+    "type": "state",
+    "common": {
+      "name": {
+        "en": "Room temperature (used)",
+        "de": "Verwendete Raumtemperatur"
+      },
+      "type": "number",
+      "unit": "°C",
+      "role": "value.temperature",
+      "read": true,
+      "write": false
+    },
+    "native": {},
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794830124785,
+    "_id": "faikout-ac.0.1OG.demand_ctrl.room_temp",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.humidity_ctrl.auto": {
+    "type": "state",
+    "native": {},
+    "common": {
+      "name": "Humidity auto",
+      "type": "boolean",
+      "role": "switch",
+      "read": true,
+      "write": true,
+      "def": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794851372978,
+    "_id": "faikout-ac.0.1OG.humidity_ctrl.auto",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.humidity_ctrl.mode": {
+    "type": "state",
+    "native": {},
+    "common": {
+      "name": "Humidity mode",
+      "type": "number",
+      "role": "value",
+      "read": true,
+      "write": false,
+      "def": 0,
+      "states": {
+        "0": "AUS",
+        "1": "ÜBERWACHUNG",
+        "2": "DRY",
+        "3": "NACHLAUF",
+        "4": "PAUSE",
+        "5": "FRESHNESS!"
+      }
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794851373022,
+    "_id": "faikout-ac.0.1OG.humidity_ctrl.mode",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.humidity_ctrl.mode_text": {
+    "type": "state",
+    "native": {},
+    "common": {
+      "name": "Humidity mode text",
+      "type": "string",
+      "role": "text",
+      "read": true,
+      "write": false,
+      "def": "AUS"
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794851373084,
+    "_id": "faikout-ac.0.1OG.humidity_ctrl.mode_text",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.humidity_ctrl.dew_point": {
+    "type": "state",
+    "native": {},
+    "common": {
+      "name": "Dew point",
+      "type": "number",
+      "unit": "°C",
+      "role": "value.temperature",
+      "read": true,
+      "write": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794851373094,
+    "_id": "faikout-ac.0.1OG.humidity_ctrl.dew_point",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.humidity_ctrl.dew_point_diff": {
+    "type": "state",
+    "native": {},
+    "common": {
+      "name": "Dew point distance",
+      "type": "number",
+      "unit": "K",
+      "role": "value",
+      "read": true,
+      "write": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1794851373098,
+    "_id": "faikout-ac.0.1OG.humidity_ctrl.dew_point_diff",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info.fantype": {
+    "type": "state",
+    "common": {
+      "name": "Fan type",
+      "type": "number",
+      "role": "value",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886132,
+    "_id": "faikout-ac.0.1OG.info.fantype",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.info.protocol": {
+    "type": "state",
+    "common": {
+      "name": "Protocol",
+      "type": "string",
+      "role": "info.firmware",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886154,
+    "_id": "faikout-ac.0.1OG.info.protocol",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "faikout-ac.0.1OG.config.livestatus": {
+    "type": "state",
+    "common": {
+      "type": "boolean",
+      "read": false,
+      "write": false,
+      "name": {
+        "en": "Live status push",
+        "de": "Live-Status-Push"
+      },
+      "role": "switch"
+    },
+    "native": {
+      "userModified": false
+    },
+    "from": "system.adapter.faikout-ac.0",
+    "user": "system.user.admin",
+    "ts": 1795085886389,
+    "_id": "faikout-ac.0.1OG.config.livestatus",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  }
+}

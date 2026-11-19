@@ -72,6 +72,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.6
+- Repochecker fixes: multilingual translations (11 languages), node:http, this.setTimeout, prettier config
+
 ### 0.1.5
 - Schedule modes for grouped activation/deactivation of schedule entries
 - Adapter title fix (Faikout AC)
