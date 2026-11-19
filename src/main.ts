@@ -594,6 +594,8 @@ class FaikoutAdapter extends utils.Adapter {
             return;
         }
 
+        const sceneModes = (cfg.sceneModes as Array<Record<string, unknown>> | undefined) || [];
+
         this.setInterval(async () => {
             const now = new Date();
             // 0=Sun,1=Mon…6=Sat → remap to 0=Mon…6=Sun to match UI (Mo=0…So=6)
@@ -606,6 +608,13 @@ class FaikoutAdapter extends utils.Adapter {
                 const entry = entries[i];
                 if (!entry.enabled) {
                     continue;
+                }
+                const entryScene = ((entry.scene as string) || '').trim();
+                if (entryScene) {
+                    const mode = sceneModes.find((m) => (m.name as string) === entryScene);
+                    if (!mode || !mode.active) {
+                        continue;
+                    }
                 }
                 const entryTime = ((entry.time as string) || '').trim();
                 const entryDays = (entry.days as number[] | undefined) || [];

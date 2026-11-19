@@ -454,6 +454,7 @@ class FaikoutAdapter extends utils.Adapter {
         if (entries.length === 0) {
             return;
         }
+        const sceneModes = cfg.sceneModes || [];
         this.setInterval(async () => {
             const now = new Date();
             const dow = (now.getDay() + 6) % 7;
@@ -464,6 +465,13 @@ class FaikoutAdapter extends utils.Adapter {
                 const entry = entries[i];
                 if (!entry.enabled) {
                     continue;
+                }
+                const entryScene = (entry.scene || '').trim();
+                if (entryScene) {
+                    const mode = sceneModes.find((m) => m.name === entryScene);
+                    if (!mode || !mode.active) {
+                        continue;
+                    }
                 }
                 const entryTime = (entry.time || '').trim();
                 const entryDays = entry.days || [];

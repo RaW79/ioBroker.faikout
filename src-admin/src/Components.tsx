@@ -151,11 +151,37 @@ var HUM_INFO_TRANSLATIONS = {
     }
 };
 
-function getLang(props) {
-    var lang = (props && props.systemConfig && props.systemConfig.common && props.systemConfig.common.language)
-        || (typeof window !== 'undefined' && window.systemLang)
+// Module-level language cache – populated once via socket on first render
+var _detectedLang: string | null = null;
+var _langWaiters: Array<(l: string) => void> = [];
+
+function _detectLangFromSocket(socket: unknown): void {
+    if (_detectedLang !== null) return;
+    try {
+        var s = socket as Record<string, unknown>;
+        var p = typeof s.getObject === 'function' ? (s.getObject as (id: string) => Promise<Record<string, unknown>>)('system.config') : null;
+        if (p && typeof p.then === 'function') {
+            p.then(function (obj: Record<string, unknown>) {
+                var common = obj && (obj.common as Record<string, unknown>);
+                var l = (common && typeof common.language === 'string' ? common.language : '') || 'en';
+                _detectedLang = l.startsWith('de') ? 'de' : 'en';
+                _langWaiters.forEach(function (cb) { try { cb(_detectedLang as string); } catch (e) {} });
+                _langWaiters = [];
+            }).catch(function () { _detectedLang = 'en'; });
+        }
+    } catch (e) { /* socket not ready */ }
+}
+
+function getLang(props: unknown): string {
+    if (_detectedLang) return _detectedLang;
+    var p = props as Record<string, unknown>;
+    if (p && p.socket) _detectLangFromSocket(p.socket);
+    var sysConfig = p && (p.systemConfig as Record<string, unknown>);
+    var common = sysConfig && (sysConfig.common as Record<string, unknown>);
+    var lang = (common && typeof common.language === 'string' ? common.language : '')
+        || (typeof window !== 'undefined' && (window as unknown as Record<string, unknown>).systemLang as string)
         || 'en';
-    return (lang === 'de') ? 'de' : 'en';
+    return (typeof lang === 'string' && lang.startsWith('de')) ? 'de' : 'en';
 }
 
 var CHART_TR = {
@@ -308,6 +334,12 @@ var SCHED_TR = {
         pause:       'Pause:',
         addAction:   '+ Action',
         addTask:     '+ Add task',
+        modesTitle:  'Modes',
+        modeNewPh:   'New mode name...',
+        modeActive:  'active',
+        modeInactive:'inactive',
+        modeAddBtn:  'Add',
+        modePh:      '\u2013 Mode \u2013',
         fieldLabels: {
             power:                'Power',
             fan:                  'Fan',
@@ -329,6 +361,12 @@ var SCHED_TR = {
         pause:       'Pause:',
         addAction:   '+ Aktion',
         addTask:     '+ Aufgabe hinzuf\u00fcgen',
+        modesTitle:  'Modi',
+        modeNewPh:   'Neuer Modusname...',
+        modeActive:  'aktiv',
+        modeInactive:'inaktiv',
+        modeAddBtn:  'Hinzuf\u00fcgen',
+        modePh:      '\u2013 Modus \u2013',
         fieldLabels: {
             power:                'Power',
             fan:                  'L\u00fcfter',
@@ -400,7 +438,7 @@ var HUM_DETAIL_TR = {
 };
 
 function DemandChart(props) {
-    var trC = CHART_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'];
+    var trC = CHART_TR[props.lang || (props.lang || (typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'))];
     var data = props.data || {};
     var workPoint = props.workPoint || null; // { temp: number, demand: number } | null
     var curve = Array.isArray(data.demandCurve) ? data.demandCurve : [];
@@ -417,7 +455,7 @@ function DemandChart(props) {
     if (sorted.length < 2) {
         return React.createElement('div', {
             style: { padding: '8px 0', color: '#888', fontStyle: 'italic', fontSize: '12px' }
-        }, CHART_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'].minPoints);
+        }, CHART_TR[props.lang || (typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en')].minPoints);
     }
 
     var W = 420, H = 180;
@@ -638,7 +676,7 @@ function DemandChart(props) {
 
 // Pure chart – no socket, all values passed as props
 function TaperChart(props) {
-    var trT = TAPER_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'];
+    var trT = TAPER_TR[props.lang || (typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en')];
     var autot      = props.autot;      // number | null
     var autor      = props.autor;      // number | null
     var room       = props.room;       // number | null
@@ -647,7 +685,7 @@ function TaperChart(props) {
     if (autot === null || autor === null) {
         return React.createElement('div', {
             style: { fontSize: '12px', color: '#888', fontStyle: 'italic', padding: '4px 0' }
-        }, TAPER_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'].waiting);
+        }, TAPER_TR[props.lang || (typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en')].waiting);
     }
 
     var guardOn = autot + autor + 0.1;
@@ -769,7 +807,7 @@ function TaperChart(props) {
 function GuardStatus(props) {
     var vals = props.vals || {};
     var deviceName = props.deviceName || '';
-    var trG = GUARD_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'];
+    var trG = GUARD_TR[props.lang || (typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en')];
 
     if (!deviceName) {
         return React.createElement('div', {
@@ -830,6 +868,14 @@ function DemandTabs(props) {
     var useState = React.useState;
     var useEffect = React.useEffect;
     var useRef   = React.useRef;
+
+    var tickR = useState(0); var tick = tickR[0]; void tick;
+    var setTick = tickR[1];
+    useEffect(function () {
+        if (_detectedLang) return;
+        _langWaiters.push(function () { setTick(function (n) { return n + 1; }); });
+        if (props.socket) _detectLangFromSocket(props.socket);
+    }, []);
 
     // Full native config for device list; demand settings in props.data (config.demandTabs)
     var fullConfig   = (props.originalData && typeof props.originalData === 'object') ? props.originalData : {};
@@ -1204,7 +1250,7 @@ function DemandTabs(props) {
             h('div', { style: S.heading }, tr.curveHeading),
             h('div', { style: { display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' } },
                 curveTable(),
-                h(DemandChart, { data: { demandCurve: curve, demandBoostEnabled: boostEnabled, demandBoostStages: boostStages, demandMinDemand: minDemand, demandMaxDemand: maxDemand }, workPoint: (gv.outdoor !== null && gv.demand !== null) ? { temp: gv.outdoor, demand: gv.demand } : null })
+                h(DemandChart, { data: { demandCurve: curve, demandBoostEnabled: boostEnabled, demandBoostStages: boostStages, demandMinDemand: minDemand, demandMaxDemand: maxDemand }, workPoint: (gv.outdoor !== null && gv.demand !== null) ? { temp: gv.outdoor, demand: gv.demand } : null, lang: getLang(props) })
             )
         ),
         h('div', null,
@@ -1220,7 +1266,7 @@ function DemandTabs(props) {
             ),
             taperEnabled ? h('div', { style: { display: 'flex', gap: '16px', alignItems: 'center', marginTop: '8px', flexWrap: 'wrap' } },
                 field(tr.maxTaper, numInput(taperMax, 'demandTaperMax', '75px', { min: 0, max: 100 })),
-                h(TaperChart, { autot: gv.autot, autor: gv.autor, room: gv.room, taperMax: taperMax })
+                h(TaperChart, { autot: gv.autot, autor: gv.autor, room: gv.room, taperMax: taperMax, lang: getLang(props) })
             ) : null
         ),
         h('div', null,
@@ -1229,7 +1275,7 @@ function DemandTabs(props) {
             guardEnabled ? h('div', null,
                 h('div', { style: { fontSize: '12px', color: '#888', margin: '6px 0 10px' } },
                     tr.guardDesc),
-                h(GuardStatus, { vals: gv, deviceName: devName }),
+                h(GuardStatus, { vals: gv, deviceName: devName, lang: getLang(props) }),
                 h('div', { style: Object.assign({}, S.row, { marginTop: '8px' }) },
                     field(tr.hbNormal, numInput(hbNormal, 'demandHeatbackNormal', '75px', { min: 0 })),
                     field(tr.hbGuard,  numInput(hbGuard,  'demandHeatbackGuard',  '75px', { min: 0 }))
@@ -1246,6 +1292,13 @@ function EnvSensorConfig(props) {
     var h         = React.createElement;
     var useState  = React.useState;
     var useEffect = React.useEffect;
+    var tickR = useState(0); var tick = tickR[0]; void tick;
+    var setTick = tickR[1];
+    useEffect(function () {
+        if (_detectedLang) return;
+        _langWaiters.push(function () { setTick(function (n) { return n + 1; }); });
+        if (props.socket) _detectLangFromSocket(props.socket);
+    }, []);
     var tr = ENV_TR[getLang(props)];
 
     var fullConfig = (props.originalData && typeof props.originalData === 'object') ? props.originalData : {};
@@ -1352,19 +1405,49 @@ function EnvSensorConfig(props) {
 }
 
 function ScheduleConfig(props) {
-    var h        = React.createElement;
+    var h         = React.createElement;
+    var useState  = React.useState;
+    var useEffect = React.useEffect;
+    var tickR = useState(0); var tick = tickR[0]; void tick;
+    var setTick = tickR[1];
+    useEffect(function () {
+        if (_detectedLang) return;
+        _langWaiters.push(function () { setTick(function (n) { return n + 1; }); });
+        if (props.socket) _detectLangFromSocket(props.socket);
+    }, []);
     var tr = SCHED_TR[getLang(props)];
 
     var fullConfig = (props.originalData && typeof props.originalData === 'object') ? props.originalData : {};
     var data       = (props.data && typeof props.data === 'object') ? props.data : {};
     var devices    = Array.isArray(fullConfig.devices) ? fullConfig.devices.map(function (d) { return d.name || ''; }).filter(Boolean) : [];
 
+    var sceneModes = Array.isArray(data.sceneModes) ? data.sceneModes : [];
+
+    var newModeR   = useState('');
+    var newModeName = newModeR[0], setNewModeName = newModeR[1];
+
+    function saveModes(newModes) {
+        props.onChange(Object.assign({}, data, { sceneModes: newModes }));
+    }
+    function addMode() {
+        var n = newModeName.trim();
+        if (!n || sceneModes.some(function (m) { return m.name === n; })) return;
+        saveModes(sceneModes.concat([{ name: n, active: true }]));
+        setNewModeName('');
+    }
+    function toggleMode(idx) {
+        saveModes(sceneModes.map(function (m, i) { return i === idx ? Object.assign({}, m, { active: !m.active }) : m; }));
+    }
+    function removeMode(idx) {
+        saveModes(sceneModes.filter(function (_, i) { return i !== idx; }));
+    }
+
     function normalizeEntry(e) {
         if (!Array.isArray(e.actions)) {
             var acts = e.field ? [{ field: e.field, value: e.value != null ? e.value : true }] : [];
-            return { enabled: !!e.enabled, deviceName: e.deviceName || '', days: Array.isArray(e.days) ? e.days : [], time: e.time || '07:00', actions: acts };
+            return { enabled: !!e.enabled, deviceName: e.deviceName || '', days: Array.isArray(e.days) ? e.days : [], time: e.time || '07:00', scene: e.scene || '', actions: acts };
         }
-        return e;
+        return Object.assign({ scene: '' }, e);
     }
     var entries = Array.isArray(data.schedule) ? data.schedule.map(normalizeEntry) : [];
 
@@ -1388,7 +1471,7 @@ function ScheduleConfig(props) {
     var DAYS = tr.days;
 
     function save(newEntries) {
-        props.onChange(Object.assign({}, data, { schedule: newEntries }));
+        props.onChange(Object.assign({}, data, { schedule: newEntries, sceneModes: sceneModes }));
     }
     function updTask(i, patch) {
         save(entries.map(function (r, j) { return j === i ? Object.assign({}, r, patch) : r; }));
@@ -1502,6 +1585,10 @@ function ScheduleConfig(props) {
                     onChange: function (ev) { updTask(i, { deviceName: ev.target.value }); } },
                     h('option', { value: '' }, tr.devicePh),
                     devices.map(function (n) { return h('option', { key: n, value: n }, n); })),
+                h('select', { value: e.scene || '', style: Object.assign({}, S.input, { minWidth: '90px' }),
+                    onChange: function (ev) { updTask(i, { scene: ev.target.value }); } },
+                    h('option', { value: '' }, tr.modePh),
+                    sceneModes.map(function (m) { return h('option', { key: m.name, value: m.name }, m.name); })),
                 h('div', { style: { display: 'flex', flexWrap: 'nowrap' } }, dayBtns),
                 h('input', { type: 'time', value: e.time || '07:00', style: Object.assign({}, S.input, { width: '90px' }),
                     onChange: function (ev) { updTask(i, { time: ev.target.value }); } }),
@@ -1514,10 +1601,40 @@ function ScheduleConfig(props) {
         );
     });
 
+    var modeRows = sceneModes.map(function (m, idx) {
+        var isActive = !!m.active;
+        return h('div', { key: m.name, style: { display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' } },
+            h('span', { style: { minWidth: '120px', fontSize: '13px' } }, m.name),
+            h('button', { type: 'button', style: {
+                    padding: '2px 10px', fontSize: '11px', cursor: 'pointer', borderRadius: '3px',
+                    border: '1px solid ' + (isActive ? '#4caf50' : '#ccc'),
+                    background: isActive ? '#4caf50' : 'transparent',
+                    color: isActive ? '#fff' : 'inherit'
+                },
+                onClick: function () { toggleMode(idx); } },
+                isActive ? tr.modeActive : tr.modeInactive),
+            h('button', { type: 'button', style: S.btnDel, onClick: function () { removeMode(idx); } }, '\u00d7')
+        );
+    });
+
+    var modesSection = h('div', { style: { marginBottom: '12px', paddingBottom: '10px', borderBottom: '1px solid #ccc' } },
+        h('div', { style: { fontWeight: 'bold', fontSize: '12px', marginBottom: '6px', color: '#888' } }, tr.modesTitle),
+        modeRows,
+        h('div', { style: { display: 'flex', gap: '6px', marginTop: '4px' } },
+            h('input', { type: 'text', value: newModeName, placeholder: tr.modeNewPh,
+                style: Object.assign({}, S.input, { minWidth: '150px' }),
+                onChange: function (ev) { setNewModeName(ev.target.value); },
+                onKeyDown: function (ev) { if (ev.key === 'Enter') { addMode(); } } }),
+            h('button', { type: 'button', style: S.btn, onClick: addMode }, tr.modeAddBtn)
+        )
+    );
+
     return h('div', { style: { fontSize: '13px' } },
+        modesSection,
         taskBlocks,
         h('button', { style: Object.assign({}, S.btn, { marginTop: '4px' }), onClick: function () {
-            save(entries.concat([{ enabled: true, deviceName: devices[0] || '', days: [1,2,3,4,5], time: '07:00', actions: [{ field: 'power', value: true }] }]));
+            var defaultScene = sceneModes.length > 0 ? sceneModes[0].name : '';
+            save(entries.concat([{ enabled: true, deviceName: devices[0] || '', days: [1,2,3,4,5], time: '07:00', scene: defaultScene, actions: [{ field: 'power', value: true }] }]));
         } }, tr.addTask)
     );
 }
@@ -1527,6 +1644,14 @@ function HumidityTabs(props) {
     var useState = React.useState;
     var useEffect = React.useEffect;
     var useRef   = React.useRef;
+
+    var tickR = useState(0); var tick = tickR[0]; void tick;
+    var setTick = tickR[1];
+    useEffect(function () {
+        if (_detectedLang) return;
+        _langWaiters.push(function () { setTick(function (n) { return n + 1; }); });
+        if (props.socket) _detectLangFromSocket(props.socket);
+    }, []);
 
     var fullConfig = (props.originalData && typeof props.originalData === 'object') ? props.originalData : {};
     var humConfig  = (props.data && typeof props.data === 'object') ? props.data : {};
