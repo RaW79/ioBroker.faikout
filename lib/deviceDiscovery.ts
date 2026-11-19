@@ -2,7 +2,7 @@
 // Ports all 4 HTTP fetch functions from faikout_alias_generator_en.js v0.4.
 // Uses built-in Node.js http module (no axios).
 
-import * as http from 'http';
+import * as http from 'node:http';
 import { FIELDS, FIELD_WHITELIST } from './fieldDefinitions';
 import type { TopicConfig } from './topicBuilder';
 import { DEFAULT_TOPIC_CONFIG } from './topicBuilder';

@@ -28,6 +28,14 @@ export interface MqttClientOptions {
      *
      */
     clientId: string;
+    /**
+     *
+     */
+    setTimeoutFn: (callback: () => void, ms: number) => unknown;
+    /**
+     *
+     */
+    clearTimeoutFn: (id: unknown) => void;
 }
 
 type OnMessageCallback = (topic: string, payload: string) => void;
@@ -47,7 +55,7 @@ export class FaikoutMqttClient {
     private client: mqtt.MqttClient | null = null;
     private subscriptions: Set<string> = new Set();
     private reconnectDelay = BACKOFF_INITIAL_MS;
-    private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+    private reconnectTimer: unknown = null;
     private intentionalDisconnect = false;
 
     /**
@@ -124,7 +132,7 @@ export class FaikoutMqttClient {
         if (this.reconnectTimer !== null) {
             return;
         }
-        this.reconnectTimer = setTimeout(() => {
+        this.reconnectTimer = this.options.setTimeoutFn(() => {
             this.reconnectTimer = null;
             if (!this.intentionalDisconnect) {
                 // Destroy old client before reconnecting
@@ -146,7 +154,7 @@ export class FaikoutMqttClient {
     async disconnect(): Promise<void> {
         this.intentionalDisconnect = true;
         if (this.reconnectTimer !== null) {
-            clearTimeout(this.reconnectTimer);
+            this.options.clearTimeoutFn(this.reconnectTimer);
             this.reconnectTimer = null;
         }
         if (this.client) {
