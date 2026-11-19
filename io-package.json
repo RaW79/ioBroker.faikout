@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "news": {
+      "0.1.5": {
+        "en": "Schedule modes, adapter title fix, language detection fix",
+        "de": "Zeitplan-Modi, Adapter-Titel korrigiert, Spracherkennung behoben"
+      },
       "0.1.4": {
         "en": "Full bilingual UI (EN/DE) for all admin tabs",
         "de": "Vollstaendige zweisprachige Oberflaeche (EN/DE) fuer alle Admin-Tabs"
