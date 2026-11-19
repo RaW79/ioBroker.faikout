@@ -1,0 +1,295 @@
+{
+  "type": "tabs",
+  "i18n": true,
+  "items": {
+    "tab_info": {
+      "type": "panel",
+      "label": { "en": "Info", "de": "Info" },
+      "items": {
+        "info_title": {
+          "type": "staticText",
+          "label": { "en": "Faikout AC Adapter", "de": "Faikout AC Adapter" },
+          "style": { "fontSize": "32px", "fontFamily": "xkcd Script, cursive", "letterSpacing": "-1px" }
+        },
+        "info_desc": {
+          "type": "staticText",
+          "label": {
+            "en": "Connects ioBroker to one or more Faikout devices via an existing MQTT broker. States are updated automatically via MQTT push. Discovery must be triggered manually per device using the Discover button in the Devices tab. States found during discovery are created automatically; states no longer present are removed when discovery is re-run. No states are created or removed in ioBroker without explicitly triggering discovery.",
+            "de": "Verbindet ioBroker mit einem oder mehreren Faikout-Devices über einen existierenden MQTT-Broker. Datenpunkte werden automatisch per MQTT aktualisiert. Die Erkennung muss einmalig je Gerät über den Discover-Button im Geräte-Tab ausgelöst werden. Bei der Erkennung gefundene Funktionen werden automatisch als Datenpunkte angelegt oder bei erneuter Ausführung entfernt. Es findet keine Veränderung von Datenpunkten in ioBroker ohne manuelle Ausführung der Erkennung statt."
+          }
+        },
+        "div_prereq": { "type": "divider" },
+        "info_prereq_head": {
+          "type": "staticText",
+          "label": { "en": "Prerequisites", "de": "Voraussetzungen" },
+          "style": { "fontWeight": "bold", "fontSize": "22px", "fontFamily": "xkcd Script, cursive" }
+        },
+        "info_prereq_1": {
+          "type": "staticText",
+          "label": { "en": "Faikout device reachable by IP address in the local network", "de": "Faikout-Gerät per IP-Adresse im lokalen Netzwerk erreichbar" }
+        },
+        "info_prereq_2": {
+          "type": "staticText",
+          "label": { "en": "MQTT broker (e.g. Mosquitto) running and reachable by this ioBroker instance as an MQTT client", "de": "MQTT-Broker (z.B. Mosquitto) läuft und ist für diese ioBroker-Instanz als MQTT-Client erreichbar" }
+        },
+        "info_prereq_3": {
+          "type": "staticText",
+          "label": { "en": "Faikout device configured to publish its data to that broker", "de": "Faikout-Gerät ist so konfiguriert, dass es seine Daten an diesen Broker sendet" }
+        },
+        "div_setup": { "type": "divider" },
+        "info_setup_head": {
+          "type": "staticText",
+          "label": { "en": "Setup", "de": "Einrichtung" },
+          "style": { "fontWeight": "bold", "fontSize": "22px", "fontFamily": "xkcd Script, cursive" }
+        },
+        "info_setup_1": {
+          "type": "staticText",
+          "label": { "en": "1. Devices tab: add one row per Faikout device (name and IP address)", "de": "1. Geräte-Tab: eine Zeile je Faikout-Gerät anlegen (Name und IP-Adresse)" }
+        },
+        "info_setup_2": {
+          "type": "staticText",
+          "label": { "en": "2. MQTT Broker tab: enter broker host, port and credentials", "de": "2. MQTT Broker-Tab: Broker-Host, Port und Zugangsdaten eintragen" }
+        },
+        "info_setup_3": {
+          "type": "staticText",
+          "label": { "en": "3. Save – the adapter starts and restores subscriptions from previous discoveries", "de": "3. Speichern – der Adapter startet und stellt Subscriptions aus früheren Erkennungen wieder her" }
+        },
+        "info_setup_4": {
+          "type": "staticText",
+          "label": { "en": "4. Click Discover per device to run detection and create states", "de": "4. Je Gerät auf Erkennen klicken, um die Erkennung zu starten und Datenpunkte anzulegen" }
+        },
+        "info_setup_5": {
+          "type": "staticText",
+          "label": { "en": "5. States appear under faikout-ac.0.{Name}.*", "de": "5. Datenpunkte erscheinen unter faikout-ac.0.{Name}.*" }
+        },
+        "info_setup_gap": {
+          "type": "staticText",
+          "label": { "en": " ", "de": " " }
+        },
+        "info_setup_6": {
+          "type": "staticText",
+          "label": { "en": "6. Deleting a device from the list removes all its states completely", "de": "6. Durch Löschen des Gerätes werden dessen Datenpunkte komplett entfernt" }
+        },
+        "info_setup_7": {
+          "type": "staticText",
+          "label": { "en": "7. Discovery can be re-run at any time – changes are detected and states are added or removed automatically", "de": "7. Ein erneutes Ausführen der Erkennung ist jederzeit möglich – Änderungen werden erkannt und Datenpunkte automatisch gelöscht und/oder ergänzt" }
+        },
+        "div_states": { "type": "divider" },
+        "info_states_head": {
+          "type": "staticText",
+          "label": { "en": "State structure per device", "de": "Datenpunkt-Struktur je Gerät" },
+          "style": { "fontWeight": "bold", "fontSize": "22px", "fontFamily": "xkcd Script, cursive" }
+        },
+        "info_states_1": {
+          "type": "staticText",
+          "label": { "en": "{Name}.info.*    – device metadata and connection status", "de": "{Name}.info.*    – Gerätemetadaten und Verbindungsstatus" }
+        },
+        "info_states_2": {
+          "type": "staticText",
+          "label": { "en": "{Name}.topics.*  – resolved MQTT topic paths", "de": "{Name}.topics.*  – aufgelöste MQTT-Topic-Pfade" }
+        },
+        "info_states_3": {
+          "type": "staticText",
+          "label": { "en": "{Name}.<field>   – sensor and status values (read-only)", "de": "{Name}.<field>   – Sensor- und Statuswerte (nur lesen)" }
+        },
+        "info_states_4": {
+          "type": "staticText",
+          "label": { "en": "{Name}.config.*  – write-only config commands", "de": "{Name}.config.*  – Nur-Schreiben-Konfigurationsbefehle" }
+        },
+        "info_states_5": {
+          "type": "staticText",
+          "label": { "en": "{Name}.ble.*     – BLE sensor data (only if device has BLE active)", "de": "{Name}.ble.*     – BLE-Sensordaten (nur wenn Gerät BLE aktiv hat)" }
+        },
+        "div_options": { "type": "divider" },
+        "info_options_head": {
+          "type": "staticText",
+          "label": { "en": "Options", "de": "Optionen" },
+          "style": { "fontWeight": "bold", "fontSize": "22px", "fontFamily": "xkcd Script, cursive" }
+        },
+        "info_options_config_head": {
+          "type": "staticText",
+          "label": { "en": "Config states", "de": "Config-Datenpunkte" },
+          "style": { "fontWeight": "bold" }
+        },
+        "info_options_config_1": {
+          "type": "staticText",
+          "label": {
+            "en": "Write-only states are created under {Name}.config.* for Faikout device configuration parameters. Writing a value sends it to the device immediately – there is no read-back or confirmation in ioBroker. Some parameters take effect immediately, others require a device restart. Use with care.",
+            "de": "Unter {Name}.config.* werden Nur-Schreiben-Datenpunkte für Faikout-Geräteparameter angelegt. Ein geschriebener Wert wird sofort an das Gerät gesendet – es gibt keine Rücklesefunktion oder Bestätigung in ioBroker. Manche Parameter wirken sofort, andere erfordern einen Neustart. Bitte mit Bedacht verwenden."
+          }
+        },
+        "info_options_envset_head": {
+          "type": "staticText",
+          "label": { "en": "env_set – External temperature input", "de": "env_set – Externer Temperatureingang" },
+          "style": { "fontWeight": "bold" }
+        },
+        "info_options_envset_1": {
+          "type": "staticText",
+          "label": {
+            "en": "env_set allows an external temperature value (e.g. from a room sensor) to be written to the Faikout device. The device uses this value in its control logic as an environment reference temperature. Write to env_set from your automation at the desired interval – the adapter forwards the value immediately each time.",
+            "de": "env_set ermöglicht es, einen externen Temperaturwert (z.B. eines Raumsensors) an das Faikout-Gerät zu schreiben. Das Gerät verwendet diesen Wert in seiner Regellogik als Umgebungsreferenztemperatur. Der Datenpunkt wird aus der Automation im gewünschten Intervall beschrieben – der Adapter leitet den Wert sofort weiter."
+          }
+        },
+        "info_options_envset_2": {
+          "type": "staticText",
+          "label": {
+            "en": "The Faikout device expects a fresh env_set value within a 300-second window – if no value arrives in time, the external sensor and its influence on the control logic are discarded.",
+            "de": "Das Faikout-Gerät erwartet innerhalb eines 300-Sekunden-Fensters einen aktuellen env_set-Wert – bleibt dieser aus, werden der externe Sensor und dessen Berücksichtigung in der Regellogik verworfen."
+          }
+        },
+        "div_version": { "type": "divider" },
+        "info_version": {
+          "type": "staticText",
+          "label": { "en": "v0.1.1", "de": "v0.1.1" },
+          "style": { "fontSize": "11px", "color": "#aaa", "textAlign": "right" }
+        }
+      }
+    },
+    "tab_devices": {
+      "type": "panel",
+      "label": { "en": "Devices", "de": "Geräte" },
+      "items": {
+        "devices": {
+          "type": "table",
+          "noDelete": false,
+          "uniqueColumns": ["name"],
+          "items": [
+            {
+              "type": "checkbox",
+              "attr": "enabled",
+              "title": { "en": "Enabled", "de": "Aktiv" },
+              "width": "80px",
+              "default": true
+            },
+            {
+              "type": "text",
+              "attr": "name",
+              "title": { "en": "Name", "de": "Name" },
+              "default": "MyFaikout"
+            },
+            {
+              "type": "text",
+              "attr": "ip",
+              "title": { "en": "IP Address", "de": "IP-Adresse" },
+              "default": "192.168.0.100"
+            },
+{
+              "type": "checkbox",
+              "attr": "useDemand",
+              "title": { "en": "Demand ctrl", "de": "Bedarfssteuerung" },
+              "width": "120px",
+              "default": false
+            },
+            {
+              "type": "checkbox",
+              "attr": "useHumidity",
+              "title": { "en": "Humidity ctrl", "de": "Feuchte Regelung" },
+              "width": "120px",
+              "default": false
+            },
+            {
+              "type": "sendTo",
+              "attr": "_discover",
+              "title": { "en": "State discovery", "de": "Datenpunkte-Erkennen" },
+              "command": "discovery",
+              "jsonData": "{\"name\": \"${data.name}\"}",
+              "label": { "en": "Erkennen", "de": "Erkennen" },
+              "variant": "outlined",
+              "width": "120px"
+            },
+            {
+              "type": "sendTo",
+              "attr": "_delete",
+              "title": { "en": "Delete states", "de": "Datenpunkte-Löschen" },
+              "command": "deleteDevice",
+              "jsonData": "{\"name\": \"${data.name}\"}",
+              "label": { "en": "Löschen", "de": "Löschen" },
+              "variant": "outlined",
+              "width": "100px"
+            }
+          ]
+        }
+      }
+    },
+    "tab_mqtt": {
+      "type": "panel",
+      "label": { "en": "MQTT Connection", "de": "MQTT Connection" },
+      "items": {
+        "mqttHost": {
+          "type": "text",
+          "label": { "en": "Broker host", "de": "Broker-Host" },
+          "default": "localhost"
+        },
+        "mqttPort": {
+          "type": "number",
+          "label": { "en": "Broker port", "de": "Broker-Port" },
+          "default": 1883,
+          "min": 1,
+          "max": 65535
+        },
+        "mqttUser": {
+          "type": "text",
+          "label": { "en": "Username", "de": "Benutzername" },
+          "default": ""
+        },
+        "mqttPassword": {
+          "type": "password",
+          "label": { "en": "Password", "de": "Passwort" },
+          "default": ""
+        }
+      }
+    },
+    "tab_schedule": {
+      "type": "panel",
+      "label": { "en": "Schedule", "de": "Zeitplan" },
+      "items": {
+        "scheduleConfig": {
+          "type": "custom",
+          "url": "custom/customComponents.js",
+          "bundlerType": "module",
+          "name": "faikout/customComponents/ScheduleConfig",
+          "guiApi": 2
+        }
+      }
+    },
+    "tab_envsensor": {
+      "type": "panel",
+      "label": { "en": "External Sensor", "de": "Externer Sensor" },
+      "items": {
+        "envSensorConfig": {
+          "type": "custom",
+          "url": "custom/customComponents.js",
+          "bundlerType": "module",
+          "name": "faikout/customComponents/EnvSensorConfig",
+          "guiApi": 2
+        }
+      }
+    },
+    "tab_demand": {
+      "type": "panel",
+      "label": { "en": "Demand Control", "de": "Bedarfsregelung" },
+      "items": {
+        "demandTabs": {
+          "type": "custom",
+          "url": "custom/customComponents.js",
+          "bundlerType": "module",
+          "name": "faikout/customComponents/DemandTabs",
+          "guiApi": 2
+        }
+      }
+    },
+    "tab_humidity": {
+      "type": "panel",
+      "label": { "en": "Humidity Control", "de": "Feuchte Regelung" },
+      "items": {
+        "humidityTabs": {
+          "type": "custom",
+          "url": "custom/customComponents.js",
+          "bundlerType": "module",
+          "name": "faikout/customComponents/HumidityTabs",
+          "guiApi": 2
+        }
+      }
+    }
+  }
+}

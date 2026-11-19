@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <filter id="shadow-box" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="shadow-text" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="14" ry="14" fill="#ffffff" stroke="#888888" stroke-width="4" filter="url(#shadow-box)"/>
+  <text
+    x="64"
+    y="64"
+    font-family="xkcd Script"
+    font-size="36"
+    fill="#888888"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    letter-spacing="-2"
+    filter="url(#shadow-text)">FaiKout</text>
+</svg>

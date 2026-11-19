@@ -1,0 +1,295 @@
+// State manager for Faikout ioBroker adapter
+// Manages ioBroker states for a single device.
+// Creates, updates and cleans up states based on DeviceProfile.
+
+import { FIELDS, CONFIG_FIELDS_DEF, FieldDef } from './fieldDefinitions';
+import { DeviceProfile } from './deviceDiscovery';
+
+type Adapter = ioBroker.Adapter;
+
+export class StateManager {
+    private readonly adapter: Adapter;
+    private readonly deviceFolder: string;
+
+    constructor(adapter: Adapter, deviceFolder: string) {
+        this.adapter = adapter;
+        this.deviceFolder = deviceFolder;
+    }
+
+    // Create or update all states for a discovered device profile
+    async createStates(profile: DeviceProfile, createConfigStates: boolean): Promise<void> {
+        const { deviceId, appName, ip, activeFields, topicConfig } = profile;
+
+        // Device channel
+        await this.adapter.setObjectNotExistsAsync(this.deviceFolder, {
+            type: 'channel',
+            common: { name: appName || deviceId },
+            native: {},
+        });
+
+        // Info channel
+        await this._ensureChannel(`${this.deviceFolder}.info`, 'Device Information');
+        await this._ensureState(`${this.deviceFolder}.info.deviceId`, {
+            name: 'Device ID', type: 'string', role: 'info.address', read: true, write: false, def: deviceId,
+        });
+        await this._ensureState(`${this.deviceFolder}.info.appName`, {
+            name: 'App Name', type: 'string', role: 'info.name', read: true, write: false, def: appName,
+        });
+        await this._ensureState(`${this.deviceFolder}.info.ip`, {
+            name: 'IP Address', type: 'string', role: 'info.ip', read: true, write: false, def: ip,
+        });
+        await this._ensureState(`${this.deviceFolder}.info.connection`, {
+            name: 'Connection', type: 'boolean', role: 'indicator.connection', read: true, write: false, def: false,
+        });
+        await this._ensureState(`${this.deviceFolder}.info.lastUpdate`, {
+            name: 'Last Update', type: 'number', role: 'date', read: true, write: false, def: 0,
+        });
+
+        // Topics channel (stores resolved topic config for reference and re-use after restart)
+        await this._ensureChannel(`${this.deviceFolder}.topics`, 'MQTT Topics');
+        await this._ensureState(`${this.deviceFolder}.topics.state`, {
+            name: 'State topic prefix', type: 'string', role: 'text', read: true, write: false,
+            def: topicConfig.topicstate,
+        });
+        await this._ensureState(`${this.deviceFolder}.topics.command`, {
+            name: 'Command topic prefix', type: 'string', role: 'text', read: true, write: false,
+            def: topicConfig.topiccommand,
+        });
+        await this._ensureState(`${this.deviceFolder}.topics.setting`, {
+            name: 'Setting topic prefix', type: 'string', role: 'text', read: true, write: false,
+            def: topicConfig.topicsetting,
+        });
+        await this._ensureState(`${this.deviceFolder}.topics.prefixApp`, {
+            name: 'Prefix app name', type: 'boolean', role: 'indicator', read: true, write: false,
+            def: topicConfig.prefixapp,
+        });
+        await this._ensureState(`${this.deviceFolder}.topics.prefixHost`, {
+            name: 'Prefix host name', type: 'boolean', role: 'indicator', read: true, write: false,
+            def: topicConfig.prefixhost,
+        });
+
+        // Data states from FIELDS
+        const hasBle = activeFields.has('ble') || activeFields.has('ble_temp');
+        let bleChannelCreated = false;
+
+        for (const [key, def] of Object.entries(FIELDS)) {
+            if (def.bleKey) {
+                // BLE fields are only created if the device reports BLE
+                if (!hasBle) continue;
+                // autob is a string BLE identifier, not a sensor sub-field
+                const isBleSubField = key.startsWith('ble_');
+                if (isBleSubField) {
+                    if (!bleChannelCreated) {
+                        await this._ensureChannel(`${this.deviceFolder}.ble`, 'BLE Sensor');
+                        bleChannelCreated = true;
+                    }
+                    const subKey = key.slice(4); // ble_temp -> temp
+                    await this._ensureFieldState(`${this.deviceFolder}.ble.${subKey}`, def);
+                } else {
+                    // autob: flat field under device folder
+                    await this._ensureFieldState(`${this.deviceFolder}.${key}`, def);
+                }
+                continue;
+            }
+
+            // Regular fields: only create if active on device
+            if (!activeFields.has(key)) continue;
+
+            await this._ensureFieldState(`${this.deviceFolder}.${key}`, def);
+        }
+
+        // Config states (write-only settings)
+        if (createConfigStates) {
+            await this._ensureChannel(`${this.deviceFolder}.config`, 'Device Configuration');
+            for (const [key, def] of Object.entries(CONFIG_FIELDS_DEF)) {
+                await this._ensureFieldState(`${this.deviceFolder}.config.${key}`, def);
+            }
+        }
+    }
+
+    // Parse MQTT status JSON and update states
+    async updateFromMqttPayload(payload: string): Promise<void> {
+        let json: Record<string, unknown>;
+        try {
+            json = JSON.parse(payload) as Record<string, unknown>;
+        } catch (e) {
+            this.adapter.log.warn(`${this.deviceFolder}: Failed to parse MQTT payload: ${e}`);
+            return;
+        }
+
+        for (const [key, def] of Object.entries(FIELDS)) {
+            if (def.writeOnly) continue;
+            if (def.bleKey && key.startsWith('ble_')) continue; // handled via ble sub-object
+
+            const rawVal = json[key];
+            if (rawVal === undefined || rawVal === null) continue;
+
+            const converted = this._convertReadValue(key, def, rawVal);
+            if (converted === null || converted === undefined) continue;
+
+            await this.adapter.setStateAsync(
+                `${this.deviceFolder}.${key}`,
+                { val: converted, ack: true },
+            );
+        }
+
+        // BLE sub-fields from json.ble
+        const bleObj = json['ble'];
+        if (bleObj !== null && bleObj !== undefined && typeof bleObj === 'object') {
+            const ble = bleObj as Record<string, unknown>;
+            const bleMap: Record<string, string> = {
+                ble_temp: 'temp',
+                ble_hum: 'hum',
+                ble_bat: 'bat',
+                ble_volt: 'volt',
+            };
+            for (const [fieldKey, subKey] of Object.entries(bleMap)) {
+                const rawVal = ble[subKey];
+                if (rawVal === undefined || rawVal === null) continue;
+                const def = FIELDS[fieldKey];
+                if (!def) continue;
+                const converted = this._convertReadValue(fieldKey, def, rawVal);
+                if (converted === null || converted === undefined) continue;
+                await this.adapter.setStateAsync(
+                    `${this.deviceFolder}.ble.${subKey}`,
+                    { val: converted, ack: true },
+                );
+            }
+        }
+
+        // autob (BLE MAC reference) - string from top-level json
+        if (json['autob'] !== undefined && json['autob'] !== null) {
+            await this.adapter.setStateAsync(
+                `${this.deviceFolder}.autob`,
+                { val: String(json['autob']), ack: true },
+            );
+        }
+
+        // Update lastUpdate timestamp
+        await this.adapter.setStateAsync(
+            `${this.deviceFolder}.info.lastUpdate`,
+            { val: Date.now(), ack: true },
+        );
+    }
+
+    // Check if a state has been marked as user-modified (native.userModified = true)
+    isUserModified(key: string): boolean {
+        // Synchronous check is not straightforward; this is a marker for future use.
+        // In Phase 1 we always allow updates unless the user manually sets the flag.
+        void key;
+        return false;
+    }
+
+    // Remove states that are no longer part of the device profile
+    async removeStaleStates(profile: DeviceProfile): Promise<void> {
+        const hasBle = profile.activeFields.has('ble') || profile.activeFields.has('ble_temp');
+
+        for (const key of Object.keys(FIELDS)) {
+            const def = FIELDS[key];
+            if (!def) continue;
+
+            const isBleField = def.bleKey && key.startsWith('ble_');
+            const statePath = isBleField
+                ? `${this.deviceFolder}.ble.${key.slice(4)}`
+                : `${this.deviceFolder}.${key}`;
+
+            const shouldExist = isBleField
+                ? hasBle
+                : (def.bleKey ? hasBle : profile.activeFields.has(key));
+
+            if (!shouldExist) {
+                try {
+                    const existing = await this.adapter.getObjectAsync(statePath);
+                    if (existing) {
+                        await this.adapter.delObjectAsync(statePath);
+                        this.adapter.log.debug(`Removed stale state: ${statePath}`);
+                    }
+                } catch (e) {
+                    // Object does not exist - no problem
+                }
+            }
+        }
+    }
+
+    // Build a state common object from a FieldDef
+    private _buildStateCommon(def: FieldDef): ioBroker.StateCommon {
+        const common: ioBroker.StateCommon = {
+            name: def.label,
+            type: def.type,
+            role: def.role ?? (def.type === 'boolean' ? (def.writeTopic ? 'switch' : 'indicator') : 'value'),
+            read: !def.writeOnly,
+            write: !!def.writeTopic,
+        };
+        if (def.unit) common.unit = def.unit;
+        if (def.states) common.states = def.states;
+        if (def.min !== undefined) common.min = def.min;
+        if (def.max !== undefined) common.max = def.max;
+        return common;
+    }
+
+    private async _ensureFieldState(id: string, def: FieldDef): Promise<void> {
+        const existing = await this.adapter.getObjectAsync(id);
+        if (existing?.native?.['userModified'] === true) {
+            this.adapter.log.debug(`Skipping userModified state: ${id}`);
+            return;
+        }
+        // Always write – handles new creation and recovery after manual deletion.
+        // setObjectAsync bypasses the internal cache that setObjectNotExistsAsync relies on.
+        await this.adapter.setObjectAsync(id, {
+            type: 'state',
+            common: this._buildStateCommon(def),
+            native: { userModified: false },
+        });
+    }
+
+    private async _ensureState(
+        id: string,
+        common: ioBroker.StateCommon & { def?: ioBroker.StateValue },
+    ): Promise<void> {
+        const { def: defaultVal, ...rest } = common;
+        await this.adapter.setObjectNotExistsAsync(id, {
+            type: 'state',
+            common: rest,
+            native: { userModified: false },
+        });
+        if (defaultVal !== undefined) {
+            const existing = await this.adapter.getStateAsync(id);
+            if (existing === null || existing === undefined) {
+                await this.adapter.setStateAsync(id, { val: defaultVal, ack: true });
+            }
+        }
+    }
+
+    private async _ensureChannel(id: string, name: string): Promise<void> {
+        await this.adapter.setObjectNotExistsAsync(id, {
+            type: 'channel',
+            common: { name },
+            native: {},
+        });
+    }
+
+    // Convert a raw JSON value to the correct TypeScript type for a field
+    private _convertReadValue(
+        key: string,
+        def: FieldDef,
+        rawVal: unknown,
+    ): ioBroker.StateValue {
+        if (rawVal === null || rawVal === undefined) return null;
+
+        switch (def.type) {
+            case 'boolean':
+                return rawVal === true || rawVal === 1 || rawVal === '1' || rawVal === 'true';
+            case 'number': {
+                // Integer fields
+                if (key === 'demand' || key === 'Whheating' || key === 'Whcooling' || key === 'Whoutside') {
+                    return parseInt(String(rawVal), 10);
+                }
+                return parseFloat(String(rawVal));
+            }
+            case 'string':
+                return String(rawVal);
+            default:
+                return String(rawVal);
+        }
+    }
+}

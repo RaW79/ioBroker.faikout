@@ -1,0 +1,101 @@
+{
+  "common": {
+    "name": "faikout-ac",
+    "version": "0.1.1",
+    "news": {
+      "0.1.0": {
+        "en": "Initial release",
+        "de": "Erste Version"
+      }
+    },
+    "title": "Faikout",
+    "titleLang": {
+      "en": "Faikout",
+      "de": "Faikout"
+    },
+    "desc": {
+      "en": "Adapter for Faikout Daikin MQTT bridge",
+      "de": "Adapter fuer Faikout Daikin MQTT-Bridge"
+    },
+    "authors": ["RaW07"],
+    "keywords": ["ioBroker", "faikout", "daikin", "climate-control", "mqtt"],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "icon": "faikout.png",
+    "enabled": true,
+    "mode": "daemon",
+    "type": "climate-control",
+    "connectionType": "local",
+    "dataSource": "push",
+    "compact": true,
+    "tier": 3,
+    "logLevel": "info",
+    "messagebox": true,
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      { "js-controller": ">=6.0.0" },
+      { "admin": ">=7.0.0" }
+    ]
+  },
+  "native": {
+    "mqttHost": "localhost",
+    "mqttPort": 1883,
+    "mqttUser": "",
+    "mqttPassword": "",
+    "devices": [],
+    "demandEnabled": false,
+    "demandDevice": "",
+    "demandOutdoorTempId": "",
+    "demandRoomTempId": "",
+    "demandCurve": [
+      { "temp": -5, "demand": 80 },
+      { "temp":  0, "demand": 75 },
+      { "temp":  5, "demand": 65 },
+      { "temp": 10, "demand": 55 },
+      { "temp": 15, "demand": 30 }
+    ],
+    "demandLogLevel": "basic",
+    "demandMaxDemand": 95,
+    "demandBoostEnabled": true,
+    "demandBoostStages": [
+      { "deviation": 0.3, "boost": 5  },
+      { "deviation": 0.6, "boost": 10 }
+    ],
+    "demandTaperEnabled": true,
+    "demandTaperMax": 15,
+    "demandGuardEnabled": true,
+    "demandHeatbackNormal": 3,
+    "demandHeatbackGuard": 6
+  },
+  "encryptedNative": ["mqttPassword"],
+  "protectedNative": ["mqttPassword"],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information",
+        "role": "info"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Connection",
+          "de": "Verbindung"
+        },
+        "role": "indicator.connection",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
+}
