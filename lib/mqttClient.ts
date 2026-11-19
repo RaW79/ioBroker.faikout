@@ -4,11 +4,29 @@
 
 import * as mqtt from 'mqtt';
 
+/**
+ *
+ */
 export interface MqttClientOptions {
+    /**
+     *
+     */
     host: string;
+    /**
+     *
+     */
     port: number;
+    /**
+     *
+     */
     username?: string;
+    /**
+     *
+     */
     password?: string;
+    /**
+     *
+     */
     clientId: string;
 }
 
@@ -18,6 +36,9 @@ type OnConnectionChangeCallback = (connected: boolean) => void;
 const BACKOFF_INITIAL_MS = 1000;
 const BACKOFF_MAX_MS = 60000;
 
+/**
+ *
+ */
 export class FaikoutMqttClient {
     private readonly options: MqttClientOptions;
     private readonly onMessage: OnMessageCallback;
@@ -29,6 +50,9 @@ export class FaikoutMqttClient {
     private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
     private intentionalDisconnect = false;
 
+    /**
+     *
+     */
     constructor(
         options: MqttClientOptions,
         onMessage: OnMessageCallback,
@@ -39,6 +63,9 @@ export class FaikoutMqttClient {
         this.onConnectionChange = onConnectionChange;
     }
 
+    /**
+     *
+     */
     connect(): void {
         this.intentionalDisconnect = false;
         this._doConnect();
@@ -54,8 +81,12 @@ export class FaikoutMqttClient {
             clean: true,
             reconnectPeriod: 0, // We manage reconnect ourselves
         };
-        if (username) connectOpts.username = username;
-        if (password) connectOpts.password = password;
+        if (username) {
+            connectOpts.username = username;
+        }
+        if (password) {
+            connectOpts.password = password;
+        }
 
         this.client = mqtt.connect(`mqtt://${host}:${port}`, connectOpts);
 
@@ -90,7 +121,9 @@ export class FaikoutMqttClient {
     }
 
     private _scheduleReconnect(): void {
-        if (this.reconnectTimer !== null) return;
+        if (this.reconnectTimer !== null) {
+            return;
+        }
         this.reconnectTimer = setTimeout(() => {
             this.reconnectTimer = null;
             if (!this.intentionalDisconnect) {
@@ -107,6 +140,9 @@ export class FaikoutMqttClient {
         }, this.reconnectDelay);
     }
 
+    /**
+     *
+     */
     async disconnect(): Promise<void> {
         this.intentionalDisconnect = true;
         if (this.reconnectTimer !== null) {
@@ -122,6 +158,9 @@ export class FaikoutMqttClient {
         this.onConnectionChange(false);
     }
 
+    /**
+     *
+     */
     subscribe(topic: string): void {
         this.subscriptions.add(topic);
         if (this.client?.connected) {
@@ -129,6 +168,9 @@ export class FaikoutMqttClient {
         }
     }
 
+    /**
+     *
+     */
     unsubscribe(topic: string): void {
         this.subscriptions.delete(topic);
         if (this.client?.connected) {
@@ -136,12 +178,18 @@ export class FaikoutMqttClient {
         }
     }
 
+    /**
+     *
+     */
     publish(topic: string, payload: string): void {
         if (this.client?.connected) {
             this.client.publish(topic, payload, { qos: 0, retain: false });
         }
     }
 
+    /**
+     *
+     */
     get connected(): boolean {
         return this.client?.connected ?? false;
     }

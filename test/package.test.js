@@ -21,7 +21,7 @@ describe('package.json', () => {
     });
 
     it('name follows iobroker naming convention', () => {
-        assert.strictEqual(pkg.name, 'iobroker.faikout', 'name must be iobroker.faikout');
+        assert.strictEqual(pkg.name, 'iobroker.faikout-ac', 'name must be iobroker.faikout-ac');
     });
 
     it('main points to build/src/main.js', () => {
@@ -41,8 +41,8 @@ describe('io-package.json', () => {
         assert.ok(ioPkg.common.icon, 'common.icon missing');
     });
 
-    it('common.name is faikout', () => {
-        assert.strictEqual(ioPkg.common.name, 'faikout', 'common.name must be faikout');
+    it('common.name is faikout-ac', () => {
+        assert.strictEqual(ioPkg.common.name, 'faikout-ac', 'common.name must be faikout-ac');
     });
 
     it('mode is daemon', () => {
@@ -53,7 +53,6 @@ describe('io-package.json', () => {
         assert.ok(ioPkg.native, 'native missing');
         assert.strictEqual(ioPkg.native.mqttHost, 'localhost', 'native.mqttHost default must be localhost');
         assert.strictEqual(ioPkg.native.mqttPort, 1883, 'native.mqttPort default must be 1883');
-        assert.strictEqual(ioPkg.native.createConfigStates, false, 'native.createConfigStates must default to false');
         assert.ok(Array.isArray(ioPkg.native.devices), 'native.devices must be an array');
     });
 

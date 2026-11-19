@@ -7,21 +7,26 @@ function buildTopicPaths(deviceId, appName, topicConfig) {
     function makeTopic(name, suffix) {
         const parts = [];
         if (prefixhost) {
-            if (prefixapp && appName)
+            if (prefixapp && appName) {
                 parts.push(appName);
+            }
             parts.push(deviceId);
-            if (name)
+            if (name) {
                 parts.push(name);
+            }
         }
         else {
-            if (name)
+            if (name) {
                 parts.push(name);
-            if (prefixapp && appName)
+            }
+            if (prefixapp && appName) {
                 parts.push(appName);
+            }
             parts.push(deviceId);
         }
-        if (suffix)
+        if (suffix) {
             parts.push(suffix);
+        }
         return parts.join('/');
     }
     return {

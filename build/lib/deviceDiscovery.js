@@ -41,12 +41,14 @@ function fetchPage(url) {
     return new Promise((resolve, reject) => {
         const req = http.get(url, (res) => {
             let html = '';
-            res.on('data', (chunk) => { html += chunk.toString(); });
+            res.on('data', (chunk) => {
+                html += chunk.toString();
+            });
             res.on('end', () => resolve(html));
         });
         req.setTimeout(6000, () => {
             req.destroy();
-            reject(new Error('Timeout: ' + url));
+            reject(new Error(`Timeout: ${url}`));
         });
         req.on('error', reject);
     });
@@ -57,15 +59,16 @@ async function fetchDeviceFields(ip) {
         fetchPage(`http://${ip}/revk-settings?_page=-2`),
     ]);
     const matches = mainHtml.match(/\bo\.([a-zA-Z]\w*)\b/g) ?? [];
-    const fieldsKeyMap = new Map(Object.keys(fieldDefinitions_1.FIELDS).map(k => [k.toLowerCase(), k]));
+    const fieldsKeyMap = new Map(Object.keys(fieldDefinitions_1.FIELDS).map((k) => [k.toLowerCase(), k]));
     const found = new Set(matches.map((m) => {
         const lower = m.slice(2).toLowerCase();
         return fieldsKeyMap.get(lower) ?? lower;
     }));
     for (const key of Object.keys(fieldDefinitions_1.FIELDS)) {
         const disabled = new RegExp(`id="no${key}"[^>]*checked`, 'i').test(extrasHtml);
-        if (disabled)
+        if (disabled) {
             found.delete(key);
+        }
     }
     if (found.has('ble')) {
         found.add('ble_temp');
@@ -73,14 +76,16 @@ async function fetchDeviceFields(ip) {
         found.add('ble_bat');
         found.add('ble_volt');
     }
-    for (const f of fieldDefinitions_1.FIELD_WHITELIST)
+    for (const f of fieldDefinitions_1.FIELD_WHITELIST) {
         found.add(f);
+    }
     let fantype = 0;
     const fantypeBlock = extrasHtml.match(/name="_fantype"[\s\S]{0,600}?<\/select>/);
     if (fantypeBlock) {
         const sel = fantypeBlock[0].match(/<option value="(\d+)"[^>]*selected/);
-        if (sel)
+        if (sel) {
             fantype = parseInt(sel[1], 10);
+        }
     }
     return { activeFields: found, fantype };
 }
@@ -88,7 +93,9 @@ function fetchDeviceId(ip) {
     return new Promise((resolve, reject) => {
         const req = http.get(`http://${ip}/revk-settings?_page=0`, (res) => {
             let html = '';
-            res.on('data', (chunk) => { html += chunk.toString(); });
+            res.on('data', (chunk) => {
+                html += chunk.toString();
+            });
             res.on('end', () => {
                 const match = html.match(/<h1>([^\s<]+)/);
                 if (!match) {
@@ -103,7 +110,7 @@ function fetchDeviceId(ip) {
         });
         req.setTimeout(6000, () => {
             req.destroy();
-            reject(new Error('Timeout reading settings: ' + ip));
+            reject(new Error(`Timeout reading settings: ${ip}`));
         });
         req.on('error', reject);
     });
@@ -113,7 +120,9 @@ function fetchXgpioConfig(ip) {
     return new Promise((resolve) => {
         const req = http.get(`http://${ip}/revk-settings?_page=1`, (res) => {
             let html = '';
-            res.on('data', (chunk) => { html += chunk.toString(); });
+            res.on('data', (chunk) => {
+                html += chunk.toString();
+            });
             res.on('end', () => {
                 const config = [];
                 for (let n = 1; n <= 5; n++) {
@@ -132,7 +141,10 @@ function fetchXgpioConfig(ip) {
                 resolve(config);
             });
         });
-        req.setTimeout(6000, () => { req.destroy(); resolve(emptyConfig()); });
+        req.setTimeout(6000, () => {
+            req.destroy();
+            resolve(emptyConfig());
+        });
         req.on('error', () => resolve(emptyConfig()));
     });
 }
@@ -140,7 +152,9 @@ function fetchTopicConfig(ip) {
     return new Promise((resolve) => {
         const req = http.get(`http://${ip}/revk-settings?_page=-3`, (res) => {
             let html = '';
-            res.on('data', (chunk) => { html += chunk.toString(); });
+            res.on('data', (chunk) => {
+                html += chunk.toString();
+            });
             res.on('end', () => {
                 function val(id) {
                     const m = html.match(new RegExp(`id="${id}"[^>]*value="([^"]*)"`)) ??
@@ -155,7 +169,10 @@ function fetchTopicConfig(ip) {
                 resolve({ topiccommand, topicsetting, topicstate, prefixapp, prefixhost });
             });
         });
-        req.setTimeout(6000, () => { req.destroy(); resolve({ ...topicBuilder_1.DEFAULT_TOPIC_CONFIG }); });
+        req.setTimeout(6000, () => {
+            req.destroy();
+            resolve({ ...topicBuilder_1.DEFAULT_TOPIC_CONFIG });
+        });
         req.on('error', () => resolve({ ...topicBuilder_1.DEFAULT_TOPIC_CONFIG }));
     });
 }

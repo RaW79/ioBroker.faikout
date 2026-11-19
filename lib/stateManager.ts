@@ -2,8 +2,9 @@
 // Manages ioBroker states for a single device.
 // Creates, updates and cleans up states based on DeviceProfile.
 
-import { FIELDS, CONFIG_FIELDS_DEF, FieldDef, getFanStates } from './fieldDefinitions';
-import { DeviceProfile } from './deviceDiscovery';
+import type { FieldDef } from './fieldDefinitions';
+import { FIELDS, CONFIG_FIELDS_DEF, getFanStates } from './fieldDefinitions';
+import type { DeviceProfile } from './deviceDiscovery';
 
 type Adapter = ioBroker.Adapter;
 
@@ -30,48 +31,103 @@ export class StateManager {
         // Info channel
         await this._ensureChannel(`${this.deviceFolder}.info`, 'Device Information');
         await this._ensureState(`${this.deviceFolder}.info.deviceId`, {
-            name: 'Device ID', type: 'string', role: 'info.address', read: true, write: false, def: deviceId,
+            name: 'Device ID',
+            type: 'string',
+            role: 'info.address',
+            read: true,
+            write: false,
+            def: deviceId,
         });
         await this._ensureState(`${this.deviceFolder}.info.appName`, {
-            name: 'App Name', type: 'string', role: 'info.name', read: true, write: false, def: appName,
+            name: 'App Name',
+            type: 'string',
+            role: 'info.name',
+            read: true,
+            write: false,
+            def: appName,
         });
         await this._ensureState(`${this.deviceFolder}.info.ip`, {
-            name: 'IP Address', type: 'string', role: 'info.ip', read: true, write: false, def: ip,
+            name: 'IP Address',
+            type: 'string',
+            role: 'info.ip',
+            read: true,
+            write: false,
+            def: ip,
         });
         await this._ensureState(`${this.deviceFolder}.info.connection`, {
-            name: 'Connection', type: 'boolean', role: 'indicator.connection', read: true, write: false, def: false,
+            name: 'Connection',
+            type: 'boolean',
+            role: 'indicator.connection',
+            read: true,
+            write: false,
+            def: false,
         });
         await this._ensureState(`${this.deviceFolder}.info.lastUpdate`, {
-            name: 'Last Update', type: 'number', role: 'date', read: true, write: false, def: 0,
+            name: 'Last Update',
+            type: 'number',
+            role: 'date',
+            read: true,
+            write: false,
+            def: 0,
         });
         await this._ensureState(`${this.deviceFolder}.info.fantype`, {
-            name: 'Fan type', type: 'number', role: 'value', read: true, write: false, def: fantype,
+            name: 'Fan type',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            def: fantype,
         });
         await this.adapter.setStateAsync(`${this.deviceFolder}.info.fantype`, { val: fantype, ack: true });
         await this._ensureState(`${this.deviceFolder}.info.protocol`, {
-            name: 'Protocol', type: 'string', role: 'info.firmware', read: true, write: false, def: '',
+            name: 'Protocol',
+            type: 'string',
+            role: 'info.firmware',
+            read: true,
+            write: false,
+            def: '',
         });
 
         // Topics channel (stores resolved topic config for reference and re-use after restart)
         await this._ensureChannel(`${this.deviceFolder}.topics`, 'MQTT Topics');
         await this._ensureState(`${this.deviceFolder}.topics.state`, {
-            name: 'State topic prefix', type: 'string', role: 'text', read: true, write: false,
+            name: 'State topic prefix',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
             def: topicConfig.topicstate,
         });
         await this._ensureState(`${this.deviceFolder}.topics.command`, {
-            name: 'Command topic prefix', type: 'string', role: 'text', read: true, write: false,
+            name: 'Command topic prefix',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
             def: topicConfig.topiccommand,
         });
         await this._ensureState(`${this.deviceFolder}.topics.setting`, {
-            name: 'Setting topic prefix', type: 'string', role: 'text', read: true, write: false,
+            name: 'Setting topic prefix',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
             def: topicConfig.topicsetting,
         });
         await this._ensureState(`${this.deviceFolder}.topics.prefixApp`, {
-            name: 'Prefix app name', type: 'boolean', role: 'indicator', read: true, write: false,
+            name: 'Prefix app name',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
             def: topicConfig.prefixapp,
         });
         await this._ensureState(`${this.deviceFolder}.topics.prefixHost`, {
-            name: 'Prefix host name', type: 'boolean', role: 'indicator', read: true, write: false,
+            name: 'Prefix host name',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
             def: topicConfig.prefixhost,
         });
 
@@ -82,7 +138,9 @@ export class StateManager {
         for (const [key, def] of Object.entries(FIELDS)) {
             if (def.bleKey) {
                 // BLE fields are only created if the device reports BLE
-                if (!hasBle) continue;
+                if (!hasBle) {
+                    continue;
+                }
                 // autob is a string BLE identifier, not a sensor sub-field
                 const isBleSubField = key.startsWith('ble_');
                 if (isBleSubField) {
@@ -100,7 +158,9 @@ export class StateManager {
             }
 
             // Regular fields: only create if active on device
-            if (!activeFields.has(key)) continue;
+            if (!activeFields.has(key)) {
+                continue;
+            }
 
             await this._ensureFieldState(`${this.deviceFolder}.${key}`, def);
         }
@@ -120,28 +180,33 @@ export class StateManager {
         try {
             json = JSON.parse(payload) as Record<string, unknown>;
         } catch (e) {
-            this.adapter.log.warn(`${this.deviceFolder}: Failed to parse MQTT payload: ${e}`);
+            this.adapter.log.warn(`${this.deviceFolder}: Failed to parse MQTT payload: ${String(e)}`);
             return;
         }
 
         for (const [key, def] of Object.entries(FIELDS)) {
-            if (def.writeOnly) continue;
-            if (def.bleKey && key.startsWith('ble_')) continue; // handled via ble sub-object
+            if (def.writeOnly) {
+                continue;
+            }
+            if (def.bleKey && key.startsWith('ble_')) {
+                continue;
+            } // handled via ble sub-object
 
             const rawVal = json[key];
-            if (rawVal === undefined || rawVal === null) continue;
+            if (rawVal === undefined || rawVal === null) {
+                continue;
+            }
 
             const converted = this._convertReadValue(key, def, rawVal);
-            if (converted === null || converted === undefined) continue;
+            if (converted === null || converted === undefined) {
+                continue;
+            }
 
-            await this.adapter.setStateAsync(
-                `${this.deviceFolder}.${key}`,
-                { val: converted, ack: true },
-            );
+            await this.adapter.setStateAsync(`${this.deviceFolder}.${key}`, { val: converted, ack: true });
         }
 
         // BLE sub-fields from json.ble
-        const bleObj = json['ble'];
+        const bleObj = json.ble;
         if (bleObj !== null && bleObj !== undefined && typeof bleObj === 'object') {
             const ble = bleObj as Record<string, unknown>;
             const bleMap: Record<string, string> = {
@@ -152,38 +217,38 @@ export class StateManager {
             };
             for (const [fieldKey, subKey] of Object.entries(bleMap)) {
                 const rawVal = ble[subKey];
-                if (rawVal === undefined || rawVal === null) continue;
+                if (rawVal === undefined || rawVal === null) {
+                    continue;
+                }
                 const def = FIELDS[fieldKey];
-                if (!def) continue;
+                if (!def) {
+                    continue;
+                }
                 const converted = this._convertReadValue(fieldKey, def, rawVal);
-                if (converted === null || converted === undefined) continue;
-                await this.adapter.setStateAsync(
-                    `${this.deviceFolder}.ble.${subKey}`,
-                    { val: converted, ack: true },
-                );
+                if (converted === null || converted === undefined) {
+                    continue;
+                }
+                await this.adapter.setStateAsync(`${this.deviceFolder}.ble.${subKey}`, { val: converted, ack: true });
             }
         }
 
         // autob (BLE MAC reference) - string from top-level json
-        if (json['autob'] !== undefined && json['autob'] !== null) {
-            await this.adapter.setStateAsync(
-                `${this.deviceFolder}.autob`,
-                { val: String(json['autob']), ack: true },
-            );
+        if (json.autob !== undefined && json.autob !== null) {
+            await this.adapter.setStateAsync(`${this.deviceFolder}.autob`, {
+                val: String(json.autob),
+                ack: true,
+            });
         }
 
         // protocol – store in info, then update fan states map
-        if (json['protocol'] !== undefined && json['protocol'] !== null) {
-            const protocol = String(json['protocol']);
+        if (json.protocol !== undefined && json.protocol !== null) {
+            const protocol = String(json.protocol);
             await this.adapter.setStateAsync(`${this.deviceFolder}.info.protocol`, { val: protocol, ack: true });
             await this._updateFanStates(protocol);
         }
 
         // Update lastUpdate timestamp
-        await this.adapter.setStateAsync(
-            `${this.deviceFolder}.info.lastUpdate`,
-            { val: Date.now(), ack: true },
-        );
+        await this.adapter.setStateAsync(`${this.deviceFolder}.info.lastUpdate`, { val: Date.now(), ack: true });
     }
 
     // Update fan state's allowed values based on fantype + protocol
@@ -208,16 +273,14 @@ export class StateManager {
 
         for (const key of Object.keys(FIELDS)) {
             const def = FIELDS[key];
-            if (!def) continue;
+            if (!def) {
+                continue;
+            }
 
             const isBleField = def.bleKey && key.startsWith('ble_');
-            const statePath = isBleField
-                ? `${this.deviceFolder}.ble.${key.slice(4)}`
-                : `${this.deviceFolder}.${key}`;
+            const statePath = isBleField ? `${this.deviceFolder}.ble.${key.slice(4)}` : `${this.deviceFolder}.${key}`;
 
-            const shouldExist = isBleField
-                ? hasBle
-                : (def.bleKey ? hasBle : profile.activeFields.has(key));
+            const shouldExist = isBleField ? hasBle : def.bleKey ? hasBle : profile.activeFields.has(key);
 
             if (!shouldExist) {
                 try {
@@ -226,7 +289,7 @@ export class StateManager {
                         await this.adapter.delObjectAsync(statePath);
                         this.adapter.log.debug(`Removed stale state: ${statePath}`);
                     }
-                } catch (e) {
+                } catch {
                     // Object does not exist - no problem
                 }
             }
@@ -242,16 +305,24 @@ export class StateManager {
             read: !def.writeOnly,
             write: !!def.writeTopic,
         };
-        if (def.unit) common.unit = def.unit;
-        if (def.states) common.states = def.states;
-        if (def.min !== undefined) common.min = def.min;
-        if (def.max !== undefined) common.max = def.max;
+        if (def.unit) {
+            common.unit = def.unit;
+        }
+        if (def.states) {
+            common.states = def.states;
+        }
+        if (def.min !== undefined) {
+            common.min = def.min;
+        }
+        if (def.max !== undefined) {
+            common.max = def.max;
+        }
         return common;
     }
 
     private async _ensureFieldState(id: string, def: FieldDef): Promise<void> {
         const existing = await this.adapter.getObjectAsync(id);
-        if (existing?.native?.['userModified'] === true) {
+        if (existing?.native?.userModified === true) {
             this.adapter.log.debug(`Skipping userModified state: ${id}`);
             return;
         }
@@ -266,7 +337,9 @@ export class StateManager {
 
     private async _ensureState(
         id: string,
-        common: ioBroker.StateCommon & { def?: ioBroker.StateValue },
+        common: ioBroker.StateCommon & {
+            def?: ioBroker.StateValue;
+        },
     ): Promise<void> {
         const { def: defaultVal, ...rest } = common;
         await this.adapter.setObjectNotExistsAsync(id, {
@@ -291,12 +364,10 @@ export class StateManager {
     }
 
     // Convert a raw JSON value to the correct TypeScript type for a field
-    private _convertReadValue(
-        key: string,
-        def: FieldDef,
-        rawVal: unknown,
-    ): ioBroker.StateValue {
-        if (rawVal === null || rawVal === undefined) return null;
+    private _convertReadValue(key: string, def: FieldDef, rawVal: unknown): ioBroker.StateValue {
+        if (rawVal === null || rawVal === undefined) {
+            return null;
+        }
 
         switch (def.type) {
             case 'boolean':

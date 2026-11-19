@@ -1,7 +1,7 @@
 # ioBroker.faikout-ac
 
 ![Version](https://img.shields.io/github/package-json/v/RaW79/ioBroker.faikout-ac)
-![Status](https://img.shields.io/badge/status-early%20beta-orange)
+![Status](https://img.shields.io/badge/status-beta-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 <p align="right"><a href="https://buymeacoffee.com/raw07" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="40" alt="Buy Me A Coffee"></a></p>
 
@@ -16,7 +16,7 @@ ioBroker adapter for **Faikout** – the ESP32-based Daikin controller by [RevK]
 
 The adapter connects to one or more Faikout devices via MQTT and automatically detects which features each device supports. All corresponding states are created and kept up to date via MQTT push. No manual topic or state configuration required. Sensors, control commands and device parameters are available directly in ioBroker for use in scripts, visualisations and automations.
 
-> **⚠️ Early beta.** Successfully tested with multiple **single-split** Daikin devices. Multi-split support implemented since v0.1.3, field testing ongoing. Feedback and issues welcome.
+> **⚠️ Beta.** Successfully tested with **single-split** and **multi-split** Daikin devices. Feedback and issues welcome.
 
 ### Design Principles
 
@@ -92,7 +92,7 @@ ioBroker-Adapter für **Faikout** – den ESP32-basierten Daikin-Controller von 
 
 Der Adapter verbindet sich per MQTT mit einem oder mehreren Faikout-Geräten und erkennt bei der Einrichtung automatisch, welche Funktionen das jeweilige Gerät unterstützt. Alle zugehörigen Datenpunkte werden vollständig angelegt und die MQTT-Kommunikation dauerhaft aktuell gehalten. Eine manuelle Konfiguration von Topics oder Datenpunkten ist nicht nötig. Sensoren, Steuerbefehle und Geräteparameter stehen direkt in ioBroker zur Verfügung und lassen sich in Skripten, Visualisierungen und Automationen frei nutzen.
 
-> **⚠️ Frühe Betaphase.** Erfolgreich getestet mit mehreren **Single-Split**-Daikin-Geräten. Multi-Split-Unterstützung ab v0.1.3 implementiert, Praxistests laufen. Feedback und Issues sind willkommen.
+> **⚠️ Beta.** Erfolgreich getestet mit **Single-Split** und **Multi-Split** Daikin-Geräten. Feedback und Issues sind willkommen.
 
 ### Designprinzipien
 

@@ -6,32 +6,35 @@
 
 import * as utils from '@iobroker/adapter-core';
 import { FaikoutMqttClient } from '../lib/mqttClient';
-import { discoverDevice, DeviceProfile } from '../lib/deviceDiscovery';
+import type { DeviceProfile } from '../lib/deviceDiscovery';
+import { discoverDevice } from '../lib/deviceDiscovery';
 import { StateManager } from '../lib/stateManager';
-import { buildTopicPaths, TopicPaths, TopicConfig, DEFAULT_TOPIC_CONFIG } from '../lib/topicBuilder';
-import { FIELDS, CONFIG_FIELDS_DEF, FieldDef } from '../lib/fieldDefinitions';
+import type { TopicPaths, TopicConfig } from '../lib/topicBuilder';
+import { buildTopicPaths, DEFAULT_TOPIC_CONFIG } from '../lib/topicBuilder';
+import type { FieldDef } from '../lib/fieldDefinitions';
+import { FIELDS, CONFIG_FIELDS_DEF } from '../lib/fieldDefinitions';
 
 interface DeviceConfig {
-    name:      string;
-    ip:        string;
-    enabled:   boolean;
+    name: string;
+    ip: string;
+    enabled: boolean;
     useDemand?: boolean;
-    group?:    string;
+    group?: string;
 }
 
 interface DemandCtx {
-    folder:       string;
-    outdoorId:    string;
-    roomId:       string;
-    cfg:          Record<string, unknown>;
-    group:        string;          // empty = single-split / no group
-    guardActive:  boolean;
-    running:      boolean;
-    lastRunTs:    number;
-    lastLogged:   number | null;
-    lastSent:     number | null;
+    folder: string;
+    outdoorId: string;
+    roomId: string;
+    cfg: Record<string, unknown>;
+    group: string; // empty = single-split / no group
+    guardActive: boolean;
+    running: boolean;
+    lastRunTs: number;
+    lastLogged: number | null;
+    lastSent: number | null;
     lastChangeTs: number;
-    lastEventTs:  number;
+    lastEventTs: number;
 }
 
 class FaikoutAdapter extends utils.Adapter {
@@ -43,22 +46,25 @@ class FaikoutAdapter extends utils.Adapter {
     private folderToTopics: Map<string, TopicPaths> = new Map();
 
     // Demand control – per-device contexts
-    private demandCtxMap:        Map<string, DemandCtx>   = new Map(); // folder → ctx
-    private outdoorIdToFolders:  Map<string, string[]>    = new Map(); // outdoorId → [folder…]
-    private roomIdToFolders:     Map<string, string[]>    = new Map(); // roomId   → [folder…]
+    private demandCtxMap: Map<string, DemandCtx> = new Map(); // folder → ctx
+    private outdoorIdToFolders: Map<string, string[]> = new Map(); // outdoorId → [folder…]
+    private roomIdToFolders: Map<string, string[]> = new Map(); // roomId   → [folder…]
     private scheduleFired: Map<number, string> = new Map(); // index → "YYYY-MM-DD HH:MM"
 
     // Humidity control
-    private humidityStates: Map<string, {
-        cfg: Record<string, unknown>;
-        mode: number;
-        dryStart: number;
-        nachlaufStart: number;
-        pauseEnd: number;
-        afterNachlauf: string;
-        lastCmdTs: number;
-        running: boolean;
-    }> = new Map();
+    private humidityStates: Map<
+        string,
+        {
+            cfg: Record<string, unknown>;
+            mode: number;
+            dryStart: number;
+            nachlaufStart: number;
+            pauseEnd: number;
+            afterNachlauf: string;
+            lastCmdTs: number;
+            running: boolean;
+        }
+    > = new Map();
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({ ...options, name: 'faikout-ac' });
@@ -72,7 +78,7 @@ class FaikoutAdapter extends utils.Adapter {
         await this.setStateAsync('info.connection', { val: false, ack: true });
 
         const devices: DeviceConfig[] = this._sanitizeDeviceNames(
-            (this.config as Record<string, unknown>)['devices'] as DeviceConfig[] ?? []
+            ((this.config as Record<string, unknown>).devices as DeviceConfig[]) ?? [],
         );
         const enabledDevices = devices.filter((d) => d.enabled !== false);
 
@@ -90,10 +96,10 @@ class FaikoutAdapter extends utils.Adapter {
         }
 
         // Create MQTT client
-        const mqttHost = (this.config as Record<string, unknown>)['mqttHost'] as string ?? 'localhost';
-        const mqttPort = (this.config as Record<string, unknown>)['mqttPort'] as number ?? 1883;
-        const mqttUser = (this.config as Record<string, unknown>)['mqttUser'] as string | undefined;
-        const mqttPassword = (this.config as Record<string, unknown>)['mqttPassword'] as string | undefined;
+        const mqttHost = ((this.config as Record<string, unknown>).mqttHost as string) ?? 'localhost';
+        const mqttPort = ((this.config as Record<string, unknown>).mqttPort as number) ?? 1883;
+        const mqttUser = (this.config as Record<string, unknown>).mqttUser as string | undefined;
+        const mqttPassword = (this.config as Record<string, unknown>).mqttPassword as string | undefined;
         const instanceId = this.instance ?? 0;
 
         this.mqttClient = new FaikoutMqttClient(
@@ -144,7 +150,7 @@ class FaikoutAdapter extends utils.Adapter {
     private _sanitizeDeviceNames(devices: DeviceConfig[]): DeviceConfig[] {
         const usedNames = new Set<string>();
         return devices.map((d) => {
-            let base = (d.name ?? '').trim() || 'MyDaikin';
+            const base = (d.name ?? '').trim() || 'MyDaikin';
             let name = base;
             let counter = 2;
             while (usedNames.has(name.toLowerCase())) {
@@ -176,11 +182,15 @@ class FaikoutAdapter extends utils.Adapter {
             const deviceId = String(deviceIdState.val);
             const appName = appNameState?.val ? String(appNameState.val) : '';
             const topicConfig: TopicConfig = {
-                topicstate:   topicStateState?.val   ? String(topicStateState.val)   : DEFAULT_TOPIC_CONFIG.topicstate,
-                topiccommand: topicCommandState?.val ? String(topicCommandState.val) : DEFAULT_TOPIC_CONFIG.topiccommand,
-                topicsetting: topicSettingState?.val ? String(topicSettingState.val) : DEFAULT_TOPIC_CONFIG.topicsetting,
-                prefixapp:    prefixAppState?.val === true,
-                prefixhost:   prefixHostState?.val === true,
+                topicstate: topicStateState?.val ? String(topicStateState.val) : DEFAULT_TOPIC_CONFIG.topicstate,
+                topiccommand: topicCommandState?.val
+                    ? String(topicCommandState.val)
+                    : DEFAULT_TOPIC_CONFIG.topiccommand,
+                topicsetting: topicSettingState?.val
+                    ? String(topicSettingState.val)
+                    : DEFAULT_TOPIC_CONFIG.topicsetting,
+                prefixapp: prefixAppState?.val === true,
+                prefixhost: prefixHostState?.val === true,
             };
 
             const topics = buildTopicPaths(deviceId, appName, topicConfig);
@@ -188,7 +198,7 @@ class FaikoutAdapter extends utils.Adapter {
             this.folderToTopics.set(folder, topics);
             this.log.info(`Restored topic for "${folder}": ${topics.statusTopic}`);
         } catch (err) {
-            this.log.warn(`Could not restore topic for "${folder}": ${err}`);
+            this.log.warn(`Could not restore topic for "${folder}": ${String(err)}`);
         }
     }
 
@@ -199,7 +209,9 @@ class FaikoutAdapter extends utils.Adapter {
             return;
         }
         const sm = this.stateManagers.get(folder);
-        if (!sm) return;
+        if (!sm) {
+            return;
+        }
 
         // Skip if no discovery has been run yet (no channel object = no states to update)
         const deviceObj = await this.getObjectAsync(folder);
@@ -211,7 +223,7 @@ class FaikoutAdapter extends utils.Adapter {
         // LWT: device publishes {"up":false,"reason":"LWT"} on the status topic when disconnected
         try {
             const json = JSON.parse(payload) as Record<string, unknown>;
-            if (json['up'] === false) {
+            if (json.up === false) {
                 await this.setStateAsync(`${folder}.info.connection`, { val: false, ack: true });
                 this.log.info(`Device "${folder}" disconnected (LWT)`);
                 return;
@@ -231,7 +243,7 @@ class FaikoutAdapter extends utils.Adapter {
             // Demand control: activate lockmode on (re)connect for all demand devices
             for (const ctx of this.demandCtxMap.values()) {
                 this._publishDemandConfigParam(ctx.folder, 'lockmode', '1');
-                if (ctx.cfg['demandLogLevel'] !== 'off') {
+                if (ctx.cfg.demandLogLevel !== 'off') {
                     this.log.info(`Demand control: lockmode activated for "${ctx.folder}"`);
                 }
             }
@@ -240,7 +252,7 @@ class FaikoutAdapter extends utils.Adapter {
             for (const folder of this.stateManagers.keys()) {
                 try {
                     await this.setStateAsync(`${folder}.info.connection`, { val: false, ack: true });
-                } catch (e) {
+                } catch {
                     // Ignore errors during shutdown
                 }
             }
@@ -255,7 +267,10 @@ class FaikoutAdapter extends utils.Adapter {
             if (state && foldersOd) {
                 for (const f of foldersOd) {
                     const ctx = this.demandCtxMap.get(f);
-                    if (ctx) { ctx.lastEventTs = Date.now(); void this._runDemandControl(f); }
+                    if (ctx) {
+                        ctx.lastEventTs = Date.now();
+                        void this._runDemandControl(f);
+                    }
                 }
                 return;
             }
@@ -263,7 +278,10 @@ class FaikoutAdapter extends utils.Adapter {
             if (state && foldersRm) {
                 for (const f of foldersRm) {
                     const ctx = this.demandCtxMap.get(f);
-                    if (ctx) { ctx.lastEventTs = Date.now(); void this._runDemandControl(f); }
+                    if (ctx) {
+                        ctx.lastEventTs = Date.now();
+                        void this._runDemandControl(f);
+                    }
                 }
                 return;
             }
@@ -311,8 +329,8 @@ class FaikoutAdapter extends utils.Adapter {
         if (state?.ack && this.humidityStates.size > 0) {
             for (const [folder, st] of this.humidityStates) {
                 const ns = `${this.namespace}.`;
-                const tempId = ((st.cfg['humTempStateId'] as string) || '').trim() || `${ns}${folder}.ble.temp`;
-                const humId  = ((st.cfg['humHumStateId']  as string) || '').trim() || `${ns}${folder}.ble.hum`;
+                const tempId = ((st.cfg.humTempStateId as string) || '').trim() || `${ns}${folder}.ble.temp`;
+                const humId = ((st.cfg.humHumStateId as string) || '').trim() || `${ns}${folder}.ble.hum`;
                 if (id === tempId || id === humId) {
                     void this._runHumidityControl(folder);
                     break;
@@ -320,20 +338,28 @@ class FaikoutAdapter extends utils.Adapter {
             }
         }
 
-        if (!state || state.ack) return;
+        if (!state || state.ack) {
+            return;
+        }
         void this._handleStateWrite(id, state.val);
     }
 
-    private async _handleStateWrite(id: string, val: ioBroker.StateValue): Promise<void> {
-        if (!this.mqttClient) return;
+    private _handleStateWrite(id: string, val: ioBroker.StateValue): void {
+        if (!this.mqttClient) {
+            return;
+        }
 
         // State ID format: faikout-ac.0.{folder}.{field}
         //              or: faikout-ac.0.{folder}.config.{configField}
         const prefix = `${this.namespace}.`;
-        if (!id.startsWith(prefix)) return;
+        if (!id.startsWith(prefix)) {
+            return;
+        }
         const relative = id.slice(prefix.length);
         const parts = relative.split('.');
-        if (parts.length < 2) return;
+        if (parts.length < 2) {
+            return;
+        }
 
         const folder = parts[0];
         const topics = this.folderToTopics.get(folder);
@@ -345,7 +371,9 @@ class FaikoutAdapter extends utils.Adapter {
         // Config field: {folder}.config.{configField}
         if (parts[1] === 'config' && parts.length === 3) {
             const configField = parts[2];
-            if (!CONFIG_FIELDS_DEF[configField]) return;
+            if (!CONFIG_FIELDS_DEF[configField]) {
+                return;
+            }
             const topic = topics.settingTopic(configField);
             const payload = String(val ?? '');
             this.mqttClient.publish(topic, payload);
@@ -354,13 +382,19 @@ class FaikoutAdapter extends utils.Adapter {
         }
 
         // Regular writable field: {folder}.{field}
-        if (parts.length !== 2) return;
+        if (parts.length !== 2) {
+            return;
+        }
         const fieldName = parts[1];
         const def = FIELDS[fieldName];
-        if (!def?.writeTopic) return;
+        if (!def?.writeTopic) {
+            return;
+        }
 
         const payload = this._buildWritePayload(fieldName, def, val);
-        if (payload === null) return;
+        if (payload === null) {
+            return;
+        }
 
         let topic: string;
         if (def.writeTopic.startsWith('setting:')) {
@@ -382,7 +416,9 @@ class FaikoutAdapter extends utils.Adapter {
     // Convert a state value to the correct MQTT payload string.
     // Mirrors the writeConv expressions from faikout_alias_generator_en.js.
     private _buildWritePayload(key: string, def: FieldDef, val: ioBroker.StateValue): string | null {
-        if (val === null || val === undefined) return null;
+        if (val === null || val === undefined) {
+            return null;
+        }
 
         if (def.writeTopic === 'control') {
             // power, swingv, swingh → JSON.stringify({fieldName: val})
@@ -403,7 +439,9 @@ class FaikoutAdapter extends utils.Adapter {
 
         // All other command topics (econo, powerful, comfort, streamer, led, quiet,
         // autoe, autop, restart): boolean → 1/0, others → direct string
-        if (def.type === 'boolean') return val ? '1' : '0';
+        if (def.type === 'boolean') {
+            return val ? '1' : '0';
+        }
         return String(val);
     }
 
@@ -411,7 +449,7 @@ class FaikoutAdapter extends utils.Adapter {
     private onMessage(obj: ioBroker.Message): void {
         if (obj.command === 'discovery') {
             const msg = obj.message as Record<string, string> | undefined;
-            const name = msg?.['name'];
+            const name = msg?.name;
 
             if (!name) {
                 if (obj.callback) {
@@ -420,11 +458,16 @@ class FaikoutAdapter extends utils.Adapter {
                 return;
             }
 
-            const devices: DeviceConfig[] = (this.config as Record<string, unknown>)['devices'] as DeviceConfig[] ?? [];
-            const device = devices.find(d => d.name === name);
+            const devices: DeviceConfig[] = ((this.config as Record<string, unknown>).devices as DeviceConfig[]) ?? [];
+            const device = devices.find((d) => d.name === name);
             if (!device?.ip) {
                 if (obj.callback) {
-                    this.sendTo(obj.from, obj.command, { error: `Device "${name}" not found in configuration` }, obj.callback);
+                    this.sendTo(
+                        obj.from,
+                        obj.command,
+                        { error: `Device "${name}" not found in configuration` },
+                        obj.callback,
+                    );
                 }
                 return;
             }
@@ -432,62 +475,73 @@ class FaikoutAdapter extends utils.Adapter {
             const ip = device.ip;
             this.log.info(`Discovery triggered for "${name}" at ${ip}`);
 
-            discoverDevice(ip).then(async (profile: DeviceProfile) => {
-                const folder = name.replace(/[^a-zA-Z0-9_-]/g, '_');
+            discoverDevice(ip)
+                .then(async (profile: DeviceProfile) => {
+                    const folder = name.replace(/[^a-zA-Z0-9_-]/g, '_');
 
-                let sm = this.stateManagers.get(folder);
-                if (!sm) {
-                    sm = new StateManager(this, folder);
-                    this.stateManagers.set(folder, sm);
-                }
-
-                await sm.createStates(profile, true);
-
-                await this.setStateAsync(`${folder}.info.deviceId`, { val: profile.deviceId, ack: true });
-                await this.setStateAsync(`${folder}.info.appName`, { val: profile.appName, ack: true });
-                await this.setStateAsync(`${folder}.info.ip`, { val: ip, ack: true });
-
-                const topics = buildTopicPaths(profile.deviceId, profile.appName, profile.topicConfig);
-                if (!this.topicToFolder.has(topics.statusTopic)) {
-                    this.topicToFolder.set(topics.statusTopic, folder);
-                    if (this.mqttClient) {
-                        this.mqttClient.subscribe(topics.statusTopic);
-                        this.log.info(`Subscribed to: ${topics.statusTopic}`);
+                    let sm = this.stateManagers.get(folder);
+                    if (!sm) {
+                        sm = new StateManager(this, folder);
+                        this.stateManagers.set(folder, sm);
                     }
-                }
-                this.folderToTopics.set(folder, topics);
 
-                // Activate live status push on device (write through normal config state pipeline)
-                await this.setStateAsync(`${folder}.config.livestatus`, { val: true, ack: false });
+                    await sm.createStates(profile, true);
 
-                this.log.info(`Discovery completed for "${name}": ${profile.deviceId} (${profile.appName}) – ${profile.activeFields.size} fields`);
+                    await this.setStateAsync(`${folder}.info.deviceId`, { val: profile.deviceId, ack: true });
+                    await this.setStateAsync(`${folder}.info.appName`, { val: profile.appName, ack: true });
+                    await this.setStateAsync(`${folder}.info.ip`, { val: ip, ack: true });
 
-                if (obj.callback) {
-                    this.sendTo(obj.from, obj.command, {
-                        result: `Erkannt: ${profile.deviceId} (${profile.appName || 'unbekannt'}) – ${profile.activeFields.size} Felder`,
-                    }, obj.callback);
-                }
-            }).catch((err: Error) => {
-                this.log.error(`Discovery failed for "${name}" (${ip}): ${err.message}`);
-                if (obj.callback) {
-                    this.sendTo(obj.from, obj.command, { error: err.message }, obj.callback);
-                }
-            });
+                    const topics = buildTopicPaths(profile.deviceId, profile.appName, profile.topicConfig);
+                    if (!this.topicToFolder.has(topics.statusTopic)) {
+                        this.topicToFolder.set(topics.statusTopic, folder);
+                        if (this.mqttClient) {
+                            this.mqttClient.subscribe(topics.statusTopic);
+                            this.log.info(`Subscribed to: ${topics.statusTopic}`);
+                        }
+                    }
+                    this.folderToTopics.set(folder, topics);
+
+                    // Activate live status push on device (write through normal config state pipeline)
+                    await this.setStateAsync(`${folder}.config.livestatus`, { val: true, ack: false });
+
+                    this.log.info(
+                        `Discovery completed for "${name}": ${profile.deviceId} (${profile.appName}) – ${profile.activeFields.size} fields`,
+                    );
+
+                    if (obj.callback) {
+                        this.sendTo(
+                            obj.from,
+                            obj.command,
+                            {
+                                result: `Erkannt: ${profile.deviceId} (${profile.appName || 'unbekannt'}) – ${profile.activeFields.size} Felder`,
+                            },
+                            obj.callback,
+                        );
+                    }
+                })
+                .catch((err: Error) => {
+                    this.log.error(`Discovery failed for "${name}" (${ip}): ${err.message}`);
+                    if (obj.callback) {
+                        this.sendTo(obj.from, obj.command, { error: err.message }, obj.callback);
+                    }
+                });
         }
 
         if (obj.command === 'getDeviceList') {
-            const devices: DeviceConfig[] = (this.config as Record<string, unknown>)['devices'] as DeviceConfig[] ?? [];
+            const devices: DeviceConfig[] = ((this.config as Record<string, unknown>).devices as DeviceConfig[]) ?? [];
             if (obj.callback) {
-                this.sendTo(obj.from, obj.command,
-                    devices.map(d => ({ label: d.name, value: d.name })),
-                    obj.callback
+                this.sendTo(
+                    obj.from,
+                    obj.command,
+                    devices.map((d) => ({ label: d.name, value: d.name })),
+                    obj.callback,
                 );
             }
         }
 
         if (obj.command === 'deleteDevice') {
             const msg = obj.message as Record<string, string> | undefined;
-            const name = msg?.['name'];
+            const name = msg?.name;
 
             if (!name) {
                 if (obj.callback) {
@@ -516,10 +570,15 @@ class FaikoutAdapter extends utils.Adapter {
 
                     this.log.info(`Deleted all states for device "${name}"`);
                     if (obj.callback) {
-                        this.sendTo(obj.from, obj.command, { result: `Datenpunkte für "${name}" gelöscht` }, obj.callback);
+                        this.sendTo(
+                            obj.from,
+                            obj.command,
+                            { result: `Datenpunkte für "${name}" gelöscht` },
+                            obj.callback,
+                        );
                     }
                 } catch (err) {
-                    this.log.error(`Failed to delete states for "${name}": ${err}`);
+                    this.log.error(`Failed to delete states for "${name}": ${String(err)}`);
                     if (obj.callback) {
                         this.sendTo(obj.from, obj.command, { error: String(err) }, obj.callback);
                     }
@@ -530,8 +589,10 @@ class FaikoutAdapter extends utils.Adapter {
 
     private _setupSchedule(): void {
         const cfg = this.config as Record<string, unknown>;
-        const entries = (cfg['schedule'] as Array<Record<string, unknown>> | undefined) || [];
-        if (entries.length === 0) return;
+        const entries = (cfg.schedule as Array<Record<string, unknown>> | undefined) || [];
+        if (entries.length === 0) {
+            return;
+        }
 
         this.setInterval(async () => {
             const now = new Date();
@@ -543,71 +604,108 @@ class FaikoutAdapter extends utils.Adapter {
 
             for (let i = 0; i < entries.length; i++) {
                 const entry = entries[i];
-                if (!entry['enabled']) continue;
-                const entryTime = ((entry['time'] as string) || '').trim();
-                const entryDays = (entry['days'] as number[] | undefined) || [];
-                if (entryTime !== hhmm) continue;
-                if (!entryDays.includes(dow)) continue;
-                if (this.scheduleFired.get(i) === firedKey) continue; // already fired this minute
+                if (!entry.enabled) {
+                    continue;
+                }
+                const entryTime = ((entry.time as string) || '').trim();
+                const entryDays = (entry.days as number[] | undefined) || [];
+                if (entryTime !== hhmm) {
+                    continue;
+                }
+                if (!entryDays.includes(dow)) {
+                    continue;
+                }
+                if (this.scheduleFired.get(i) === firedKey) {
+                    continue;
+                } // already fired this minute
 
-                const deviceName = ((entry['deviceName'] as string) || '').trim();
+                const deviceName = ((entry.deviceName as string) || '').trim();
                 // support both new multi-action format and legacy single field/value
-                const actions: Array<Record<string, unknown>> =
-                    Array.isArray(entry['actions']) ? entry['actions'] as Array<Record<string, unknown>>
-                    : entry['field'] ? [{ field: entry['field'], value: entry['value'] }]
-                    : [];
-                if (!deviceName || actions.length === 0) continue;
+                const actions: Array<Record<string, unknown>> = Array.isArray(entry.actions)
+                    ? (entry.actions as Array<Record<string, unknown>>)
+                    : entry.field
+                      ? [{ field: entry.field, value: entry.value }]
+                      : [];
+                if (!deviceName || actions.length === 0) {
+                    continue;
+                }
 
                 const folder = deviceName.replace(/[^a-zA-Z0-9_-]/g, '_');
                 let fired = false;
                 for (const action of actions) {
-                    const field = ((action['field'] as string) || '').trim();
-                    const value = action['value'];
-                    if (!field) continue;
+                    const field = ((action.field as string) || '').trim();
+                    const value = action.value;
+                    if (!field) {
+                        continue;
+                    }
                     try {
                         if (field === 'demand_override_on') {
                             const overrideVal = Math.max(30, Math.min(100, Math.round(Number(value ?? 50))));
-                            await this.setStateAsync(`${folder}.demand_ctrl.override_value`, { val: overrideVal, ack: false });
-                            await this.setStateAsync(`${folder}.demand_ctrl.override_active`, { val: true, ack: false });
+                            await this.setStateAsync(`${folder}.demand_ctrl.override_value`, {
+                                val: overrideVal,
+                                ack: false,
+                            });
+                            await this.setStateAsync(`${folder}.demand_ctrl.override_active`, {
+                                val: true,
+                                ack: false,
+                            });
                             this.log.info(`Schedule [${deviceName}] demand override ON = ${overrideVal}%`);
                         } else if (field === 'demand_override_off') {
-                            await this.setStateAsync(`${folder}.demand_ctrl.override_active`, { val: false, ack: false });
+                            await this.setStateAsync(`${folder}.demand_ctrl.override_active`, {
+                                val: false,
+                                ack: false,
+                            });
                             this.log.info(`Schedule [${deviceName}] demand override OFF`);
                         } else {
-                            await this.setStateAsync(`${folder}.${field}`, { val: value as ioBroker.StateValue, ack: false });
+                            await this.setStateAsync(`${folder}.${field}`, {
+                                val: value as ioBroker.StateValue,
+                                ack: false,
+                            });
                             this.log.info(`Schedule [${deviceName}] ${field}=${JSON.stringify(value)}`);
                         }
                         fired = true;
                     } catch (err) {
-                        this.log.warn(`Schedule [${deviceName}] ${field} failed: ${err}`);
+                        this.log.warn(`Schedule [${deviceName}] ${field} failed: ${String(err)}`);
                     }
-                    const delayMs = Math.max(0, Number(action['delay'] ?? 0)) * 1000;
-                    if (delayMs > 0) await new Promise<void>(resolve => setTimeout(resolve, delayMs));
+                    const delayMs = Math.max(0, Number(action.delay ?? 0)) * 1000;
+                    if (delayMs > 0) {
+                        await new Promise<void>((resolve) => setTimeout(resolve, delayMs));
+                    }
                 }
-                if (fired) this.scheduleFired.set(i, firedKey);
+                if (fired) {
+                    this.scheduleFired.set(i, firedKey);
+                }
             }
         }, 30_000);
     }
 
     private _setupEnvSensors(): void {
         const cfg = this.config as Record<string, unknown>;
-        const entries = (cfg['envSensors'] as Array<Record<string, unknown>> | undefined) || [];
+        const entries = (cfg.envSensors as Array<Record<string, unknown>> | undefined) || [];
         for (const entry of entries) {
-            const deviceName = ((entry['deviceName'] as string) || '').trim();
-            const sensorStateId = ((entry['sensorStateId'] as string) || '').trim();
-            const intervalSec = Math.max(10, Number(entry['intervalSec'] ?? 30));
-            if (!deviceName || !sensorStateId) continue;
+            const deviceName = ((entry.deviceName as string) || '').trim();
+            const sensorStateId = ((entry.sensorStateId as string) || '').trim();
+            const intervalSec = Math.max(10, Number(entry.intervalSec ?? 30));
+            if (!deviceName || !sensorStateId) {
+                continue;
+            }
             const folder = deviceName.replace(/[^a-zA-Z0-9_-]/g, '_');
             const targetId = `${this.namespace}.${folder}.env_set`;
             const publish = async (): Promise<void> => {
                 try {
                     const state = await this.getStateAsync(sensorStateId);
-                    if (!state || state.val === null || state.val === undefined) return;
+                    if (!state || state.val === null || state.val === undefined) {
+                        return;
+                    }
                     const val = Number(state.val);
-                    if (isNaN(val)) return;
+                    if (isNaN(val)) {
+                        return;
+                    }
                     await this.setStateAsync(targetId, { val, ack: false });
                     this.log.debug(`EnvSensor [${deviceName}] env_set=${val}`);
-                } catch { /* ignore */ }
+                } catch {
+                    /* ignore */
+                }
             };
             void publish();
             this.setInterval(publish, intervalSec * 1_000);
@@ -617,8 +715,8 @@ class FaikoutAdapter extends utils.Adapter {
 
     private async _setupDemandControl(): Promise<void> {
         const cfg = this.config as Record<string, unknown>;
-        const devices = (cfg['devices'] as Array<Record<string, unknown>>) || [];
-        const demandDevices = devices.filter(d => d['enabled'] !== false && d['useDemand']);
+        const devices = (cfg.devices as Array<Record<string, unknown>>) || [];
+        const demandDevices = devices.filter((d) => d.enabled !== false && d.useDemand);
 
         if (demandDevices.length === 0) {
             this.log.info('Demand control: no device has useDemand checkbox set – skipping');
@@ -629,46 +727,63 @@ class FaikoutAdapter extends utils.Adapter {
         const FLAT_SKIP = new Set(['demandOutdoorTempId', 'demandRoomTempId']);
         const flatDefaults: Record<string, unknown> = {};
         for (const [k, v] of Object.entries(cfg)) {
-            if (k.startsWith('demand') && !FLAT_SKIP.has(k)) flatDefaults[k] = v;
+            if (k.startsWith('demand') && !FLAT_SKIP.has(k)) {
+                flatDefaults[k] = v;
+            }
         }
 
         for (const deviceEntry of demandDevices) {
-            const deviceName = ((deviceEntry['name'] as string) || '').trim();
-            if (!deviceName) { this.log.warn('Demand control: device name empty – skipping entry'); continue; }
+            const deviceName = ((deviceEntry.name as string) || '').trim();
+            if (!deviceName) {
+                this.log.warn('Demand control: device name empty – skipping entry');
+                continue;
+            }
 
             // Merge: flat defaults → per-device cfg[deviceName]
             const devCfg: Record<string, unknown> = Object.assign(
-                {}, flatDefaults,
-                (cfg[deviceName] as Record<string, unknown> | undefined) || {}
+                {},
+                flatDefaults,
+                (cfg[deviceName] as Record<string, unknown> | undefined) || {},
             );
 
-            if (!devCfg['demandEnabled']) {
+            if (!devCfg.demandEnabled) {
                 this.log.info(`Demand control: demandEnabled not set for "${deviceName}" – skipping`);
                 continue;
             }
 
-            const folder    = deviceName.replace(/[^a-zA-Z0-9_-]/g, '_');
-            const group     = ((deviceEntry['group'] as string) || '').trim();
-            const outdoorId = ((devCfg['demandOutdoorTempId'] as string) || '').trim()
-                || `${this.namespace}.${folder}.outside`;
-            const roomId    = ((devCfg['demandRoomTempId'] as string) || '').trim()
-                || `${this.namespace}.${folder}.env`;
+            const folder = deviceName.replace(/[^a-zA-Z0-9_-]/g, '_');
+            const group = ((deviceEntry.group as string) || '').trim();
+            const outdoorId =
+                ((devCfg.demandOutdoorTempId as string) || '').trim() || `${this.namespace}.${folder}.outside`;
+            const roomId = ((devCfg.demandRoomTempId as string) || '').trim() || `${this.namespace}.${folder}.env`;
 
             const ctx: DemandCtx = {
-                folder, outdoorId, roomId, cfg: devCfg, group,
-                guardActive: false, running: false,
-                lastRunTs: 0, lastLogged: null,
-                lastSent: null, lastChangeTs: 0, lastEventTs: 0,
+                folder,
+                outdoorId,
+                roomId,
+                cfg: devCfg,
+                group,
+                guardActive: false,
+                running: false,
+                lastRunTs: 0,
+                lastLogged: null,
+                lastSent: null,
+                lastChangeTs: 0,
+                lastEventTs: 0,
             };
             this.demandCtxMap.set(folder, ctx);
 
             // Sensor ID → folder maps (for onStateChange routing)
             const od = this.outdoorIdToFolders.get(outdoorId) ?? [];
-            if (!od.includes(folder)) od.push(folder);
+            if (!od.includes(folder)) {
+                od.push(folder);
+            }
             this.outdoorIdToFolders.set(outdoorId, od);
 
             const rm = this.roomIdToFolders.get(roomId) ?? [];
-            if (!rm.includes(folder)) rm.push(folder);
+            if (!rm.includes(folder)) {
+                rm.push(folder);
+            }
             this.roomIdToFolders.set(roomId, rm);
 
             if (!outdoorId.startsWith(`${this.namespace}.`)) {
@@ -686,19 +801,96 @@ class FaikoutAdapter extends utils.Adapter {
                 native: {},
             });
             const stBase = { type: 'state' as const, native: {} };
-            await this.setObjectNotExistsAsync(`${dp}.active`,         { ...stBase, common: { name: { en: 'Demand control active',   de: 'Bedarfsregelung aktiv'       }, type: 'boolean', role: 'indicator',         read: true, write: false, def: false } });
-            await this.setObjectNotExistsAsync(`${dp}.demand_calc`,    { ...stBase, common: { name: { en: 'Calculated demand',        de: 'Berechneter Bedarf'          }, type: 'number',  unit: '%', role: 'value',   read: true, write: false, min: 0, max: 100 } });
-            await this.setObjectNotExistsAsync(`${dp}.override_active`,{ ...stBase, common: { name: { en: 'Manual override active',   de: 'Manuelle Übersteuerung aktiv'}, type: 'boolean', role: 'switch',           read: true, write: true,  def: false } });
-            await this.setObjectNotExistsAsync(`${dp}.override_value`, { ...stBase, common: { name: { en: 'Manual override demand',   de: 'Manueller Bedarfswert'       }, type: 'number',  unit: '%', role: 'level',   read: true, write: true,  min: 0, max: 100, def: 50 } });
-            await this.setObjectNotExistsAsync(`${dp}.guard_active`,   { ...stBase, common: { name: { en: 'Guard active',             de: 'Guard aktiv'                 }, type: 'boolean', role: 'indicator',         read: true, write: false, def: false } });
-            await this.setObjectNotExistsAsync(`${dp}.outdoor_temp`,   { ...stBase, common: { name: { en: 'Outdoor temperature used', de: 'Verwendete Außentemperatur'  }, type: 'number',  unit: '°C', role: 'value.temperature', read: true, write: false } });
-            await this.setObjectNotExistsAsync(`${dp}.room_temp`,      { ...stBase, common: { name: { en: 'Room temperature used',    de: 'Verwendete Raumtemperatur'   }, type: 'number',  unit: '°C', role: 'value.temperature', read: true, write: false } });
+            await this.setObjectNotExistsAsync(`${dp}.active`, {
+                ...stBase,
+                common: {
+                    name: { en: 'Demand control active', de: 'Bedarfsregelung aktiv' },
+                    type: 'boolean',
+                    role: 'indicator',
+                    read: true,
+                    write: false,
+                    def: false,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.demand_calc`, {
+                ...stBase,
+                common: {
+                    name: { en: 'Calculated demand', de: 'Berechneter Bedarf' },
+                    type: 'number',
+                    unit: '%',
+                    role: 'value',
+                    read: true,
+                    write: false,
+                    min: 0,
+                    max: 100,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.override_active`, {
+                ...stBase,
+                common: {
+                    name: { en: 'Manual override active', de: 'Manuelle Übersteuerung aktiv' },
+                    type: 'boolean',
+                    role: 'switch',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.override_value`, {
+                ...stBase,
+                common: {
+                    name: { en: 'Manual override demand', de: 'Manueller Bedarfswert' },
+                    type: 'number',
+                    unit: '%',
+                    role: 'level',
+                    read: true,
+                    write: true,
+                    min: 0,
+                    max: 100,
+                    def: 50,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.guard_active`, {
+                ...stBase,
+                common: {
+                    name: { en: 'Guard active', de: 'Guard aktiv' },
+                    type: 'boolean',
+                    role: 'indicator',
+                    read: true,
+                    write: false,
+                    def: false,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.outdoor_temp`, {
+                ...stBase,
+                common: {
+                    name: { en: 'Outdoor temperature used', de: 'Verwendete Außentemperatur' },
+                    type: 'number',
+                    unit: '°C',
+                    role: 'value.temperature',
+                    read: true,
+                    write: false,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.room_temp`, {
+                ...stBase,
+                common: {
+                    name: { en: 'Room temperature used', de: 'Verwendete Raumtemperatur' },
+                    type: 'number',
+                    unit: '°C',
+                    role: 'value.temperature',
+                    read: true,
+                    write: false,
+                },
+            });
 
             await this.setStateAsync(`${dp}.active`, { val: true, ack: true });
 
             // Fallback timer: fire every 180s if no sensor event has arrived
             this.setInterval(() => {
-                if (Date.now() - ctx.lastEventTs >= 180_000) void this._runDemandControl(folder);
+                if (Date.now() - ctx.lastEventTs >= 180_000) {
+                    void this._runDemandControl(folder);
+                }
             }, 180_000);
 
             this.log.info(`Demand control active for "${deviceName}" | outdoor: ${outdoorId} | room: ${roomId}`);
@@ -708,10 +900,16 @@ class FaikoutAdapter extends utils.Adapter {
 
     private async _runDemandControl(folder: string): Promise<void> {
         const ctx = this.demandCtxMap.get(folder);
-        if (!ctx) return;
-        if (ctx.running) return;
+        if (!ctx) {
+            return;
+        }
+        if (ctx.running) {
+            return;
+        }
         const now = Date.now();
-        if (now - ctx.lastRunTs < 60_000) return;
+        if (now - ctx.lastRunTs < 60_000) {
+            return;
+        }
         ctx.running = true;
         ctx.lastRunTs = now;
         try {
@@ -733,7 +931,9 @@ class FaikoutAdapter extends utils.Adapter {
             ? await this.getStateAsync(roomId.slice(ns.length))
             : await this.getForeignStateAsync(roomId);
 
-        if (outdoorState?.val == null || roomState?.val == null) return;
+        if (outdoorState?.val == null || roomState?.val == null) {
+            return;
+        }
 
         const outdoor = Number(outdoorState.val);
         const room = Number(roomState.val);
@@ -744,11 +944,11 @@ class FaikoutAdapter extends utils.Adapter {
 
         // Read power/mode early – needed to decide whether to send, but calculation runs regardless
         const powerState = await this.getStateAsync(`${folder}.power`);
-        const modeState  = await this.getStateAsync(`${folder}.mode`);
-        const isActive   = powerState?.val === true && modeState?.val === 'H';
+        const modeState = await this.getStateAsync(`${folder}.mode`);
+        const isActive = powerState?.val === true && modeState?.val === 'H';
 
         // 1. Base demand from curve interpolation (always calculated for chart display)
-        const curve = (cfg['demandCurve'] as Array<{ temp: number; demand: number }> | undefined) ?? [];
+        const curve = (cfg.demandCurve as Array<{ temp: number; demand: number }> | undefined) ?? [];
         if (curve.length < 2) {
             this.log.warn('Demand curve has fewer than 2 support points – skipping');
             return;
@@ -759,18 +959,18 @@ class FaikoutAdapter extends utils.Adapter {
         // 2. Boost
         let boostApplied = 0;
         let boostStageDesc = '';
-        if (cfg['demandBoostEnabled']) {
+        if (cfg.demandBoostEnabled) {
             const autotState = await this.getStateAsync(`${folder}.autot`);
             if (autotState?.val != null) {
                 const autot = Number(autotState.val);
                 const diff = autot - room;
-                const stages = (cfg['demandBoostStages'] as Array<{ deviation: number; boost: number }> | undefined) ?? [];
+                const stages = (cfg.demandBoostStages as Array<{ deviation: number; boost: number }> | undefined) ?? [];
                 const sortedStages = [...stages].sort((a, b) => Number(b.deviation) - Number(a.deviation));
                 for (const stage of sortedStages) {
                     if (diff >= Number(stage.deviation)) {
                         boostApplied = Number(stage.boost);
                         boostStageDesc = `≥${stage.deviation}K`;
-                        demand = Math.min(Number(cfg['demandMaxDemand'] ?? 95), demand + boostApplied);
+                        demand = Math.min(Number(cfg.demandMaxDemand ?? 95), demand + boostApplied);
                         break;
                     }
                 }
@@ -779,7 +979,7 @@ class FaikoutAdapter extends utils.Adapter {
 
         // 3. Taper
         let taperApplied = 0;
-        if (cfg['demandTaperEnabled']) {
+        if (cfg.demandTaperEnabled) {
             const autotState = await this.getStateAsync(`${folder}.autot`);
             const autorState = await this.getStateAsync(`${folder}.autor`);
             if (autotState?.val != null) {
@@ -787,10 +987,10 @@ class FaikoutAdapter extends utils.Adapter {
                 const autor = autorState?.val != null ? Number(autorState.val) : 0.3;
                 const guardThreshold = autot + autor + 0.1;
                 if (room > autot && room < guardThreshold) {
-                    const taperMax = Number(cfg['demandTaperMax'] ?? 15);
+                    const taperMax = Number(cfg.demandTaperMax ?? 15);
                     const taperFraction = (room - autot) / (guardThreshold - autot);
                     taperApplied = taperFraction * taperMax;
-                    demand = Math.max(Number(cfg['demandMinDemand'] ?? 30), demand - taperApplied);
+                    demand = Math.max(Number(cfg.demandMinDemand ?? 30), demand - taperApplied);
                 }
             }
         }
@@ -799,8 +999,8 @@ class FaikoutAdapter extends utils.Adapter {
         await this._checkGuard(ctx, room);
 
         // Clamp to [min, max] demand
-        demand = Math.min(Number(cfg['demandMaxDemand'] ?? 95), demand);
-        demand = Math.max(Number(cfg['demandMinDemand'] ?? 30), demand);
+        demand = Math.min(Number(cfg.demandMaxDemand ?? 95), demand);
+        demand = Math.max(Number(cfg.demandMinDemand ?? 30), demand);
         demand = Math.round(demand);
 
         // 5. Multi-split group floor: demand >= max(minDemand of all enabled peers in same group)
@@ -808,7 +1008,7 @@ class FaikoutAdapter extends utils.Adapter {
             let groupFloor = demand;
             for (const peer of this.demandCtxMap.values()) {
                 if (peer.folder !== folder && peer.group === ctx.group) {
-                    groupFloor = Math.max(groupFloor, Number(peer.cfg['demandMinDemand'] ?? 30));
+                    groupFloor = Math.max(groupFloor, Number(peer.cfg.demandMinDemand ?? 30));
                 }
             }
             demand = Math.max(demand, groupFloor);
@@ -816,11 +1016,13 @@ class FaikoutAdapter extends utils.Adapter {
 
         // Always update display states (chart working point) – no log, no device write
         await this.setStateAsync(`${dp}.guard_active`, { val: ctx.guardActive, ack: true });
-        await this.setStateAsync(`${dp}.demand_calc`,  { val: demand, ack: true });
+        await this.setStateAsync(`${dp}.demand_calc`, { val: demand, ack: true });
 
         // Only send to device when active in heating mode
         if (!isActive) {
-            this.log.debug(`Demand control skipped: power=${String(powerState?.val)} mode=${String(modeState?.val ?? '?')}`);
+            this.log.debug(
+                `Demand control skipped: power=${String(powerState?.val)} mode=${String(modeState?.val ?? '?')}`,
+            );
             return;
         }
 
@@ -834,14 +1036,14 @@ class FaikoutAdapter extends utils.Adapter {
             return;
         }
 
-        if (cfg['demandLogLevel'] === 'extended') {
+        if (cfg.demandLogLevel === 'extended') {
             const boostStr = boostApplied > 0 ? `+${boostApplied}%(${boostStageDesc})` : '–';
             const taperStr = taperApplied > 0 ? `-${taperApplied.toFixed(1)}%` : '–';
             const guardStr = ctx.guardActive ? 'EIN' : 'AUS';
             this.log.info(
                 `Demand [${folder}] outdoor=${outdoor}°C room=${room}°C` +
-                ` | base=${baseDemand.toFixed(0)}% boost=${boostStr} taper=${taperStr}` +
-                ` → target=${demand}% | guard=${guardStr}`
+                    ` | base=${baseDemand.toFixed(0)}% boost=${boostStr} taper=${taperStr}` +
+                    ` → target=${demand}% | guard=${guardStr}`,
             );
         } else if (demand !== ctx.lastLogged) {
             this.log.info(`Demand [${folder}] outdoor=${outdoor}°C room=${room}°C → target=${demand}%`);
@@ -855,8 +1057,8 @@ class FaikoutAdapter extends utils.Adapter {
     // Each change (up or down) is held for its configured delay since the last change.
     private _scheduleDemand(ctx: DemandCtx, target: number): void {
         const { cfg, folder } = ctx;
-        const delayDown = Number(cfg['demandDelayReduce']   ?? 0)   * 1000;
-        const delayUp   = Number(cfg['demandDelayIncrease'] ?? 300) * 1000;
+        const delayDown = Number(cfg.demandDelayReduce ?? 0) * 1000;
+        const delayUp = Number(cfg.demandDelayIncrease ?? 300) * 1000;
 
         // First send: apply immediately
         if (ctx.lastSent === null) {
@@ -864,16 +1066,20 @@ class FaikoutAdapter extends utils.Adapter {
             return;
         }
 
-        if (target === ctx.lastSent) return;
+        if (target === ctx.lastSent) {
+            return;
+        }
 
         const goingUp = target > ctx.lastSent;
-        const delay   = goingUp ? delayUp : delayDown;
+        const delay = goingUp ? delayUp : delayDown;
         const elapsed = Date.now() - ctx.lastChangeTs;
 
         if (delay <= 0 || elapsed >= delay) {
             this._sendDemand(ctx, target);
         } else {
-            this.log.info(`Demand [${folder}] ${goingUp ? '↑' : '↓'} ${ctx.lastSent}%→${target}% gehalten, noch ${Math.round((delay - elapsed) / 1000)}s`);
+            this.log.info(
+                `Demand [${folder}] ${goingUp ? '↑' : '↓'} ${ctx.lastSent}%→${target}% gehalten, noch ${Math.round((delay - elapsed) / 1000)}s`,
+            );
         }
     }
 
@@ -888,33 +1094,48 @@ class FaikoutAdapter extends utils.Adapter {
 
     private async _checkGuard(ctx: DemandCtx, room: number): Promise<void> {
         const { cfg, folder } = ctx;
-        if (!cfg['demandGuardEnabled']) return;
+        if (!cfg.demandGuardEnabled) {
+            return;
+        }
         const autotState = await this.getStateAsync(`${folder}.autot`);
         const autorState = await this.getStateAsync(`${folder}.autor`);
-        if (autotState?.val == null) return;
+        if (autotState?.val == null) {
+            return;
+        }
         const autot = Number(autotState.val);
         const autor = autorState?.val != null ? Number(autorState.val) : 0.3;
         const guardThreshold = autot + autor + 0.1;
-        const heatbackNormal = Number(cfg['demandHeatbackNormal'] ?? 3);
-        const heatbackGuard  = Number(cfg['demandHeatbackGuard']  ?? 6);
-        const logOff = cfg['demandLogLevel'] === 'off';
+        const heatbackNormal = Number(cfg.demandHeatbackNormal ?? 3);
+        const heatbackGuard = Number(cfg.demandHeatbackGuard ?? 6);
+        const logOff = cfg.demandLogLevel === 'off';
         if (room >= guardThreshold && !ctx.guardActive) {
             ctx.guardActive = true;
             this._publishGuardHeatback(folder, heatbackGuard);
-            if (!logOff) this.log.info(`Demand guard ON: room=${room}°C >= threshold=${guardThreshold.toFixed(2)}°C → heatback=${heatbackGuard}`);
+            if (!logOff) {
+                this.log.info(
+                    `Demand guard ON: room=${room}°C >= threshold=${guardThreshold.toFixed(2)}°C → heatback=${heatbackGuard}`,
+                );
+            }
         } else if (room <= autot && ctx.guardActive) {
             ctx.guardActive = false;
             this._publishGuardHeatback(folder, heatbackNormal);
-            if (!logOff) this.log.info(`Demand guard OFF: room=${room}°C <= autot=${autot}°C → heatback=${heatbackNormal}`);
+            if (!logOff) {
+                this.log.info(`Demand guard OFF: room=${room}°C <= autot=${autot}°C → heatback=${heatbackNormal}`);
+            }
         }
     }
 
     private _interpolateCurve(curve: Array<{ temp: number; demand: number }>, x: number): number {
         const sorted = [...curve].sort((a, b) => Number(a.temp) - Number(b.temp));
-        if (x <= Number(sorted[0].temp)) return Number(sorted[0].demand);
-        if (x >= Number(sorted[sorted.length - 1].temp)) return Number(sorted[sorted.length - 1].demand);
+        if (x <= Number(sorted[0].temp)) {
+            return Number(sorted[0].demand);
+        }
+        if (x >= Number(sorted[sorted.length - 1].temp)) {
+            return Number(sorted[sorted.length - 1].demand);
+        }
         for (let i = 0; i < sorted.length - 1; i++) {
-            const t0 = Number(sorted[i].temp), t1 = Number(sorted[i + 1].temp);
+            const t0 = Number(sorted[i].temp),
+                t1 = Number(sorted[i + 1].temp);
             if (x >= t0 && x <= t1) {
                 const frac = (x - t0) / (t1 - t0);
                 return Number(sorted[i].demand) + frac * (Number(sorted[i + 1].demand) - Number(sorted[i].demand));
@@ -930,77 +1151,158 @@ class FaikoutAdapter extends utils.Adapter {
 
     private _publishDemandConfigParam(folder: string, param: string, value: string): void {
         const topics = this.folderToTopics.get(folder);
-        if (!topics || !this.mqttClient) return;
+        if (!topics || !this.mqttClient) {
+            return;
+        }
         this.mqttClient.publish(topics.settingTopic(param), value);
     }
 
     private async _setupHumidityControls(): Promise<void> {
         const cfg = this.config as Record<string, unknown>;
-        const devices = (cfg['devices'] as Array<Record<string, unknown>>) || [];
-        const humCfg = (cfg['humCfg'] as Record<string, Record<string, unknown>> | undefined) ?? {};
+        const devices = (cfg.devices as Array<Record<string, unknown>>) || [];
+        const humCfg = (cfg.humCfg as Record<string, Record<string, unknown>> | undefined) ?? {};
 
-        const humDevices = devices.filter(d => d['enabled'] !== false && d['useHumidity']);
-        if (humDevices.length === 0) return;
+        const humDevices = devices.filter((d) => d.enabled !== false && d.useHumidity);
+        if (humDevices.length === 0) {
+            return;
+        }
 
         for (const device of humDevices) {
-            const deviceName = ((device['name'] as string) || '').trim();
-            if (!deviceName) continue;
+            const deviceName = ((device.name as string) || '').trim();
+            if (!deviceName) {
+                continue;
+            }
             const folder = deviceName.replace(/[^a-zA-Z0-9_-]/g, '_');
             const dp = `${folder}.humidity_ctrl`;
 
-            const devCfg: Record<string, unknown> = Object.assign({
-                humFreshMin: 20, humTpHoch: 4.0, humTpTief: 7.0, humMaxFeuchte: 75,
-                humMaxLaufzeit: 240, humPauseMin: 30, humNachlaufMin: 15,
-                humStartZeit: '07:00', humEndZeit: '22:00',
-                humTempStateId: '', humHumStateId: '',
-            }, humCfg[deviceName] ?? {});
+            const devCfg: Record<string, unknown> = Object.assign(
+                {
+                    humFreshMin: 20,
+                    humTpHoch: 4.0,
+                    humTpTief: 7.0,
+                    humMaxFeuchte: 75,
+                    humMaxLaufzeit: 240,
+                    humPauseMin: 30,
+                    humNachlaufMin: 15,
+                    humStartZeit: '07:00',
+                    humEndZeit: '22:00',
+                    humTempStateId: '',
+                    humHumStateId: '',
+                },
+                humCfg[deviceName] ?? {},
+            );
 
             const stBase = { type: 'state' as const, native: {} };
-            await this.setObjectNotExistsAsync(`${dp}.auto`, { ...stBase,
-                common: { name: 'Humidity auto', type: 'boolean' as const, role: 'switch', read: true, write: true, def: false } });
-            await this.setObjectNotExistsAsync(`${dp}.mode`, { ...stBase,
-                common: { name: 'Humidity mode', type: 'number' as const, role: 'value', read: true, write: false, def: 0,
-                    states: { 0: 'AUS', 1: 'ÜBERWACHUNG', 2: 'DRY', 3: 'NACHLAUF', 4: 'PAUSE', 5: 'FRESHNESS!' } } });
-            await this.setObjectNotExistsAsync(`${dp}.mode_text`, { ...stBase,
-                common: { name: 'Humidity mode text', type: 'string' as const, role: 'text', read: true, write: false, def: 'AUS' } });
-            await this.setObjectNotExistsAsync(`${dp}.dew_point`, { ...stBase,
-                common: { name: 'Dew point', type: 'number' as const, unit: '°C', role: 'value.temperature', read: true, write: false } });
-            await this.setObjectNotExistsAsync(`${dp}.dew_point_diff`, { ...stBase,
-                common: { name: 'Dew point distance', type: 'number' as const, unit: 'K', role: 'value', read: true, write: false } });
+            await this.setObjectNotExistsAsync(`${dp}.auto`, {
+                ...stBase,
+                common: {
+                    name: 'Humidity auto',
+                    type: 'boolean' as const,
+                    role: 'switch',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.mode`, {
+                ...stBase,
+                common: {
+                    name: 'Humidity mode',
+                    type: 'number' as const,
+                    role: 'value',
+                    read: true,
+                    write: false,
+                    def: 0,
+                    states: { 0: 'AUS', 1: 'ÜBERWACHUNG', 2: 'DRY', 3: 'NACHLAUF', 4: 'PAUSE', 5: 'FRESHNESS!' },
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.mode_text`, {
+                ...stBase,
+                common: {
+                    name: 'Humidity mode text',
+                    type: 'string' as const,
+                    role: 'text',
+                    read: true,
+                    write: false,
+                    def: 'AUS',
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.dew_point`, {
+                ...stBase,
+                common: {
+                    name: 'Dew point',
+                    type: 'number' as const,
+                    unit: '°C',
+                    role: 'value.temperature',
+                    read: true,
+                    write: false,
+                },
+            });
+            await this.setObjectNotExistsAsync(`${dp}.dew_point_diff`, {
+                ...stBase,
+                common: {
+                    name: 'Dew point distance',
+                    type: 'number' as const,
+                    unit: 'K',
+                    role: 'value',
+                    read: true,
+                    write: false,
+                },
+            });
 
             this.humidityStates.set(folder, {
-                cfg: devCfg, mode: 0,
-                dryStart: 0, nachlaufStart: 0, pauseEnd: 0,
-                afterNachlauf: 'ueberwachung', lastCmdTs: 0, running: false,
+                cfg: devCfg,
+                mode: 0,
+                dryStart: 0,
+                nachlaufStart: 0,
+                pauseEnd: 0,
+                afterNachlauf: 'ueberwachung',
+                lastCmdTs: 0,
+                running: false,
             });
 
             this.log.info(`Humidity control active for "${deviceName}"`);
-            this.setInterval(() => { void this._runHumidityControl(folder); }, 30_000);
+            this.setInterval(() => {
+                void this._runHumidityControl(folder);
+            }, 30_000);
             void this._runHumidityControl(folder);
         }
     }
 
     private async _runHumidityControl(folder: string): Promise<void> {
         const st = this.humidityStates.get(folder);
-        if (!st || st.running) return;
+        if (!st || st.running) {
+            return;
+        }
         st.running = true;
-        try { await this._runHumidityControlCore(folder, st); }
-        finally { st.running = false; }
+        try {
+            await this._runHumidityControlCore(folder, st);
+        } finally {
+            st.running = false;
+        }
     }
 
-    private async _runHumidityControlCore(folder: string, st: {
-        cfg: Record<string, unknown>; mode: number; dryStart: number; nachlaufStart: number;
-        pauseEnd: number; afterNachlauf: string; lastCmdTs: number;
-    }): Promise<void> {
+    private async _runHumidityControlCore(
+        folder: string,
+        st: {
+            cfg: Record<string, unknown>;
+            mode: number;
+            dryStart: number;
+            nachlaufStart: number;
+            pauseEnd: number;
+            afterNachlauf: string;
+            lastCmdTs: number;
+        },
+    ): Promise<void> {
         const MODI = { AUS: 0, UE: 1, DRY: 2, NL: 3, ZP: 4, FF: 5 };
         const MOD_NAME = ['AUS', 'ÜBERWACHUNG', 'DRY', 'NACHLAUF', 'PAUSE', 'FRESHNESS!'];
         const cfg = st.cfg;
         const dp = `${folder}.humidity_ctrl`;
         const ns = `${this.namespace}.`;
-        const toMs = (m: number) => m * 60_000;
+        const toMs = (m: number): number => m * 60_000;
         const now = Date.now();
 
-        const setMode = async (m: number) => {
+        const setMode = async (m: number): Promise<void> => {
             st.mode = m;
             await this.setStateAsync(`${dp}.mode`, { val: m, ack: true });
             await this.setStateAsync(`${dp}.mode_text`, { val: MOD_NAME[m] ?? '?', ack: true });
@@ -1009,32 +1311,39 @@ class FaikoutAdapter extends utils.Adapter {
         const autoState = await this.getStateAsync(`${dp}.auto`);
         const auto = autoState?.val === true;
 
-        const tempId = ((cfg['humTempStateId'] as string) || '').trim() || `${ns}${folder}.ble.temp`;
-        const humId  = ((cfg['humHumStateId']  as string) || '').trim() || `${ns}${folder}.ble.hum`;
-        const tempState = tempId.startsWith(ns) ? await this.getStateAsync(tempId.slice(ns.length)) : await this.getForeignStateAsync(tempId);
-        const humState  = humId.startsWith(ns)  ? await this.getStateAsync(humId.slice(ns.length))  : await this.getForeignStateAsync(humId);
+        const tempId = ((cfg.humTempStateId as string) || '').trim() || `${ns}${folder}.ble.temp`;
+        const humId = ((cfg.humHumStateId as string) || '').trim() || `${ns}${folder}.ble.hum`;
+        const tempState = tempId.startsWith(ns)
+            ? await this.getStateAsync(tempId.slice(ns.length))
+            : await this.getForeignStateAsync(tempId);
+        const humState = humId.startsWith(ns)
+            ? await this.getStateAsync(humId.slice(ns.length))
+            : await this.getForeignStateAsync(humId);
 
-        const bleTemp = (tempState?.val != null && !isNaN(Number(tempState.val))) ? Number(tempState.val) : undefined;
-        const bleHum  = (humState?.val  != null && !isNaN(Number(humState.val)))  ? Number(humState.val)  : undefined;
-        const bleTs   = Math.min(tempState?.ts ?? 0, humState?.ts ?? 0);
-        const freshMin = Math.max(15, Number(cfg['humFreshMin'] ?? 20));
-        const stale = bleTs === 0 || (now - bleTs) > toMs(freshMin);
+        const bleTemp = tempState?.val != null && !isNaN(Number(tempState.val)) ? Number(tempState.val) : undefined;
+        const bleHum = humState?.val != null && !isNaN(Number(humState.val)) ? Number(humState.val) : undefined;
+        const bleTs = Math.min(tempState?.ts ?? 0, humState?.ts ?? 0);
+        const freshMin = Math.max(15, Number(cfg.humFreshMin ?? 20));
+        const stale = bleTs === 0 || now - bleTs > toMs(freshMin);
 
-        const startNachlauf = async (reason: string) => {
-            st.nachlaufStart = now; st.dryStart = 0; st.afterNachlauf = reason;
+        const startNachlauf = async (reason: string): Promise<void> => {
+            st.nachlaufStart = now;
+            st.dryStart = 0;
+            st.afterNachlauf = reason;
             await this._humCmd(folder, true, 'F', 'A');
         };
 
         // 1. Nachlauf timer
-        if (st.nachlaufStart > 0 && (now - st.nachlaufStart) >= toMs(Number(cfg['humNachlaufMin'] ?? 15))) {
+        if (st.nachlaufStart > 0 && now - st.nachlaufStart >= toMs(Number(cfg.humNachlaufMin ?? 15))) {
             await this._humCmd(folder, false);
             st.nachlaufStart = 0;
-            const reason = st.afterNachlauf; st.afterNachlauf = 'ueberwachung';
+            const reason = st.afterNachlauf;
+            st.afterNachlauf = 'ueberwachung';
             if (st.mode === MODI.FF) {
                 await this.setStateAsync(`${dp}.auto`, { val: false, ack: true });
                 await setMode(MODI.AUS);
             } else if (reason === 'zwangspause') {
-                st.pauseEnd = now + toMs(Number(cfg['humPauseMin'] ?? 30));
+                st.pauseEnd = now + toMs(Number(cfg.humPauseMin ?? 30));
                 await setMode(MODI.ZP);
             } else {
                 await setMode(auto ? MODI.UE : MODI.AUS);
@@ -1043,91 +1352,126 @@ class FaikoutAdapter extends utils.Adapter {
         }
         // 2. Zwangspause timer
         if (st.mode === MODI.ZP && st.pauseEnd > 0 && now >= st.pauseEnd) {
-            st.pauseEnd = 0; await setMode(MODI.UE);
+            st.pauseEnd = 0;
+            await setMode(MODI.UE);
         }
         // 3. Auto off
         if (!auto) {
-            if (st.mode === MODI.DRY) { await startNachlauf('ueberwachung'); await setMode(MODI.NL); }
-            else if (![MODI.NL, MODI.ZP, MODI.FF].includes(st.mode)) {
-                if (st.mode !== MODI.AUS) { await this._humCmd(folder, false); await setMode(MODI.AUS); }
+            if (st.mode === MODI.DRY) {
+                await startNachlauf('ueberwachung');
+                await setMode(MODI.NL);
+            } else if (![MODI.NL, MODI.ZP, MODI.FF].includes(st.mode)) {
+                if (st.mode !== MODI.AUS) {
+                    await this._humCmd(folder, false);
+                    await setMode(MODI.AUS);
+                }
             }
             return;
         }
         // 4. Freshness
         if (stale && st.mode !== MODI.FF) {
-            if (st.mode === MODI.DRY) { await startNachlauf('freshness'); await setMode(MODI.NL); }
+            if (st.mode === MODI.DRY) {
+                await startNachlauf('freshness');
+                await setMode(MODI.NL);
+            }
             await setMode(MODI.FF);
-            this.log.warn(`Humidity [${folder}] sensor stale`); return;
+            this.log.warn(`Humidity [${folder}] sensor stale`);
+            return;
         }
         // 5. Skip special states
-        if ([MODI.FF, MODI.NL, MODI.ZP].includes(st.mode)) return;
+        if ([MODI.FF, MODI.NL, MODI.ZP].includes(st.mode)) {
+            return;
+        }
         // 6. No data
         if (bleTemp === undefined || bleHum === undefined) {
-            if (st.mode === MODI.AUS) await this.setStateAsync(`${dp}.auto`, { val: false, ack: true });
+            if (st.mode === MODI.AUS) {
+                await this.setStateAsync(`${dp}.auto`, { val: false, ack: true });
+            }
             return;
         }
         // AUS → ÜBERWACHUNG
-        if (st.mode === MODI.AUS) await setMode(MODI.UE);
+        if (st.mode === MODI.AUS) {
+            await setMode(MODI.UE);
+        }
         // 7. Dew point
-        const tp   = this._taupunkt(bleTemp, bleHum);
+        const tp = this._taupunkt(bleTemp, bleHum);
         const diff = bleTemp - tp;
-        await this.setStateAsync(`${dp}.dew_point`,      { val: Math.round(tp   * 10) / 10, ack: true });
+        await this.setStateAsync(`${dp}.dew_point`, { val: Math.round(tp * 10) / 10, ack: true });
         await this.setStateAsync(`${dp}.dew_point_diff`, { val: Math.round(diff * 10) / 10, ack: true });
-        this.log.debug(`Humidity [${folder}] T=${bleTemp}°C rH=${bleHum}% TP=${tp.toFixed(1)}° Δ=${diff.toFixed(1)}K mode=${MOD_NAME[st.mode]}`);
+        this.log.debug(
+            `Humidity [${folder}] T=${bleTemp}°C rH=${bleHum}% TP=${tp.toFixed(1)}° Δ=${diff.toFixed(1)}K mode=${MOD_NAME[st.mode]}`,
+        );
         // 8. Time window
-        if (!this._humZeitErlaubt(cfg['humStartZeit'] as string || '07:00', cfg['humEndZeit'] as string || '22:00')) {
-            if (st.mode === MODI.DRY) { await startNachlauf('ueberwachung'); await setMode(MODI.NL); }
+        if (!this._humZeitErlaubt((cfg.humStartZeit as string) || '07:00', (cfg.humEndZeit as string) || '22:00')) {
+            if (st.mode === MODI.DRY) {
+                await startNachlauf('ueberwachung');
+                await setMode(MODI.NL);
+            }
             return;
         }
         // 9. Max runtime
-        if (st.mode === MODI.DRY && st.dryStart > 0 && (now - st.dryStart) >= toMs(Number(cfg['humMaxLaufzeit'] ?? 240))) {
+        if (st.mode === MODI.DRY && st.dryStart > 0 && now - st.dryStart >= toMs(Number(cfg.humMaxLaufzeit ?? 240))) {
             this.log.info(`Humidity [${folder}] max runtime – forced pause`);
-            await startNachlauf('zwangspause'); await setMode(MODI.NL); return;
+            await startNachlauf('zwangspause');
+            await setMode(MODI.NL);
+            return;
         }
         // 10. Override detection
-        if (st.mode === MODI.DRY && (now - st.lastCmdTs) > 120_000) {
-            const realMode  = await this.getStateAsync(`${folder}.mode`);
+        if (st.mode === MODI.DRY && now - st.lastCmdTs > 120_000) {
+            const realMode = await this.getStateAsync(`${folder}.mode`);
             const realPower = await this.getStateAsync(`${folder}.power`);
             if (realPower?.val !== false && realMode?.val !== 'D') {
                 this.log.warn(`Humidity [${folder}] override – going to NACHLAUF`);
-                await startNachlauf('ueberwachung'); await setMode(MODI.NL); return;
+                await startNachlauf('ueberwachung');
+                await setMode(MODI.NL);
+                return;
             }
         }
         // 11. Control logic
-        const tpHoch    = Number(cfg['humTpHoch']     ?? 4.0);
-        const tpTief    = Number(cfg['humTpTief']     ?? 7.0);
-        const maxFeucht = Number(cfg['humMaxFeuchte'] ?? 75);
+        const tpHoch = Number(cfg.humTpHoch ?? 4.0);
+        const tpTief = Number(cfg.humTpTief ?? 7.0);
+        const maxFeucht = Number(cfg.humMaxFeuchte ?? 75);
         if (st.mode === MODI.UE && (diff <= tpHoch || bleHum >= maxFeucht)) {
             this.log.info(`Humidity [${folder}] start DRY Δ=${diff.toFixed(1)}K rH=${bleHum}%`);
-            st.dryStart = now; st.lastCmdTs = now;
-            await this._humCmd(folder, true, 'D', 'A'); await setMode(MODI.DRY);
+            st.dryStart = now;
+            st.lastCmdTs = now;
+            await this._humCmd(folder, true, 'D', 'A');
+            await setMode(MODI.DRY);
         } else if (st.mode === MODI.DRY && diff >= tpTief && bleHum < maxFeucht) {
             this.log.info(`Humidity [${folder}] stop DRY Δ=${diff.toFixed(1)}K rH=${bleHum}%`);
-            await startNachlauf('ueberwachung'); await setMode(MODI.NL);
+            await startNachlauf('ueberwachung');
+            await setMode(MODI.NL);
         }
     }
 
     private _taupunkt(T: number, rH: number): number {
         const sdd = 6.112 * Math.exp((17.62 * T) / (243.12 + T));
-        const dd  = sdd * rH / 100.0;
+        const dd = (sdd * rH) / 100.0;
         return (235.0 * Math.log(dd / 6.11)) / (17.1 - Math.log(dd / 6.11));
     }
 
     private _humZeitErlaubt(start: string, end: string): boolean {
         const now = new Date();
-        const hm  = now.getHours() * 60 + now.getMinutes();
+        const hm = now.getHours() * 60 + now.getMinutes();
         const [sh, sm] = (start || '07:00').split(':').map(Number);
-        const [eh, em] = (end   || '22:00').split(':').map(Number);
-        const s = sh * 60 + sm, e = eh * 60 + em;
-        return s < e ? (hm >= s && hm < e) : (hm >= s || hm < e);
+        const [eh, em] = (end || '22:00').split(':').map(Number);
+        const s = sh * 60 + sm,
+            e = eh * 60 + em;
+        return s < e ? hm >= s && hm < e : hm >= s || hm < e;
     }
 
     private async _humCmd(folder: string, power: boolean, mode?: string, fan?: string): Promise<void> {
         try {
             await this.setStateAsync(`${folder}.power`, { val: power, ack: false });
-            if (mode !== undefined) await this.setStateAsync(`${folder}.mode`, { val: mode, ack: false });
-            if (fan  !== undefined) await this.setStateAsync(`${folder}.fan`,  { val: fan,  ack: false });
-        } catch (err) { this.log.warn(`Humidity [${folder}] cmd failed: ${err}`); }
+            if (mode !== undefined) {
+                await this.setStateAsync(`${folder}.mode`, { val: mode, ack: false });
+            }
+            if (fan !== undefined) {
+                await this.setStateAsync(`${folder}.fan`, { val: fan, ack: false });
+            }
+        } catch (err) {
+            this.log.warn(`Humidity [${folder}] cmd failed: ${String(err)}`);
+        }
     }
 
     private async onUnload(callback: () => void): Promise<void> {
@@ -1141,7 +1485,7 @@ class FaikoutAdapter extends utils.Adapter {
             }
             await this.setStateAsync('info.connection', { val: false, ack: true });
         } catch (e) {
-            this.log.error(`Error during unload: ${e}`);
+            this.log.error(`Error during unload: ${String(e)}`);
         }
         callback();
     }

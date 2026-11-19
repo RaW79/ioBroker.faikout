@@ -1,7 +1,406 @@
 // @ts-nocheck
 import React from 'react';
 
+var DEMAND_INFO_TRANSLATIONS = {
+    en: {
+        funcTitle:   'How it works',
+        funcText:    'Demand control adjusts the air conditioner based on outdoor temperature (weather-compensated control). ' +
+                     'A higher demand value means more heating output. The control logic runs inside the adapter. ' +
+                     'The function is designed and tested for use with the Faikout AutoControl function active (thermostat mode disabled). ' +
+                     'Other operating modes may work in principle but are insufficiently tested for the adapter demand control.',
+        curveTitle:  'Base curve',
+        curveText:   'Maps outdoor temperature to a base demand value. Points are linearly interpolated; outside the defined range the edge value is held. ' +
+                     'Min. and max. demand additionally limit the output range. The base curve must be determined and adjusted individually per room.',
+        boostTitle:  'Boost',
+        boostText:   'Increases demand step by step when room temperature falls below the setpoint (autot). ' +
+                     'Each stage defines a deviation in Kelvin and the corresponding increase in percentage points.',
+        taperTitle:  'Taper',
+        taperText:   'Reduces demand when room temperature exceeds the setpoint. ' +
+                     'The reduction grows linearly up to the configured maximum (max. taper %) when the guard threshold is reached.',
+        guardTitle:  'Guard',
+        guardText:   'Switches the heatback mode when the room is significantly too warm. ' +
+                     'ON threshold: room >= autot + autor + 0.1 K. OFF threshold: room <= autot. ' +
+                     'In guard mode a higher heatback value is sent to put the unit into an enhanced standby and prevent further overheating. ' +
+                     'Ideally the unit should already be running at minimum modulation (e.g. via taper) before guard activates.',
+        holdTitle:   'Demand changes (hold times)',
+        holdText:    'After a demand change the next change in the same direction is delayed until the configured hold time has elapsed. ' +
+                     'Decrease (default: 0 s) and increase (default: 300 s) are configurable separately. ' +
+                     'Calculation is event-triggered, at most once per 60 seconds and at least every 180 seconds.',
+        sensorTitle: 'Sensors',
+        sensorText:  'Outdoor temperature: state ID providing outdoor temperature in °C (default: {device}.outside). ' +
+                     'Room temperature: state ID providing room temperature in °C (default: {device}.env). ' +
+                     'If left empty the device default state is used. ' +
+                     'In multi-split groups all devices share the same outdoor sensor. ' +
+                     'Changing the outdoor sensor for one device automatically updates all other devices in the group.',
+        msTitle:     'Multi-split',
+        msText:      'Multiple indoor units on one outdoor unit can be grouped in the Devices tab (groups A-E). ' +
+                     'Demand control calculates independently per indoor unit with its own room temperature, curve and boost/taper. ' +
+                     'The floor for the sent demand is the highest minimum demand of all devices in the group. ' +
+                     'This prevents the outdoor unit from being throttled too much while another indoor unit still needs heating output.',
+        ovTitle:     'Manual override',
+        ovText:      'Override bypasses the base curve, boost and taper calculation and sends a fixed demand value directly. ' +
+                     'Set state {device}.demand_ctrl.override_active to true, then {device}.demand_ctrl.override_value is used as demand. ' +
+                     'Guard remains active during override. ' +
+                     'The Schedule tab provides actions "Demand manual ON" (with configurable value 0-100%) and "Demand manual OFF" ' +
+                     'to activate or deactivate the override on a schedule.',
+        noDevice:    'No device activated - enable checkbox in Devices tab',
+    },
+    de: {
+        funcTitle:   'Funktionsprinzip',
+        funcText:    'Die Bedarfsregelung steuert die Klimaanlage anhand der Außentemperatur (Witterungsführung). ' +
+                     'Ein höherer Demand-Wert bedeutet mehr Heizleistung. Die Regelung läuft im Adapter. ' +
+                     'Die Funktion ist ausgelegt und getestet für den Betrieb mit aktiver AutoControl-Funktion des Faikout (Thermostatmodus deaktiviert). ' +
+                     'Andere Betriebsverfahren können grundsätzlich funktionieren, sind jedoch für die Bedarfsregelung im Adapter unzureichend getestet.',
+        curveTitle:  'Basiskennlinie',
+        curveText:   'Ordnet der Außentemperatur einen Basis-Demand-Wert zu. Stützpunkte werden linear interpoliert; außerhalb der Stützpunkte wird der Randwert gehalten. ' +
+                     'Min. und Max. Bedarf begrenzen den Ausgabebereich zusätzlich. Die Stützpunkte bzw. Basiskennlinie ist individuell für den Raum zu bestimmen und anzupassen.',
+        boostTitle:  'Boost',
+        boostText:   'Erhöht den Demand stufenweise wenn die Raumtemperatur unter den Sollwert (autot) fällt. ' +
+                     'Jede Stufe definiert eine Abweichung in Kelvin und den zugehörigen Aufschlag in Prozentpunkten.',
+        taperTitle:  'Taper',
+        taperText:   'Reduziert den Demand wenn die Raumtemperatur den Sollwert überschreitet. ' +
+                     'Die Absenkung wächst linear bis zum konfigurierten Maximum (Max. Taper %) bei Erreichen der Guard-Schwelle.',
+        guardTitle:  'Guard',
+        guardText:   'Schaltet den Heatback-Modus um wenn der Raum deutlich zu warm ist. ' +
+                     'Schwelle EIN: Raum >= autot + autor + 0,1 K. Schwelle AUS: Raum <= autot. ' +
+                     'Im Guard-Modus wird ein höherer Heatback-Wert gesendet um die Anlage in den verstärkten Ruhemodus zu versetzen und weiteres Überhitzen zu verhindern. ' +
+                     'Idealerweise sollte die Anlage vorher in ihrer minimalen Modulationsfähigkeit gelaufen sein, z.B. durch den Taper.',
+        holdTitle:   'Bedarfsänderung (Haltezeiten)',
+        holdText:    'Nach einer Demand-Änderung wird die nächste Änderung in dieselbe Richtung erst nach Ablauf der konfigurierten Haltezeit durchgeführt. ' +
+                     'Absenkung (Standard: 0 s) und Anhebung (Standard: 300 s) sind getrennt einstellbar. ' +
+                     'Die Berechnung erfolgt event-getriggert, maximal einmal pro 60 Sekunden und spätestens alle 180 Sekunden.',
+        sensorTitle: 'Sensoren',
+        sensorText:  'Außentemperatur: Datenpunkt der die Außentemperatur in °C liefert (Standard: {Gerät}.outside). ' +
+                     'Raumtemperatur: Datenpunkt der die Raumtemperatur in °C liefert (Standard: {Gerät}.env). ' +
+                     'Bleibt das Feld leer, wird der Standard-Datenpunkt des jeweiligen Geräts verwendet. ' +
+                     'Bei Multisplit-Gruppen teilen sich alle Geräte der Gruppe denselben Außensensor. ' +
+                     'Wird der Außensensor bei einem Gerät geändert, wird die Auswahl automatisch auf alle anderen Geräte der Gruppe übertragen.',
+        msTitle:     'Multisplit',
+        msText:      'Mehrere Innengeräte an einem Außengerät lassen sich im Geräte-Tab zu einer Gruppe (A-E) zusammenfassen. ' +
+                     'Die Bedarfsregelung rechnet für jedes Innengerät unabhängig mit eigener Raumtemperatur, eigener Kennlinie und eigenem Boost/Taper. ' +
+                     'Als Untergrenze für den gesendeten Demand gilt der höchste Mindest-Demand aller Geräte in der Gruppe. ' +
+                     'Dadurch wird verhindert, dass das Außengerät zu stark gedrosselt wird, solange ein anderes Innengerät noch Heizleistung braucht.',
+        ovTitle:     'Manueller Override',
+        ovText:      'Der Override ermöglicht es, die Berechnung der Basiskennlinie, Boost und Taper zu umgehen und einen festen Demand-Wert direkt zu senden. ' +
+                     'Datenpunkt {Gerät}.demand_ctrl.override_active auf true setzen, dann wird {Gerät}.demand_ctrl.override_value direkt als Demand verwendet. ' +
+                     'Guard bleibt dabei weiterhin aktiv. ' +
+                     'Im Zeitplan-Tab stehen die Aktionen "Demand manuell Ein" (mit konfigurierbarem Wert 0-100 %) und "Demand manuell Aus" zur Verfügung.',
+        noDevice:    'Kein Gerät aktiviert - Checkbox im Geräte-Tab setzen',
+    }
+};
+
+var HUM_INFO_TRANSLATIONS = {
+    en: {
+        whatTitle:   'What is Humidity Control?',
+        whatText:    'Humidity control protects against mould by monitoring the dew point margin. ' +
+                     'If the margin between room temperature and dew point falls below a configured threshold the unit is switched to drying mode (DRY) automatically.',
+        sensorTitle: 'Sensors',
+        sensorText:  'A BLE sensor on the Faikout device provides room temperature and humidity directly. ' +
+                     'Alternatively external states (e.g. Zigbee sensor) can be configured. ' +
+                     'If left empty the default BLE state of the device is used ({device}.ble.temp / {device}.ble.hum).',
+        dryTitle:    'DRY mode',
+        dryText:     'When triggered the unit runs in D-mode (dehumidification) with automatic fan speed. ' +
+                     'After DRY operation a configurable fan run-on follows to dry the heat exchanger. ' +
+                     'Then the control returns to monitoring mode.',
+        thrTitle:    'Thresholds',
+        thrText:     'Delta DP-ON: DRY starts when dew point margin (room temp - dew point) <= this value, or humidity >= max. humidity. ' +
+                     'Delta DP-OFF: DRY stops when dew point margin >= this value and humidity < max. humidity. ' +
+                     'Typical values: delta DP-ON = 4 K, delta DP-OFF = 7 K.',
+        windowTitle: 'Time window',
+        windowText:  'DRY operation only within the configured time window. ' +
+                     'A running DRY cycle outside the window is ended with run-on.',
+        motorTitle:  'Motor protection',
+        motorText:   'Maximum DRY runtime limits continuous operation. ' +
+                     'After reaching the maximum runtime a run-on follows, then a forced pause. ' +
+                     'DRY operation is not re-enabled until the pause has elapsed.',
+        freshTitle:  'Freshness',
+        freshText:   'Sensor data must be current within the configured time window. ' +
+                     'Stale data stops DRY operation (with run-on) and disables the automation ' +
+                     'until the user re-enables it manually.',
+        noDevice:    'No device activated - enable checkbox in Devices tab',
+    },
+    de: {
+        whatTitle:   'Was ist Feuchte-Regelung?',
+        whatText:    'Die Feuchte-Regelung schützt vor Schimmelbildung durch Überwachung des Taupunktabstands. ' +
+                     'Unterschreitet der Abstand zwischen Raumtemperatur und Taupunkt einen konfigurierten Schwellwert, ' +
+                     'wird die Anlage automatisch in den Trocknungsmodus (DRY) geschaltet.',
+        sensorTitle: 'Sensoren',
+        sensorText:  'Ein BLE-Sensor am Faikout-Gerät liefert Raumtemperatur und Luftfeuchte direkt. ' +
+                     'Alternativ können externe Datenpunkte (z.B. Zigbee-Sensor) konfiguriert werden. ' +
+                     'Bleibt das Feld leer, wird der Standard-BLE-Datenpunkt des jeweiligen Geräts verwendet ({Gerät}.ble.temp / {Gerät}.ble.hum).',
+        dryTitle:    'DRY-Modus',
+        dryText:     'Bei Auslösung läuft die Anlage im D-Modus (Trocknen) mit automatischer Lüftergeschwindigkeit. ' +
+                     'Nach dem DRY-Betrieb folgt ein konfigurierbarer Lüfter-Nachlauf, um den Wärmetauscher zu trocknen. ' +
+                     'Danach kehrt die Regelung in den Überwachungsmodus zurück.',
+        thrTitle:    'Schwellen',
+        thrText:     'Delta TP-Ein: DRY startet wenn Taupunktabstand (Raumtemp - Taupunkt) <= diesem Wert, oder Feuchte >= Max. Feuchte. ' +
+                     'Delta TP-Aus: DRY stoppt wenn Taupunktabstand >= diesem Wert und Feuchte < Max. Feuchte. ' +
+                     'Typische Werte: Delta TP-Ein = 4 K, Delta TP-Aus = 7 K.',
+        windowTitle: 'Zeitfenster',
+        windowText:  'DRY-Betrieb nur innerhalb des konfigurierten Zeitfensters. ' +
+                     'Außerhalb des Fensters wird ein laufender DRY-Betrieb mit Nachlauf beendet.',
+        motorTitle:  'Motorschutz',
+        motorText:   'Maximale DRY-Laufzeit begrenzt den Dauerbetrieb. ' +
+                     'Nach Erreichen der Maximalzeit folgt ein Nachlauf und anschließend eine Zwangspause. ' +
+                     'Erst nach Ablauf der Pause wird der DRY-Betrieb wieder freigegeben.',
+        freshTitle:  'Freshness',
+        freshText:   'Sensordaten müssen innerhalb des konfigurierten Zeitfensters aktuell sein. ' +
+                     'Veraltete Daten führen zum Stopp des DRY-Betriebs (mit Nachlauf) und zur Deaktivierung der Automatik ' +
+                     'bis der Benutzer sie manuell wieder aktiviert.',
+        noDevice:    'Kein Gerät aktiviert - Checkbox im Geräte-Tab setzen',
+    }
+};
+
+function getLang(props) {
+    var lang = (props && props.systemConfig && props.systemConfig.common && props.systemConfig.common.language)
+        || (typeof window !== 'undefined' && window.systemLang)
+        || 'en';
+    return (lang === 'de') ? 'de' : 'en';
+}
+
+var CHART_TR = {
+    en: { minPoints: 'At least 2 support points required for preview', legendBase: 'Base curve', legendBoost: 'Boost', legendEffective: 'Effective' },
+    de: { minPoints: 'Mindestens 2 Stützpunkte für Vorschau erforderlich', legendBase: 'Basiskennlinie', legendBoost: 'Boost', legendEffective: 'Effektiv' }
+};
+
+var TAPER_TR = {
+    en: { waiting: 'Waiting for device values (autot, autor)\u2026', chartLabel: 'Room temperature \u2192 taper reduction (%)' },
+    de: { waiting: 'Warte auf Gerätewerte (autot, autor)\u2026', chartLabel: 'Raumtemperatur \u2192 Taper-Reduktion (%)' }
+};
+
+var GUARD_TR = {
+    en: {
+        noDevice:   'Select a device to show guard status.',
+        setpoint:   'Setpoint (autot)',
+        hysteresis: 'Hysteresis (autor)',
+        threshOn:   'Guard threshold ON',
+        threshOff:  'Guard threshold OFF',
+        roomTemp:   'Room temperature',
+        active:     'ACTIVE',
+        inactive:   'INACTIVE',
+        label:      'Guard'
+    },
+    de: {
+        noDevice:   'Gerät auswählen um Guard-Status anzuzeigen.',
+        setpoint:   'Sollwert (autot)',
+        hysteresis: 'Hysterese (autor)',
+        threshOn:   'Guard-Schwelle-Ein',
+        threshOff:  'Guard-Schwelle-Aus',
+        roomTemp:   'Raumtemperatur',
+        active:     'AKTIV',
+        inactive:   'INAKTIV',
+        label:      'Guard'
+    }
+};
+
+var DEMAND_DETAIL_TR = {
+    en: {
+        enableCheckbox:  'Enable demand control (heating mode only)',
+        msGroup:         'Multi-split \u2013 Group ',
+        singleSplit:     'Single-Split',
+        limitsHeading:   'Demand limits',
+        minDemand:       'Min. demand (%)',
+        maxDemand:       'Max. demand (%)',
+        changesHeading:  'Demand changes',
+        holdDecrease:    'Hold time decrease (s)',
+        holdIncrease:    'Hold time increase (s)',
+        sensorsHeading:  'Sensors',
+        outdoorLabel:    'Outdoor temperature (empty = ',
+        enterToCheck:    'Enter to check',
+        groupSync:       'Group "{g}" \u2013 synced across all devices in this group',
+        roomLabel:       'Room temperature (empty = ',
+        outdoorTempCol:  'Outdoor temp (\u00b0C)',
+        demandCol:       'Demand (%)',
+        addPoint:        '+ Support point',
+        deviationCol:    'Deviation >= (K)',
+        boostCol:        'Boost (+%)',
+        addStage:        '+ Stage',
+        logHeading:      'Log output',
+        logLevel:        'Log level',
+        logOff:          'Off (system messages only)',
+        logBasic:        'Basic (per step, min. every 3 min.)',
+        logExtended:     'Extended (per step with base/boost/taper/guard, min. every 3 min.)',
+        curveHeading:    'Base curve \u2013 weather compensation (outdoor temp \u2192 demand)',
+        boostHeading:    'Boost',
+        boostEnable:     'Enable boost (room below setpoint)',
+        taperHeading:    'Taper',
+        taperEnable:     'Enable taper',
+        taperDesc:       'Room above setpoint \u2192 reduce demand linearly. Maximum at guard threshold (autot + hysteresis + 0.1 \u00b0C).',
+        maxTaper:        'Max. taper (%)',
+        guardHeading:    'Guard (overheat protection)',
+        guardEnable:     'Enable guard',
+        guardDesc:       'Guard ON: room >= setpoint + hysteresis + 0.1\u00b0C \u2192 heatback switches. Guard OFF: room <= setpoint \u2192 heatback normal.',
+        hbNormal:        'Heatback normal (\u00b0C)',
+        hbGuard:         'Heatback guard (\u00b0C)',
+        noDevice:        'No device activated \u2013 enable checkbox in Devices tab'
+    },
+    de: {
+        enableCheckbox:  'Bedarfsregelung aktivieren (nur Heizmodus)',
+        msGroup:         'Multisplit \u2013 Gruppe ',
+        singleSplit:     'Single-Split',
+        limitsHeading:   'Bedarfsgrenzen',
+        minDemand:       'Min. Bedarf (%)',
+        maxDemand:       'Max. Bedarf (%)',
+        changesHeading:  'Bedarfs\u00e4nderung',
+        holdDecrease:    'Haltezeit Absenkung (s)',
+        holdIncrease:    'Haltezeit Anhebung (s)',
+        sensorsHeading:  'Sensoren',
+        outdoorLabel:    'Au\u00dfentemperatur (leer = ',
+        enterToCheck:    'Enter zum Pr\u00fcfen',
+        groupSync:       'Gruppe "{g}" \u2013 wird f\u00fcr alle Ger\u00e4te dieser Gruppe synchronisiert',
+        roomLabel:       'Raumtemperatur (leer = ',
+        outdoorTempCol:  'Au\u00dfentemp (\u00b0C)',
+        demandCol:       'Bedarf (%)',
+        addPoint:        '+ St\u00fctzpunkt',
+        deviationCol:    'Abweichung >= (K)',
+        boostCol:        'Boost (+%)',
+        addStage:        '+ Stufe',
+        logHeading:      'Log-Ausgabe',
+        logLevel:        'Log-Level',
+        logOff:          'Aus (nur Systemmeldungen)',
+        logBasic:        'Basis (je Schritt, mind. alle 3 Min.)',
+        logExtended:     'Erweitert (je Schritt mit Basis/Boost/Taper/Guard, mind. alle 3 Min.)',
+        curveHeading:    'Basiskennlinie \u2013 Witterungsf\u00fchrung (Au\u00dfentemperatur \u2192 Bedarf)',
+        boostHeading:    'Boost',
+        boostEnable:     'Boost aktivieren (Raum unter Sollwert)',
+        taperHeading:    'Taper',
+        taperEnable:     'Taper aktivieren',
+        taperDesc:       'Raum \u00fcber Sollwert \u2192 Bedarf linear reduzieren. Maximum bei Guard-Schwelle (autot + Hysterese + 0,1 \u00b0C).',
+        maxTaper:        'Max. Taper (%)',
+        guardHeading:    'Guard (\u00dcberhitzschutz)',
+        guardEnable:     'Guard aktivieren',
+        guardDesc:       'Guard EIN: Raum >= Sollwert + Hysterese + 0,1\u00b0C \u2192 heatback wechselt. Guard AUS: Raum <= Sollwert \u2192 heatback normal.',
+        hbNormal:        'Heatback normal (\u00b0C)',
+        hbGuard:         'Heatback Guard (\u00b0C)',
+        noDevice:        'Kein Ger\u00e4t aktiviert \u2013 Checkbox im Ger\u00e4te-Tab setzen'
+    }
+};
+
+var ENV_TR = {
+    en: {
+        deviceCol:    'Device',
+        sensorCol:    'Sensor state',
+        intervalCol:  'Interval',
+        devicePh:     '\u2013 Device \u2013',
+        sensorPh:     'e.g. zigbee.0.00158d0001.temperature',
+        enterToCheck: 'Enter to check',
+        addEntry:     '+ Add entry',
+        hint:         'The Faikout device expects a new value within 300 seconds \u2013 at longer intervals the external sensor is discarded. Directly paired BLE sensors must not be forwarded additionally.'
+    },
+    de: {
+        deviceCol:    'Ger\u00e4t',
+        sensorCol:    'Sensor-Datenpunkt',
+        intervalCol:  'Intervall',
+        devicePh:     '\u2013 Ger\u00e4t \u2013',
+        sensorPh:     'z.B. zigbee.0.00158d0001.temperature',
+        enterToCheck: 'Enter zum Pr\u00fcfen',
+        addEntry:     '+ Eintrag hinzuf\u00fcgen',
+        hint:         'Der Faikout-Sensor erwartet innerhalb von 300 Sekunden einen neuen Wert \u2013 bei l\u00e4ngeren Intervallen wird der externe Sensor verworfen. Direkt gekoppelte BLE-Sensoren sind nicht zus\u00e4tzlich an das Faikout zu \u00fcbermitteln.'
+    }
+};
+
+var SCHED_TR = {
+    en: {
+        devicePh:    '\u2013 Device \u2013',
+        days:        ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+        on:          'On',
+        off:         'Off',
+        pause:       'Pause:',
+        addAction:   '+ Action',
+        addTask:     '+ Add task',
+        fieldLabels: {
+            power:                'Power',
+            fan:                  'Fan',
+            econo:                'ECONO',
+            swingh:               'SwingH',
+            swingv:               'SwingV',
+            comfort:              'Comfort',
+            powerful:             'Powerful',
+            autot:                'Setpoint',
+            demand_override_on:   'Demand manual ON',
+            demand_override_off:  'Demand manual OFF'
+        }
+    },
+    de: {
+        devicePh:    '\u2013 Ger\u00e4t \u2013',
+        days:        ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
+        on:          'An',
+        off:         'Aus',
+        pause:       'Pause:',
+        addAction:   '+ Aktion',
+        addTask:     '+ Aufgabe hinzuf\u00fcgen',
+        fieldLabels: {
+            power:                'Power',
+            fan:                  'L\u00fcfter',
+            econo:                'ECONO',
+            swingh:               'SwingH',
+            swingv:               'SwingV',
+            comfort:              'Comfort',
+            powerful:             'Powerful',
+            autot:                'Sollwert',
+            demand_override_on:   'Demand manuell Ein',
+            demand_override_off:  'Demand manuell Aus'
+        }
+    }
+};
+
+var HUM_DETAIL_TR = {
+    en: {
+        autoLabel:      'Auto',
+        modeLabel:      'Mode',
+        dpMarginLabel:  'Dew point margin',
+        dpLabel:        'Dew point',
+        sensorsHeading: 'Sensors',
+        tempSensor:     'Temperature sensor',
+        tempCard:       'Temperature',
+        humSensor:      'Humidity sensor',
+        humCard:        'Humidity',
+        thrHeading:     'Thresholds',
+        tpOn:           '\u0394 DP-ON (\u00b0C)',
+        tpOff:          '\u0394 DP-OFF (\u00b0C)',
+        maxHum:         'Max. rel. humidity (%)',
+        windowHeading:  'Time window',
+        windowFrom:     'Active from',
+        windowTo:       'Active until',
+        runtimeHeading: 'Runtimes',
+        maxRuntime:     'Max. DRY runtime (min)',
+        runOn:          'Run-on (min)',
+        forcedPause:    'Forced pause (min)',
+        freshTimeout:   'Freshness timeout (min)',
+        noDevice:       'No device activated \u2013 enable checkbox in Devices tab',
+        emptyHint:      'empty = ',
+        modeMap:        { 'AUS': 'OFF', 'ÜBERWACHUNG': 'MONITORING', 'DRY': 'DRY', 'NACHLAUF': 'RUNDOWN', 'PAUSE': 'PAUSE', 'FRESHNESS!': 'FRESHNESS!' }
+    },
+    de: {
+        autoLabel:      'Automatik',
+        modeLabel:      'Modus',
+        dpMarginLabel:  'Taupunktabstand',
+        dpLabel:        'Taupunkt',
+        sensorsHeading: 'Sensoren',
+        tempSensor:     'Temperatur-Sensor',
+        tempCard:       'Temperatur',
+        humSensor:      'Feuchte-Sensor',
+        humCard:        'Feuchte',
+        thrHeading:     'Schwellen',
+        tpOn:           '\u0394 TP-Ein (\u00b0C)',
+        tpOff:          '\u0394 TP-Aus (\u00b0C)',
+        maxHum:         'Max. rel. Feuchte (%)',
+        windowHeading:  'Zeitfenster',
+        windowFrom:     'Betrieb ab',
+        windowTo:       'Betrieb bis',
+        runtimeHeading: 'Laufzeiten',
+        maxRuntime:     'Max. DRY-Laufzeit (min)',
+        runOn:          'Nachlauf (min)',
+        forcedPause:    'Zwangspause (min)',
+        freshTimeout:   'Freshness-Timeout (min)',
+        noDevice:       'Kein Ger\u00e4t aktiviert \u2013 Checkbox im Ger\u00e4te-Tab setzen',
+        emptyHint:      'leer = ',
+        modeMap:        { 'AUS': 'AUS', 'ÜBERWACHUNG': 'ÜBERWACHUNG', 'DRY': 'DRY', 'NACHLAUF': 'NACHLAUF', 'PAUSE': 'PAUSE', 'FRESHNESS!': 'FRESHNESS!' }
+    }
+};
+
 function DemandChart(props) {
+    var trC = CHART_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'];
     var data = props.data || {};
     var workPoint = props.workPoint || null; // { temp: number, demand: number } | null
     var curve = Array.isArray(data.demandCurve) ? data.demandCurve : [];
@@ -18,7 +417,7 @@ function DemandChart(props) {
     if (sorted.length < 2) {
         return React.createElement('div', {
             style: { padding: '8px 0', color: '#888', fontStyle: 'italic', fontSize: '12px' }
-        }, 'Mindestens 2 Stützpunkte für Vorschau erforderlich');
+        }, CHART_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'].minPoints);
     }
 
     var W = 420, H = 180;
@@ -209,19 +608,19 @@ function DemandChart(props) {
     // Legend
     var legendItems = [
         React.createElement('line', { key: 'll', x1: 0, y1: 6, x2: 18, y2: 6, stroke: '#1976d2', strokeWidth: 2.5 }),
-        React.createElement('text', { key: 'lt', x: 22, y: 10, fontSize: 10, fill: '#555' }, 'Basiskennlinie')
+        React.createElement('text', { key: 'lt', x: 22, y: 10, fontSize: 10, fill: '#555' }, trC.legendBase)
     ];
     if (boostEnabled) {
         legendItems.push(
             React.createElement('line', { key: 'lb', x1: 110, y1: 6, x2: 128, y2: 6, stroke: '#ff9800', strokeWidth: 1.5, strokeDasharray: '5 3' }),
-            React.createElement('text', { key: 'lbt', x: 132, y: 10, fontSize: 10, fill: '#555' }, 'Boost')
+            React.createElement('text', { key: 'lbt', x: 132, y: 10, fontSize: 10, fill: '#555' }, trC.legendBoost)
         );
     }
     if (hasClamp) {
         var lx = boostEnabled ? 185 : 110;
         legendItems.push(
             React.createElement('line', { key: 'lc', x1: lx, y1: 6, x2: lx + 18, y2: 6, stroke: '#43a047', strokeWidth: 2, strokeDasharray: '4 2' }),
-            React.createElement('text', { key: 'lct', x: lx + 22, y: 10, fontSize: 10, fill: '#555' }, 'Effektiv')
+            React.createElement('text', { key: 'lct', x: lx + 22, y: 10, fontSize: 10, fill: '#555' }, trC.legendEffective)
         );
     }
 
@@ -239,6 +638,7 @@ function DemandChart(props) {
 
 // Pure chart – no socket, all values passed as props
 function TaperChart(props) {
+    var trT = TAPER_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'];
     var autot      = props.autot;      // number | null
     var autor      = props.autor;      // number | null
     var room       = props.room;       // number | null
@@ -247,7 +647,7 @@ function TaperChart(props) {
     if (autot === null || autor === null) {
         return React.createElement('div', {
             style: { fontSize: '12px', color: '#888', fontStyle: 'italic', padding: '4px 0' }
-        }, 'Warte auf Gerätewerte (autot, autor)\u2026');
+        }, TAPER_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'].waiting);
     }
 
     var guardOn = autot + autor + 0.1;
@@ -355,7 +755,7 @@ function TaperChart(props) {
 
     return React.createElement('div', { style: { margin: '8px 0 4px 0' } },
         React.createElement('div', { style: { fontSize: '10px', color: '#888', marginBottom: '2px' } },
-            'Raumtemperatur \u2192 Taper-Reduktion (%)'
+            trT.chartLabel
         ),
         React.createElement('svg', {
             width: W, height: H,
@@ -369,11 +769,12 @@ function TaperChart(props) {
 function GuardStatus(props) {
     var vals = props.vals || {};
     var deviceName = props.deviceName || '';
+    var trG = GUARD_TR[typeof window !== 'undefined' && window.systemLang === 'de' ? 'de' : 'en'];
 
     if (!deviceName) {
         return React.createElement('div', {
             style: { fontSize: '12px', color: '#888', fontStyle: 'italic', padding: '4px 0' }
-        }, 'Gerät auswählen um Guard-Status anzuzeigen.');
+        }, trG.noDevice);
     }
 
     var autot       = vals.autot       != null ? vals.autot       : null;
@@ -388,14 +789,14 @@ function GuardStatus(props) {
     function fmt(v) { return v !== null ? v.toFixed(1) + ' °C' : '–'; }
 
     var guardColor = guardKnown ? (guardActive ? '#d32f2f' : '#388e3c') : '#888';
-    var guardLabel = guardKnown ? (guardActive ? 'AKTIV' : 'INAKTIV') : '–';
+    var guardLabel = guardKnown ? (guardActive ? trG.active : trG.inactive) : '–';
 
     var rows = [
-        ['Sollwert (autot)',   fmt(autot)],
-        ['Hysterese (autor)',  autor !== null ? autor.toFixed(1) + ' K' : '–'],
-        ['Guard-Schwelle-Ein', fmt(thresholdOn)],
-        ['Guard-Schwelle-Aus', fmt(thresholdOff)],
-        ['Raumtemperatur',     fmt(room)]
+        [trG.setpoint,   fmt(autot)],
+        [trG.hysteresis, autor !== null ? autor.toFixed(1) + ' K' : '–'],
+        [trG.threshOn,   fmt(thresholdOn)],
+        [trG.threshOff,  fmt(thresholdOff)],
+        [trG.roomTemp,   fmt(room)]
     ];
 
     return React.createElement('div', {
@@ -418,7 +819,7 @@ function GuardStatus(props) {
                 color: guardColor, fontWeight: 'bold', fontSize: '13px', minWidth: '80px', lineHeight: '1.5'
             }
         },
-            React.createElement('span', { style: { fontSize: '10px', color: '#888', fontWeight: 'normal' } }, 'Guard'),
+            React.createElement('span', { style: { fontSize: '10px', color: '#888', fontWeight: 'normal' } }, trG.label),
             React.createElement('span', null, guardLabel)
         )
     );
@@ -512,7 +913,7 @@ function DemandTabs(props) {
             h('div', { style: { display: 'flex', flexWrap: 'wrap', borderBottom: '2px solid #e0e0e0', marginBottom: '16px' } },
                 h('button', { style: { padding: '7px 18px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '13px',
                     borderBottom: '2px solid #1976d2', color: '#1976d2', fontWeight: 'bold', marginBottom: '-2px' } }, 'Info'),
-                h('span', { style: { padding: '7px 18px', fontSize: '12px', color: '#aaa', alignSelf: 'center' } }, 'Kein Gerät aktiviert – Checkbox im Geräte-Tab setzen')
+                h('span', { style: { padding: '7px 18px', fontSize: '12px', color: '#aaa', alignSelf: 'center' } }, DEMAND_INFO_TRANSLATIONS[getLang(props)].noDevice)
             ),
             renderInfoTab()
         );
@@ -547,6 +948,8 @@ function DemandTabs(props) {
         var v = devCfg[f];
         return (v !== undefined && v !== null) ? v : def;
     }
+
+    var tr = DEMAND_DETAIL_TR[getLang(props)];
 
     var enabled        = g('demandEnabled', false);
     var logLevel       = g('demandLogLevel', 'basic');
@@ -601,6 +1004,7 @@ function DemandTabs(props) {
     }
 
     function renderInfoTab() {
+        var tr = DEMAND_INFO_TRANSLATIONS[getLang(props)];
         var sec = function (title, text) {
             return h('div', { style: { marginBottom: '14px' } },
                 h('div', { style: { fontWeight: 'bold', fontSize: '22px', fontFamily: 'xkcd Script, cursive', marginBottom: '4px' } }, title),
@@ -608,47 +1012,15 @@ function DemandTabs(props) {
             );
         };
         return h('div', { style: { maxWidth: '680px', padding: '4px 0', fontSize: '15px' } },
-            sec('Funktionsprinzip',
-                'Die Bedarfsregelung steuert die Klimaanlage anhand der Außentemperatur (Witterungsführung). ' +
-                'Ein höherer Demand-Wert bedeutet mehr Heizleistung. Die Regelung läuft im Adapter. ' +
-                'Die Funktion ist ausgelegt und getestet für den Betrieb mit aktiver AutoControl-Funktion des Faikout (Thermostatmodus deaktiviert). ' +
-                'Andere Betriebsverfahren können grundsätzlich funktionieren, sind jedoch für die Bedarfsregelung im Adapter unzureichend getestet.'),
-            sec('Basiskennlinie',
-                'Ordnet der Außentemperatur einen Basis-Demand-Wert zu. Stützpunkte werden linear interpoliert; außerhalb der Stützpunkte wird der Randwert gehalten. ' +
-                'Min. und Max. Bedarf begrenzen den Ausgabebereich zusätzlich. Die Stützpunkte bzw. Basiskennlinie ist individuell für den Raum zu bestimmen und anzupassen.'),
-            sec('Boost',
-                'Erhöht den Demand stufenweise wenn die Raumtemperatur unter den Sollwert (autot) fällt. ' +
-                'Jede Stufe definiert eine Abweichung in Kelvin und den zugehörigen Aufschlag in Prozentpunkten.'),
-            sec('Taper',
-                'Reduziert den Demand wenn die Raumtemperatur den Sollwert überschreitet. ' +
-                'Die Absenkung wächst linear bis zum konfigurierten Maximum (Max. Taper %) bei Erreichen der Guard-Schwelle.'),
-            sec('Guard',
-                'Schaltet den Heatback-Modus um wenn der Raum deutlich zu warm ist. ' +
-                'Schwelle EIN: Raum ≥ autot + autor + 0,1 K. Schwelle AUS: Raum ≤ autot. ' +
-                'Im Guard-Modus wird ein höherer Heatback-Wert gesendet um die Anlage in den verstärkten Ruhemodus zu versetzen und weiteres Überhitzen zu verhindern. ' +
-                'Idealerweise sollte die Anlage vorher in ihrer minimalen Modulationsfähigkeit gelaufen sein, z.B. durch den Taper, ' +
-                'und es bleibt keine andere Möglichkeit als vor Überhitzung zu schützen als die verstärkte Pause.'),
-            sec('Bedarfsänderung (Haltezeiten)',
-                'Nach einer Demand-Änderung wird die nächste Änderung in dieselbe Richtung erst nach Ablauf der konfigurierten Haltezeit durchgeführt. ' +
-                'Absenkung (Standard: 0 s) und Anhebung (Standard: 300 s) sind getrennt einstellbar. ' +
-                'Die Berechnung erfolgt event-getriggert, maximal einmal pro 60 Sekunden und spätestens alle 180 Sekunden.'),
-            sec('Sensoren',
-                'Außentemperatur: Datenpunkt der die Außentemperatur in °C liefert (Standard: {Gerät}.outside). ' +
-                'Raumtemperatur: Datenpunkt der die Raumtemperatur in °C liefert (Standard: {Gerät}.env). ' +
-                'Bleibt das Feld leer, wird der Standard-Datenpunkt des jeweiligen Geräts verwendet. ' +
-                'Bei Multisplit-Gruppen teilen sich alle Geräte der Gruppe denselben Außensensor. ' +
-                'Wird der Außensensor bei einem Gerät geändert, wird die Auswahl automatisch auf alle anderen Geräte der Gruppe übertragen.'),
-            sec('Multisplit',
-                'Mehrere Innengeräte an einem Außengerät lassen sich im Geräte-Tab zu einer Gruppe (A–E) zusammenfassen. ' +
-                'Die Bedarfsregelung rechnet für jedes Innengerät unabhängig – mit eigener Raumtemperatur, eigener Kennlinie und eigenem Boost/Taper. ' +
-                'Als Untergrenze für den gesendeten Demand gilt der höchste Mindest-Demand aller Geräte in der Gruppe. ' +
-                'Dadurch wird verhindert, dass das Außengerät zu stark gedrosselt wird, solange ein anderes Innengerät noch Heizleistung braucht.'),
-            sec('Manueller Override',
-                'Der Override ermöglicht es, die Berechnung der Basiskennlinie, Boost und Taper zu umgehen und einen festen Demand-Wert direkt zu senden. ' +
-                'Datenpunkt {Gerät}.demand_ctrl.override_active auf true setzen, dann wird {Gerät}.demand_ctrl.override_value direkt als Demand verwendet. ' +
-                'Guard bleibt dabei weiterhin aktiv. ' +
-                'Im Zeitplan-Tab stehen die Aktionen "Demand manuell Ein" (mit konfigurierbarem Wert 0–100 %) und "Demand manuell Aus" zur Verfügung, ' +
-                'um den Override zeitgesteuert zu aktivieren oder zurückzunehmen.')
+            sec(tr.funcTitle,   tr.funcText),
+            sec(tr.curveTitle,  tr.curveText),
+            sec(tr.boostTitle,  tr.boostText),
+            sec(tr.taperTitle,  tr.taperText),
+            sec(tr.guardTitle,  tr.guardText),
+            sec(tr.holdTitle,   tr.holdText),
+            sec(tr.sensorTitle, tr.sensorText),
+            sec(tr.msTitle,     tr.msText),
+            sec(tr.ovTitle,     tr.ovText)
         );
     }
 
@@ -676,13 +1048,13 @@ function DemandTabs(props) {
     if (activeTab === -1) return h('div', { style: { fontSize: '13px' } }, tabBar, renderInfoTab());
 
     var groupBadge = device.group
-        ? h('span', { style: { marginLeft: '12px', fontSize: '11px', color: '#1976d2', background: '#e3f2fd', borderRadius: '4px', padding: '2px 8px' } }, 'Multisplit – Gruppe ' + device.group)
-        : h('span', { style: { marginLeft: '12px', fontSize: '11px', color: '#888', background: '#f5f5f5', borderRadius: '4px', padding: '2px 8px' } }, 'Single-Split');
+        ? h('span', { style: { marginLeft: '12px', fontSize: '11px', color: '#1976d2', background: '#e3f2fd', borderRadius: '4px', padding: '2px 8px' } }, tr.msGroup + device.group)
+        : h('span', { style: { marginLeft: '12px', fontSize: '11px', color: '#888', background: '#f5f5f5', borderRadius: '4px', padding: '2px 8px' } }, tr.singleSplit);
 
     var enableRow = h('div', { style: { marginBottom: '16px', display: 'inline-flex', alignItems: 'center',
         border: '1px solid ' + (device.group ? '#1976d2' : '#ccc'),
         borderRadius: '6px', padding: '8px 14px', gap: '0' } },
-        checkLabel(enabled, 'demandEnabled', 'Bedarfsregelung aktivieren (nur Heizmodus)'),
+        checkLabel(enabled, 'demandEnabled', tr.enableCheckbox),
         groupBadge);
 
     if (!enabled) return h('div', { style: { fontSize: '13px' } }, tabBar, enableRow);
@@ -690,22 +1062,22 @@ function DemandTabs(props) {
     // left col row 1: Bedarfsgrenzen + Bedarfsänderung + Sensoren (inline helper)
     var leftRow1 = h('div', { style: { display: 'flex', gap: '32px', flexWrap: 'wrap', alignItems: 'flex-start' } },
         h('div', null,
-            h('div', { style: S.heading }, 'Bedarfsgrenzen'),
-            field('Min. Bedarf (%)', numInput(minDemand, 'demandMinDemand', '75px', { min: 0, max: 100 })),
+            h('div', { style: S.heading }, tr.limitsHeading),
+            field(tr.minDemand, numInput(minDemand, 'demandMinDemand', '75px', { min: 0, max: 100 })),
             h('div', { style: { marginTop: '6px' } },
-                field('Max. Bedarf (%)', numInput(maxDemand, 'demandMaxDemand', '75px', { min: 0, max: 100 }))
+                field(tr.maxDemand, numInput(maxDemand, 'demandMaxDemand', '75px', { min: 0, max: 100 }))
             )
         ),
         h('div', null,
-            h('div', { style: S.heading }, 'Bedarfsänderung'),
-            field('Haltezeit Absenkung (s)', numInput(delayReduce, 'demandDelayReduce', '75px', { min: 0 })),
+            h('div', { style: S.heading }, tr.changesHeading),
+            field(tr.holdDecrease, numInput(delayReduce, 'demandDelayReduce', '75px', { min: 0 })),
             h('div', { style: { marginTop: '6px' } },
-                field('Haltezeit Anhebung (s)', numInput(delayIncrease, 'demandDelayIncrease', '75px', { min: 0 }))
+                field(tr.holdIncrease, numInput(delayIncrease, 'demandDelayIncrease', '75px', { min: 0 }))
             )
         ),
         h('div', null,
-            h('div', { style: S.heading }, 'Sensoren'),
-            field('Außentemperatur (leer = ' + defaultOutdoor + ')',
+            h('div', { style: S.heading }, tr.sensorsHeading),
+            field(tr.outdoorLabel + defaultOutdoor + ')',
                 h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
                 h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
                     h('input', { type: 'text', value: outdoorId, placeholder: defaultOutdoor,
@@ -719,15 +1091,15 @@ function DemandTabs(props) {
                     }),
                     pvOut !== null
                         ? h('span', { style: { fontSize: '12px', color: '#1976d2', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' } }, pvOut.toFixed(1) + ' °C')
-                        : h('span', { style: { fontSize: '11px', color: '#aaa' } }, 'Enter zum Prüfen')
+                        : h('span', { style: { fontSize: '11px', color: '#aaa' } }, tr.enterToCheck)
                 ),
                 device.group
-                    ? h('span', { style: { fontSize: '11px', color: '#888' } }, 'Gruppe "' + device.group + '" – wird für alle Geräte dieser Gruppe synchronisiert')
+                    ? h('span', { style: { fontSize: '11px', color: '#888' } }, tr.groupSync.replace('{g}', device.group))
                     : null
                 )
             ),
             h('div', { style: { marginTop: '6px' } },
-                field('Raumtemperatur (leer = ' + defaultRoom + ')',
+                field(tr.roomLabel + defaultRoom + ')',
                     h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
                         h('input', { type: 'text', value: roomId, placeholder: defaultRoom,
                             style: Object.assign({}, S.input, { width: '220px' }),
@@ -740,7 +1112,7 @@ function DemandTabs(props) {
                         }),
                         pvRoom !== null
                             ? h('span', { style: { fontSize: '12px', color: '#1976d2', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' } }, pvRoom.toFixed(1) + ' °C')
-                            : h('span', { style: { fontSize: '11px', color: '#aaa' } }, 'Enter zum Prüfen')
+                            : h('span', { style: { fontSize: '11px', color: '#aaa' } }, tr.enterToCheck)
                     )
                 )
             )
@@ -769,14 +1141,14 @@ function DemandTabs(props) {
         return h('div', null,
             h('table', { style: { borderCollapse: 'collapse' } },
                 h('thead', null, h('tr', null,
-                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, 'Außentemp (°C)'),
-                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, 'Bedarf (%)'),
+                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, tr.outdoorTempCol),
+                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, tr.demandCol),
                     h('th', null)
                 )),
                 h('tbody', null, rows)
             ),
             h('button', { style: Object.assign({}, S.btn, { marginTop: '6px' }),
-                onClick: function () { update('demandCurve', curve.concat([{ temp: 20, demand: 20 }])); } }, '+ Stützpunkt')
+                onClick: function () { update('demandCurve', curve.concat([{ temp: 20, demand: 20 }])); } }, tr.addPoint)
         );
     }
 
@@ -785,8 +1157,8 @@ function DemandTabs(props) {
         return h('div', { style: { marginTop: '8px' } },
             h('table', { style: { borderCollapse: 'collapse' } },
                 h('thead', null, h('tr', null,
-                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, 'Abweichung >= (K)'),
-                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, 'Boost (+%)'),
+                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, tr.deviationCol),
+                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '12px' } }, tr.boostCol),
                     h('th', null)
                 )),
                 h('tbody', null, boostStages.map(function (row, ri) {
@@ -807,7 +1179,7 @@ function DemandTabs(props) {
                 }))
             ),
             h('button', { style: Object.assign({}, S.btn, { marginTop: '6px' }),
-                onClick: function () { update('demandBoostStages', boostStages.concat([{ deviation: 1.0, boost: 15 }])); } }, '+ Stufe')
+                onClick: function () { update('demandBoostStages', boostStages.concat([{ deviation: 1.0, boost: 15 }])); } }, tr.addStage)
         );
     }
 
@@ -818,50 +1190,49 @@ function DemandTabs(props) {
     var twoColGrid = h('div', { style: { display: 'grid', gridTemplateColumns: 'auto auto', gap: '24px 32px', alignItems: 'start' } },
         leftRow1,
         h('div', null,
-            h('div', { style: S.heading }, 'Log-Ausgabe'),
-            field('Log-Level',
+            h('div', { style: S.heading }, tr.logHeading),
+            field(tr.logLevel,
                 h('select', { value: logLevel, style: Object.assign({}, S.input, { minWidth: '240px' }),
                     onChange: function (e) { update('demandLogLevel', e.target.value); } },
-                    h('option', { value: 'off' }, 'Aus (nur Systemmeldungen)'),
-                    h('option', { value: 'basic' }, 'Basis (je Schritt, mind. alle 3 Min.)'),
-                    h('option', { value: 'extended' }, 'Erweitert (je Schritt mit Basis/Boost/Taper/Guard, mind. alle 3 Min.)')
+                    h('option', { value: 'off' }, tr.logOff),
+                    h('option', { value: 'basic' }, tr.logBasic),
+                    h('option', { value: 'extended' }, tr.logExtended)
                 )
             )
         ),
         h('div', null,
-            h('div', { style: S.heading }, 'Basiskennlinie – Witterungsführung (Außentemperatur → Bedarf)'),
+            h('div', { style: S.heading }, tr.curveHeading),
             h('div', { style: { display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' } },
                 curveTable(),
                 h(DemandChart, { data: { demandCurve: curve, demandBoostEnabled: boostEnabled, demandBoostStages: boostStages, demandMinDemand: minDemand, demandMaxDemand: maxDemand }, workPoint: (gv.outdoor !== null && gv.demand !== null) ? { temp: gv.outdoor, demand: gv.demand } : null })
             )
         ),
         h('div', null,
-            h('div', { style: S.heading }, 'Boost'),
-            checkLabel(boostEnabled, 'demandBoostEnabled', 'Boost aktivieren (Raum unter Sollwert)'),
+            h('div', { style: S.heading }, tr.boostHeading),
+            checkLabel(boostEnabled, 'demandBoostEnabled', tr.boostEnable),
             boostEnabled ? boostTable() : null
         ),
         h('div', null,
-            h('div', { style: S.heading }, 'Taper'),
-            checkLabel(taperEnabled, 'demandTaperEnabled', 'Taper aktivieren'),
+            h('div', { style: S.heading }, tr.taperHeading),
+            checkLabel(taperEnabled, 'demandTaperEnabled', tr.taperEnable),
             h('div', { style: { fontSize: '12px', color: '#888', margin: '4px 0 8px' } },
-                'Raum über Sollwert → Bedarf linear reduzieren. ' +
-                'Maximum bei Guard-Schwelle (autot + Hysterese + 0,1 °C).'
+                tr.taperDesc
             ),
             taperEnabled ? h('div', { style: { display: 'flex', gap: '16px', alignItems: 'center', marginTop: '8px', flexWrap: 'wrap' } },
-                field('Max. Taper (%)', numInput(taperMax, 'demandTaperMax', '75px', { min: 0, max: 100 })),
+                field(tr.maxTaper, numInput(taperMax, 'demandTaperMax', '75px', { min: 0, max: 100 })),
                 h(TaperChart, { autot: gv.autot, autor: gv.autor, room: gv.room, taperMax: taperMax })
             ) : null
         ),
         h('div', null,
-            h('div', { style: S.heading }, 'Guard (Überhitzschutz)'),
-            checkLabel(guardEnabled, 'demandGuardEnabled', 'Guard aktivieren'),
+            h('div', { style: S.heading }, tr.guardHeading),
+            checkLabel(guardEnabled, 'demandGuardEnabled', tr.guardEnable),
             guardEnabled ? h('div', null,
                 h('div', { style: { fontSize: '12px', color: '#888', margin: '6px 0 10px' } },
-                    'Guard EIN: Raum >= Sollwert + Hysterese + 0,1°C → heatback wechselt. Guard AUS: Raum <= Sollwert → heatback normal.'),
+                    tr.guardDesc),
                 h(GuardStatus, { vals: gv, deviceName: devName }),
                 h('div', { style: Object.assign({}, S.row, { marginTop: '8px' }) },
-                    field('Heatback normal (°C)', numInput(hbNormal, 'demandHeatbackNormal', '75px', { min: 0 })),
-                    field('Heatback Guard (°C)',  numInput(hbGuard,  'demandHeatbackGuard',  '75px', { min: 0 }))
+                    field(tr.hbNormal, numInput(hbNormal, 'demandHeatbackNormal', '75px', { min: 0 })),
+                    field(tr.hbGuard,  numInput(hbGuard,  'demandHeatbackGuard',  '75px', { min: 0 }))
                 )
             ) : null
         )
@@ -875,6 +1246,7 @@ function EnvSensorConfig(props) {
     var h         = React.createElement;
     var useState  = React.useState;
     var useEffect = React.useEffect;
+    var tr = ENV_TR[getLang(props)];
 
     var fullConfig = (props.originalData && typeof props.originalData === 'object') ? props.originalData : {};
     var data       = (props.data && typeof props.data === 'object') ? props.data : {};
@@ -919,14 +1291,14 @@ function EnvSensorConfig(props) {
             h('td', { style: { paddingRight: '10px', paddingBottom: '6px' } },
                 h('select', { value: entry.deviceName || '', style: Object.assign({}, S.input, { minWidth: '120px' }),
                     onChange: function (e) { save(entries.map(function (r, j) { return j === i ? Object.assign({}, r, { deviceName: e.target.value }) : r; })); } },
-                    h('option', { value: '' }, '– Gerät –'),
+                    h('option', { value: '' }, tr.devicePh),
                     devices.map(function (name) { return h('option', { key: name, value: name }, name); })
                 )
             ),
             // Sensor state ID + preview
             h('td', { style: { paddingRight: '10px', paddingBottom: '6px' } },
                 h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px' } },
-                    h('input', { type: 'text', value: entry.sensorStateId || '', placeholder: 'z.B. zigbee.0.00158d0001.temperature',
+                    h('input', { type: 'text', value: entry.sensorStateId || '', placeholder: tr.sensorPh,
                         style: Object.assign({}, S.input, { width: '280px' }),
                         onChange: function (e) { save(entries.map(function (r, j) { return j === i ? Object.assign({}, r, { sensorStateId: e.target.value }) : r; })); },
                         onBlur: function (e) { fetchPreview(e.target.value.trim(), i); },
@@ -934,7 +1306,7 @@ function EnvSensorConfig(props) {
                     }),
                     pv[i] != null
                         ? h('span', { style: { fontSize: '12px', color: '#1976d2', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' } }, pv[i].toFixed(1) + ' °C')
-                        : h('span', { style: { fontSize: '11px', color: '#aaa' } }, 'Enter zum Prüfen')
+                        : h('span', { style: { fontSize: '11px', color: '#aaa' } }, tr.enterToCheck)
                 )
             ),
             // Interval
@@ -964,23 +1336,24 @@ function EnvSensorConfig(props) {
         h('table', { style: { borderCollapse: 'collapse', marginBottom: '8px' } },
             h('thead', null,
                 h('tr', null,
-                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '10px', paddingBottom: '6px', fontWeight: 'normal' } }, 'Gerät'),
-                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '10px', paddingBottom: '6px', fontWeight: 'normal' } }, 'Sensor-Datenpunkt'),
-                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '10px', paddingBottom: '6px', fontWeight: 'normal' } }, 'Intervall'),
+                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '10px', paddingBottom: '6px', fontWeight: 'normal' } }, tr.deviceCol),
+                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '10px', paddingBottom: '6px', fontWeight: 'normal' } }, tr.sensorCol),
+                    h('th', { style: { textAlign: 'left', fontSize: '11px', color: '#888', paddingRight: '10px', paddingBottom: '6px', fontWeight: 'normal' } }, tr.intervalCol),
                     h('th', null)
                 )
             ),
             h('tbody', null, rows)
         ),
         h('button', { style: S.btn, onClick: function () { save(entries.concat([{ deviceName: devices[0] || '', sensorStateId: '', intervalSec: 30 }])); } },
-            '+ Eintrag hinzufügen'),
+            tr.addEntry),
         h('div', { style: { marginTop: '12px', fontSize: '12px', color: '#888' } },
-            'Der Faikout-Sensor erwartet innerhalb von 300 Sekunden einen neuen Wert – bei längeren Intervallen wird der externe Sensor verworfen. Direkt gekoppelte BLE-Sensoren sind nicht zusätzlich an das Faikout zu übermitteln.')
+            tr.hint)
     );
 }
 
 function ScheduleConfig(props) {
     var h        = React.createElement;
+    var tr = SCHED_TR[getLang(props)];
 
     var fullConfig = (props.originalData && typeof props.originalData === 'object') ? props.originalData : {};
     var data       = (props.data && typeof props.data === 'object') ? props.data : {};
@@ -1001,18 +1374,18 @@ function ScheduleConfig(props) {
         { val: 'Q', label: 'Quiet' }
     ];
     var SCHED_FIELDS = [
-        { key: 'power',               label: 'Power',              type: 'bool'   },
-        { key: 'fan',                 label: 'Lüfter',             type: 'fan'    },
-        { key: 'econo',               label: 'ECONO',              type: 'bool'   },
-        { key: 'swingh',              label: 'SwingH',             type: 'bool'   },
-        { key: 'swingv',              label: 'SwingV',             type: 'bool'   },
-        { key: 'comfort',             label: 'Comfort',            type: 'bool'   },
-        { key: 'powerful',            label: 'Powerful',           type: 'bool'   },
-        { key: 'autot',               label: 'Sollwert',           type: 'number' },
-        { key: 'demand_override_on',  label: 'Demand manuell Ein', type: 'demand' },
-        { key: 'demand_override_off', label: 'Demand manuell Aus', type: 'void'   }
+        { key: 'power',               label: tr.fieldLabels.power,               type: 'bool'   },
+        { key: 'fan',                 label: tr.fieldLabels.fan,                 type: 'fan'    },
+        { key: 'econo',               label: tr.fieldLabels.econo,               type: 'bool'   },
+        { key: 'swingh',              label: tr.fieldLabels.swingh,              type: 'bool'   },
+        { key: 'swingv',              label: tr.fieldLabels.swingv,              type: 'bool'   },
+        { key: 'comfort',             label: tr.fieldLabels.comfort,             type: 'bool'   },
+        { key: 'powerful',            label: tr.fieldLabels.powerful,            type: 'bool'   },
+        { key: 'autot',               label: tr.fieldLabels.autot,               type: 'number' },
+        { key: 'demand_override_on',  label: tr.fieldLabels.demand_override_on,  type: 'demand' },
+        { key: 'demand_override_off', label: tr.fieldLabels.demand_override_off, type: 'void'   }
     ];
-    var DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    var DAYS = tr.days;
 
     function save(newEntries) {
         props.onChange(Object.assign({}, data, { schedule: newEntries }));
@@ -1099,8 +1472,8 @@ function ScheduleConfig(props) {
                             updAction(i, ai, { value: newVal });
                         }
                     } },
-                    h('option', { value: '1' }, 'An'),
-                    h('option', { value: '0' }, 'Aus'));
+                    h('option', { value: '1' }, tr.on),
+                    h('option', { value: '0' }, tr.off));
 
             return h('div', { key: ai, style: { display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px', paddingLeft: '28px' } },
                 h('select', { value: a.field || 'power', style: Object.assign({}, S.input, { minWidth: '90px' }),
@@ -1111,7 +1484,7 @@ function ScheduleConfig(props) {
                     } },
                     SCHED_FIELDS.map(function (f) { return h('option', { key: f.key, value: f.key }, f.label); })),
                 valueInput,
-                h('span', { style: { fontSize: '11px', color: '#888', whiteSpace: 'nowrap' } }, 'Pause:'),
+                h('span', { style: { fontSize: '11px', color: '#888', whiteSpace: 'nowrap' } }, tr.pause),
                 h('input', { type: 'number', value: delayVal, min: '0', max: '300', step: '1',
                     style: Object.assign({}, S.input, { width: '46px' }),
                     onChange: function (ev) { updAction(i, ai, { delay: Math.max(0, Math.round(Number(ev.target.value))) }); } }),
@@ -1127,13 +1500,13 @@ function ScheduleConfig(props) {
                     onChange: function (ev) { updTask(i, { enabled: ev.target.checked }); } }),
                 h('select', { value: e.deviceName || '', style: Object.assign({}, S.input, { minWidth: '90px' }),
                     onChange: function (ev) { updTask(i, { deviceName: ev.target.value }); } },
-                    h('option', { value: '' }, '– Gerät –'),
+                    h('option', { value: '' }, tr.devicePh),
                     devices.map(function (n) { return h('option', { key: n, value: n }, n); })),
                 h('div', { style: { display: 'flex', flexWrap: 'nowrap' } }, dayBtns),
                 h('input', { type: 'time', value: e.time || '07:00', style: Object.assign({}, S.input, { width: '90px' }),
                     onChange: function (ev) { updTask(i, { time: ev.target.value }); } }),
                 !hasPowerOff && h('button', { type: 'button', style: S.btnSm,
-                    onClick: function () { addAction(i); } }, '+ Aktion'),
+                    onClick: function () { addAction(i); } }, tr.addAction),
                 h('button', { type: 'button', style: S.btnDel,
                     onClick: function () { save(entries.filter(function (_, j) { return j !== i; })); } }, '×')
             ),
@@ -1145,7 +1518,7 @@ function ScheduleConfig(props) {
         taskBlocks,
         h('button', { style: Object.assign({}, S.btn, { marginTop: '4px' }), onClick: function () {
             save(entries.concat([{ enabled: true, deviceName: devices[0] || '', days: [1,2,3,4,5], time: '07:00', actions: [{ field: 'power', value: true }] }]));
-        } }, '+ Aufgabe hinzufügen')
+        } }, tr.addTask)
     );
 }
 
@@ -1270,6 +1643,7 @@ function HumidityTabs(props) {
     }
 
     function renderInfoTab() {
+        var tr = HUM_INFO_TRANSLATIONS[getLang(props)];
         var sec = function (title, text) {
             return h('div', { style: { marginBottom: '14px' } },
                 h('div', { style: { fontWeight: 'bold', fontSize: '22px', fontFamily: 'xkcd Script, cursive', marginBottom: '4px' } }, title),
@@ -1277,33 +1651,13 @@ function HumidityTabs(props) {
             );
         };
         return h('div', { style: { maxWidth: '680px', padding: '4px 0', fontSize: '15px' } },
-            sec('Was ist Feuchte-Regelung?',
-                'Die Feuchte-Regelung schützt vor Schimmelbildung durch Überwachung des Taupunktabstands. ' +
-                'Unterschreitet der Abstand zwischen Raumtemperatur und Taupunkt einen konfigurierten Schwellwert, ' +
-                'wird die Anlage automatisch in den Trocknungsmodus (DRY) geschaltet.'),
-            sec('Sensoren',
-                'Ein BLE-Sensor am Faikout-Gerät liefert Raumtemperatur und Luftfeuchte direkt. ' +
-                'Alternativ können externe Datenpunkte (z.B. Zigbee-Sensor) konfiguriert werden. ' +
-                'Bleibt das Feld leer, wird der Standard-BLE-Datenpunkt des jeweiligen Geräts verwendet ({Gerät}.ble.temp / {Gerät}.ble.hum).'),
-            sec('DRY-Modus',
-                'Bei Auslösung läuft die Anlage im D-Modus (Trocknen) mit automatischer Lüftergeschwindigkeit. ' +
-                'Nach dem DRY-Betrieb folgt ein konfigurierbarer Lüfter-Nachlauf, um den Wärmetauscher zu trocknen. ' +
-                'Danach kehrt die Regelung in den Überwachungsmodus zurück.'),
-            sec('Schwellen',
-                'Δ TP-Ein: DRY startet wenn Taupunktabstand (Raumtemp - Taupunkt) <= diesem Wert, oder Feuchte >= Max. Feuchte. ' +
-                'Δ TP-Aus: DRY stoppt wenn Taupunktabstand >= diesem Wert und Feuchte < Max. Feuchte. ' +
-                'Typische Werte: Δ TP-Ein = 4 K, Δ TP-Aus = 7 K.'),
-            sec('Zeitfenster',
-                'DRY-Betrieb nur innerhalb des konfigurierten Zeitfensters. ' +
-                'Außerhalb des Fensters wird ein laufender DRY-Betrieb mit Nachlauf beendet.'),
-            sec('Motorschutz',
-                'Maximale DRY-Laufzeit begrenzt den Dauerbetrieb. ' +
-                'Nach Erreichen der Maximalzeit folgt ein Nachlauf und anschließend eine Zwangspause. ' +
-                'Erst nach Ablauf der Pause wird der DRY-Betrieb wieder freigegeben.'),
-            sec('Freshness',
-                'Sensordaten müssen innerhalb des konfigurierten Zeitfensters aktuell sein. ' +
-                'Veraltete Daten führen zum Stopp des DRY-Betriebs (mit Nachlauf) und zur Deaktivierung der Automatik ' +
-                'bis der Benutzer sie manuell wieder aktiviert.')
+            sec(tr.whatTitle,   tr.whatText),
+            sec(tr.sensorTitle, tr.sensorText),
+            sec(tr.dryTitle,    tr.dryText),
+            sec(tr.thrTitle,    tr.thrText),
+            sec(tr.windowTitle, tr.windowText),
+            sec(tr.motorTitle,  tr.motorText),
+            sec(tr.freshTitle,  tr.freshText)
         );
     }
 
@@ -1312,7 +1666,7 @@ function HumidityTabs(props) {
             h('div', { style: { display: 'flex', flexWrap: 'wrap', borderBottom: '2px solid #e0e0e0', marginBottom: '16px' } },
                 h('button', { style: { padding: '7px 18px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '13px',
                     borderBottom: '2px solid #1976d2', color: '#1976d2', fontWeight: 'bold', marginBottom: '-2px' } }, 'Info'),
-                h('span', { style: { padding: '7px 18px', fontSize: '12px', color: '#aaa', alignSelf: 'center' } }, 'Kein Gerät aktiviert – Checkbox im Geräte-Tab setzen')
+                h('span', { style: { padding: '7px 18px', fontSize: '12px', color: '#aaa', alignSelf: 'center' } }, HUM_INFO_TRANSLATIONS[getLang(props)].noDevice)
             ),
             renderInfoTab()
         );
@@ -1335,6 +1689,8 @@ function HumidityTabs(props) {
         var v = humCfg[f];
         return (v !== undefined && v !== null) ? v : def;
     }
+
+    var tr = HUM_DETAIL_TR[getLang(props)];
 
     var tempStateId  = g('humTempStateId', '');
     var humStateId   = g('humHumStateId',  '');
@@ -1376,8 +1732,9 @@ function HumidityTabs(props) {
 
     // Status row
     var modeColor = { 'DRY': '#1976d2', 'NACHLAUF': '#ff9800', 'PAUSE': '#f44336', 'FRESHNESS!': '#d32f2f', 'ÜBERWACHUNG': '#388e3c', 'AUS': '#888' };
-    var modeText  = lv.modeText || 'AUS';
-    var mColor    = modeColor[modeText] || '#888';
+    var modeText    = lv.modeText || 'AUS';
+    var modeDisplay = (tr.modeMap && tr.modeMap[modeText]) || modeText;
+    var mColor      = modeColor[modeText] || '#888';
 
     // Δ color: red ≤ tpHoch, orange between, green ≥ tpTief
     var tpH = Number(g('humTpHoch', 4.0)), tpT = Number(g('humTpTief', 7.0));
@@ -1394,19 +1751,19 @@ function HumidityTabs(props) {
                     try { props.socket.setState('faikout-ac.0.' + devKey + '.humidity_ctrl.auto', { val: e.target.checked, ack: false }); } catch (ex) {}
                 }
             } }),
-            'Automatik'
+            tr.autoLabel
         ),
         h('div', { style: Object.assign({}, cardStyle, { border: '1px solid ' + mColor }) },
-            h('span', { style: { fontSize: '14px', fontWeight: 'bold', color: mColor } }, modeText),
-            h('span', { style: { fontSize: '10px', color: '#888', marginTop: '2px' } }, 'Modus')
+            h('span', { style: { fontSize: '14px', fontWeight: 'bold', color: mColor } }, modeDisplay),
+            h('span', { style: { fontSize: '10px', color: '#888', marginTop: '2px' } }, tr.modeLabel)
         ),
         diff !== null ? h('div', { style: Object.assign({}, cardStyle, { border: '1px solid ' + diffColor }) },
             h('span', { style: { fontSize: '20px', fontWeight: 'bold', color: diffColor, fontVariantNumeric: 'tabular-nums' } }, diff.toFixed(1) + ' K'),
-            h('span', { style: { fontSize: '10px', color: '#888', marginTop: '2px' } }, 'Taupunktabstand')
+            h('span', { style: { fontSize: '10px', color: '#888', marginTop: '2px' } }, tr.dpMarginLabel)
         ) : null,
         lv.dewPoint !== null ? h('div', { style: Object.assign({}, cardStyle, { border: '1px solid #1976d2' }) },
             h('span', { style: { fontSize: '20px', fontWeight: 'bold', color: '#1976d2', fontVariantNumeric: 'tabular-nums' } }, Number(lv.dewPoint).toFixed(1) + ' °C'),
-            h('span', { style: { fontSize: '10px', color: '#888', marginTop: '2px' } }, 'Taupunkt')
+            h('span', { style: { fontSize: '10px', color: '#888', marginTop: '2px' } }, tr.dpLabel)
         ) : null
     );
 
@@ -1421,9 +1778,9 @@ function HumidityTabs(props) {
 
     // Sensoren section
     var sensorSection = h('div', null,
-        h('div', { style: S.heading }, 'Sensoren'),
+        h('div', { style: S.heading }, tr.sensorsHeading),
         h('div', { style: S.row },
-            field('Temperatur-Sensor',
+            field(tr.tempSensor,
                 h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
                     h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
                         h('input', { type: 'text', value: tempStateId, placeholder: defaultTemp,
@@ -1431,14 +1788,14 @@ function HumidityTabs(props) {
                             onChange: function (e) { update('humTempStateId', e.target.value); },
                             onKeyDown: function (e) { if (e.key === 'Enter') fetchSensor(e.target.value || defaultTemp, setPvTemp); }
                         }),
-                        sensorCard(pvTemp, '°C', 'Temperatur')
+                        sensorCard(pvTemp, '°C', tr.tempCard)
                     ),
-                    h('div', { style: { fontSize: '11px', color: '#aaa' } }, '(leer = ' + defaultTemp + ')')
+                    h('div', { style: { fontSize: '11px', color: '#aaa' } }, '(' + tr.emptyHint + defaultTemp + ')')
                 )
             )
         ),
         h('div', { style: S.row },
-            field('Feuchte-Sensor',
+            field(tr.humSensor,
                 h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
                     h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
                         h('input', { type: 'text', value: humStateId, placeholder: defaultHum,
@@ -1446,9 +1803,9 @@ function HumidityTabs(props) {
                             onChange: function (e) { update('humHumStateId', e.target.value); },
                             onKeyDown: function (e) { if (e.key === 'Enter') fetchSensor(e.target.value || defaultHum, setPvHum); }
                         }),
-                        sensorCard(pvHum, '%', 'Feuchte')
+                        sensorCard(pvHum, '%', tr.humCard)
                     ),
-                    h('div', { style: { fontSize: '11px', color: '#aaa' } }, '(leer = ' + defaultHum + ')')
+                    h('div', { style: { fontSize: '11px', color: '#aaa' } }, '(' + tr.emptyHint + defaultHum + ')')
                 )
             )
         )
@@ -1456,24 +1813,24 @@ function HumidityTabs(props) {
 
     // Schwellen section
     var schwellenSection = h('div', null,
-        h('div', { style: S.heading }, 'Schwellen'),
+        h('div', { style: S.heading }, tr.thrHeading),
         h('div', { style: S.row },
-            field('Δ TP-Ein (°C)', numInput(tpHoch, 'humTpHoch', '75px', { step: 0.1 })),
-            field('Δ TP-Aus (°C)', numInput(tpTief, 'humTpTief', '75px', { step: 0.1 })),
-            field('Max. rel. Feuchte (%)', numInput(maxFeuchte, 'humMaxFeuchte', '75px', { min: 1, max: 100, step: 1 }))
+            field(tr.tpOn, numInput(tpHoch, 'humTpHoch', '75px', { step: 0.1 })),
+            field(tr.tpOff, numInput(tpTief, 'humTpTief', '75px', { step: 0.1 })),
+            field(tr.maxHum, numInput(maxFeuchte, 'humMaxFeuchte', '75px', { min: 1, max: 100, step: 1 }))
         )
     );
 
     // Zeitfenster section
     var zeitSection = h('div', null,
-        h('div', { style: S.heading }, 'Zeitfenster'),
+        h('div', { style: S.heading }, tr.windowHeading),
         h('div', { style: S.row },
-            field('Betrieb ab',
+            field(tr.windowFrom,
                 h('input', { type: 'time', value: startZeit,
                     style: Object.assign({}, S.input, { width: '110px' }),
                     onChange: function (e) { update('humStartZeit', e.target.value); } })
             ),
-            field('Betrieb bis',
+            field(tr.windowTo,
                 h('input', { type: 'time', value: endZeit,
                     style: Object.assign({}, S.input, { width: '110px' }),
                     onChange: function (e) { update('humEndZeit', e.target.value); } })
@@ -1483,12 +1840,12 @@ function HumidityTabs(props) {
 
     // Laufzeiten section
     var laufzeitSection = h('div', null,
-        h('div', { style: S.heading }, 'Laufzeiten'),
+        h('div', { style: S.heading }, tr.runtimeHeading),
         h('div', { style: S.row },
-            field('Max. DRY-Laufzeit (min)', numInput(maxLaufzeit, 'humMaxLaufzeit', '75px', { min: 1, step: 1 })),
-            field('Nachlauf (min)', numInput(nachlaufMin, 'humNachlaufMin', '75px', { min: 1, step: 1 })),
-            field('Zwangspause (min)', numInput(pauseMin, 'humPauseMin', '75px', { min: 1, step: 1 })),
-            field('Freshness-Timeout (min)', numInput(freshMin, 'humFreshMin', '75px', { min: 15, step: 1 }))
+            field(tr.maxRuntime, numInput(maxLaufzeit, 'humMaxLaufzeit', '75px', { min: 1, step: 1 })),
+            field(tr.runOn, numInput(nachlaufMin, 'humNachlaufMin', '75px', { min: 1, step: 1 })),
+            field(tr.forcedPause, numInput(pauseMin, 'humPauseMin', '75px', { min: 1, step: 1 })),
+            field(tr.freshTimeout, numInput(freshMin, 'humFreshMin', '75px', { min: 15, step: 1 }))
         )
     );
 

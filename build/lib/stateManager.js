@@ -16,54 +16,110 @@ class StateManager {
         });
         await this._ensureChannel(`${this.deviceFolder}.info`, 'Device Information');
         await this._ensureState(`${this.deviceFolder}.info.deviceId`, {
-            name: 'Device ID', type: 'string', role: 'info.address', read: true, write: false, def: deviceId,
+            name: 'Device ID',
+            type: 'string',
+            role: 'info.address',
+            read: true,
+            write: false,
+            def: deviceId,
         });
         await this._ensureState(`${this.deviceFolder}.info.appName`, {
-            name: 'App Name', type: 'string', role: 'info.name', read: true, write: false, def: appName,
+            name: 'App Name',
+            type: 'string',
+            role: 'info.name',
+            read: true,
+            write: false,
+            def: appName,
         });
         await this._ensureState(`${this.deviceFolder}.info.ip`, {
-            name: 'IP Address', type: 'string', role: 'info.ip', read: true, write: false, def: ip,
+            name: 'IP Address',
+            type: 'string',
+            role: 'info.ip',
+            read: true,
+            write: false,
+            def: ip,
         });
         await this._ensureState(`${this.deviceFolder}.info.connection`, {
-            name: 'Connection', type: 'boolean', role: 'indicator.connection', read: true, write: false, def: false,
+            name: 'Connection',
+            type: 'boolean',
+            role: 'indicator.connection',
+            read: true,
+            write: false,
+            def: false,
         });
         await this._ensureState(`${this.deviceFolder}.info.lastUpdate`, {
-            name: 'Last Update', type: 'number', role: 'date', read: true, write: false, def: 0,
+            name: 'Last Update',
+            type: 'number',
+            role: 'date',
+            read: true,
+            write: false,
+            def: 0,
         });
         await this._ensureState(`${this.deviceFolder}.info.fantype`, {
-            name: 'Fan type', type: 'number', role: 'value', read: true, write: false, def: fantype,
+            name: 'Fan type',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            def: fantype,
         });
         await this.adapter.setStateAsync(`${this.deviceFolder}.info.fantype`, { val: fantype, ack: true });
         await this._ensureState(`${this.deviceFolder}.info.protocol`, {
-            name: 'Protocol', type: 'string', role: 'info.firmware', read: true, write: false, def: '',
+            name: 'Protocol',
+            type: 'string',
+            role: 'info.firmware',
+            read: true,
+            write: false,
+            def: '',
         });
         await this._ensureChannel(`${this.deviceFolder}.topics`, 'MQTT Topics');
         await this._ensureState(`${this.deviceFolder}.topics.state`, {
-            name: 'State topic prefix', type: 'string', role: 'text', read: true, write: false,
+            name: 'State topic prefix',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
             def: topicConfig.topicstate,
         });
         await this._ensureState(`${this.deviceFolder}.topics.command`, {
-            name: 'Command topic prefix', type: 'string', role: 'text', read: true, write: false,
+            name: 'Command topic prefix',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
             def: topicConfig.topiccommand,
         });
         await this._ensureState(`${this.deviceFolder}.topics.setting`, {
-            name: 'Setting topic prefix', type: 'string', role: 'text', read: true, write: false,
+            name: 'Setting topic prefix',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
             def: topicConfig.topicsetting,
         });
         await this._ensureState(`${this.deviceFolder}.topics.prefixApp`, {
-            name: 'Prefix app name', type: 'boolean', role: 'indicator', read: true, write: false,
+            name: 'Prefix app name',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
             def: topicConfig.prefixapp,
         });
         await this._ensureState(`${this.deviceFolder}.topics.prefixHost`, {
-            name: 'Prefix host name', type: 'boolean', role: 'indicator', read: true, write: false,
+            name: 'Prefix host name',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
             def: topicConfig.prefixhost,
         });
         const hasBle = activeFields.has('ble') || activeFields.has('ble_temp');
         let bleChannelCreated = false;
         for (const [key, def] of Object.entries(fieldDefinitions_1.FIELDS)) {
             if (def.bleKey) {
-                if (!hasBle)
+                if (!hasBle) {
                     continue;
+                }
                 const isBleSubField = key.startsWith('ble_');
                 if (isBleSubField) {
                     if (!bleChannelCreated) {
@@ -78,8 +134,9 @@ class StateManager {
                 }
                 continue;
             }
-            if (!activeFields.has(key))
+            if (!activeFields.has(key)) {
                 continue;
+            }
             await this._ensureFieldState(`${this.deviceFolder}.${key}`, def);
         }
         if (createConfigStates) {
@@ -95,23 +152,27 @@ class StateManager {
             json = JSON.parse(payload);
         }
         catch (e) {
-            this.adapter.log.warn(`${this.deviceFolder}: Failed to parse MQTT payload: ${e}`);
+            this.adapter.log.warn(`${this.deviceFolder}: Failed to parse MQTT payload: ${String(e)}`);
             return;
         }
         for (const [key, def] of Object.entries(fieldDefinitions_1.FIELDS)) {
-            if (def.writeOnly)
+            if (def.writeOnly) {
                 continue;
-            if (def.bleKey && key.startsWith('ble_'))
+            }
+            if (def.bleKey && key.startsWith('ble_')) {
                 continue;
+            }
             const rawVal = json[key];
-            if (rawVal === undefined || rawVal === null)
+            if (rawVal === undefined || rawVal === null) {
                 continue;
+            }
             const converted = this._convertReadValue(key, def, rawVal);
-            if (converted === null || converted === undefined)
+            if (converted === null || converted === undefined) {
                 continue;
+            }
             await this.adapter.setStateAsync(`${this.deviceFolder}.${key}`, { val: converted, ack: true });
         }
-        const bleObj = json['ble'];
+        const bleObj = json.ble;
         if (bleObj !== null && bleObj !== undefined && typeof bleObj === 'object') {
             const ble = bleObj;
             const bleMap = {
@@ -122,22 +183,28 @@ class StateManager {
             };
             for (const [fieldKey, subKey] of Object.entries(bleMap)) {
                 const rawVal = ble[subKey];
-                if (rawVal === undefined || rawVal === null)
+                if (rawVal === undefined || rawVal === null) {
                     continue;
+                }
                 const def = fieldDefinitions_1.FIELDS[fieldKey];
-                if (!def)
+                if (!def) {
                     continue;
+                }
                 const converted = this._convertReadValue(fieldKey, def, rawVal);
-                if (converted === null || converted === undefined)
+                if (converted === null || converted === undefined) {
                     continue;
+                }
                 await this.adapter.setStateAsync(`${this.deviceFolder}.ble.${subKey}`, { val: converted, ack: true });
             }
         }
-        if (json['autob'] !== undefined && json['autob'] !== null) {
-            await this.adapter.setStateAsync(`${this.deviceFolder}.autob`, { val: String(json['autob']), ack: true });
+        if (json.autob !== undefined && json.autob !== null) {
+            await this.adapter.setStateAsync(`${this.deviceFolder}.autob`, {
+                val: String(json.autob),
+                ack: true,
+            });
         }
-        if (json['protocol'] !== undefined && json['protocol'] !== null) {
-            const protocol = String(json['protocol']);
+        if (json.protocol !== undefined && json.protocol !== null) {
+            const protocol = String(json.protocol);
             await this.adapter.setStateAsync(`${this.deviceFolder}.info.protocol`, { val: protocol, ack: true });
             await this._updateFanStates(protocol);
         }
@@ -157,15 +224,12 @@ class StateManager {
         const hasBle = profile.activeFields.has('ble') || profile.activeFields.has('ble_temp');
         for (const key of Object.keys(fieldDefinitions_1.FIELDS)) {
             const def = fieldDefinitions_1.FIELDS[key];
-            if (!def)
+            if (!def) {
                 continue;
+            }
             const isBleField = def.bleKey && key.startsWith('ble_');
-            const statePath = isBleField
-                ? `${this.deviceFolder}.ble.${key.slice(4)}`
-                : `${this.deviceFolder}.${key}`;
-            const shouldExist = isBleField
-                ? hasBle
-                : (def.bleKey ? hasBle : profile.activeFields.has(key));
+            const statePath = isBleField ? `${this.deviceFolder}.ble.${key.slice(4)}` : `${this.deviceFolder}.${key}`;
+            const shouldExist = isBleField ? hasBle : def.bleKey ? hasBle : profile.activeFields.has(key);
             if (!shouldExist) {
                 try {
                     const existing = await this.adapter.getObjectAsync(statePath);
@@ -174,7 +238,7 @@ class StateManager {
                         this.adapter.log.debug(`Removed stale state: ${statePath}`);
                     }
                 }
-                catch (e) {
+                catch {
                 }
             }
         }
@@ -187,19 +251,23 @@ class StateManager {
             read: !def.writeOnly,
             write: !!def.writeTopic,
         };
-        if (def.unit)
+        if (def.unit) {
             common.unit = def.unit;
-        if (def.states)
+        }
+        if (def.states) {
             common.states = def.states;
-        if (def.min !== undefined)
+        }
+        if (def.min !== undefined) {
             common.min = def.min;
-        if (def.max !== undefined)
+        }
+        if (def.max !== undefined) {
             common.max = def.max;
+        }
         return common;
     }
     async _ensureFieldState(id, def) {
         const existing = await this.adapter.getObjectAsync(id);
-        if (existing?.native?.['userModified'] === true) {
+        if (existing?.native?.userModified === true) {
             this.adapter.log.debug(`Skipping userModified state: ${id}`);
             return;
         }
@@ -231,8 +299,9 @@ class StateManager {
         });
     }
     _convertReadValue(key, def, rawVal) {
-        if (rawVal === null || rawVal === undefined)
+        if (rawVal === null || rawVal === undefined) {
             return null;
+        }
         switch (def.type) {
             case 'boolean':
                 return rawVal === true || rawVal === 1 || rawVal === '1' || rawVal === 'true';

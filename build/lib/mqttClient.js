@@ -61,10 +61,12 @@ class FaikoutMqttClient {
             clean: true,
             reconnectPeriod: 0,
         };
-        if (username)
+        if (username) {
             connectOpts.username = username;
-        if (password)
+        }
+        if (password) {
             connectOpts.password = password;
+        }
         this.client = mqtt.connect(`mqtt://${host}:${port}`, connectOpts);
         this.client.on('connect', () => {
             this.reconnectDelay = BACKOFF_INITIAL_MS;
@@ -90,8 +92,9 @@ class FaikoutMqttClient {
         });
     }
     _scheduleReconnect() {
-        if (this.reconnectTimer !== null)
+        if (this.reconnectTimer !== null) {
             return;
+        }
         this.reconnectTimer = setTimeout(() => {
             this.reconnectTimer = null;
             if (!this.intentionalDisconnect) {

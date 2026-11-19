@@ -3,19 +3,61 @@
 // No eval()-strings: readConv/writeConv are NOT stored here.
 // Conversion logic is implemented directly in stateManager.ts / main.ts.
 
+/**
+ *
+ */
 export interface FieldDef {
-    label: { en: string; de: string };
+    /**
+     *
+     */
+    label: {
+        /**
+         *
+         */
+        en: string;
+        /**
+         *
+         */
+        de: string;
+    };
+    /**
+     *
+     */
     type: 'boolean' | 'number' | 'string';
+    /**
+     *
+     */
     unit?: string;
-    writeTopic?: string;   // 'control' | 'mode' | 'fan' | 'econo' | 'powerful' | 'comfort' |
-                           // 'streamer' | 'led' | 'quiet' | 'humidify' | 'demand' |
-                           // 'autoe' | 'autop' | 'restart' |
-                           // 'setting:autot' | 'setting:autor' | 'setting'
+    /**
+     *
+     */
+    writeTopic?: string; // 'control' | 'mode' | 'fan' | 'econo' | 'powerful' | 'comfort' |
+    // 'streamer' | 'led' | 'quiet' | 'humidify' | 'demand' |
+    // 'autoe' | 'autop' | 'restart' |
+    // 'setting:autot' | 'setting:autor' | 'setting'
+    /**
+     *
+     */
     writeOnly?: boolean;
+    /**
+     *
+     */
     bleKey?: boolean;
+    /**
+     *
+     */
     role?: string;
+    /**
+     *
+     */
     states?: Record<string, string>;
+    /**
+     *
+     */
     min?: number;
+    /**
+     *
+     */
     max?: number;
 }
 
@@ -53,7 +95,7 @@ export const FIELDS: Record<string, FieldDef> = {
         type: 'string',
         writeTopic: 'fan',
         role: 'value.speed',
-        states: { A: 'A', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', Q: 'Q' },
+        states: { A: 'A', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', Q: 'Q' },
     },
     econo: {
         label: { en: 'Economy mode', de: 'Eco-Modus' },
@@ -416,23 +458,51 @@ export const CONFIG_FIELDS_DEF: Record<string, FieldDef> = {
 
 // Fields always created even if not found via o.xyz scan
 // (direct MQTT JSON fields or synthetic write-only data points)
-export const FIELD_WHITELIST = new Set<string>(['comp', 'anglev', 'angleh', 'env_set', 'restart', 'Whheating', 'Whcooling', 'Whoutside']);
+export const FIELD_WHITELIST = new Set<string>([
+    'comp',
+    'anglev',
+    'angleh',
+    'env_set',
+    'restart',
+    'Whheating',
+    'Whcooling',
+    'Whoutside',
+]);
 
 // Fan states maps – mirrored from firmware fans_5_auto / fans_3_auto
 export const FAN_STATES_5_AUTO: Record<string, string> = {
-    A: 'A', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', Q: 'Q',
+    A: 'A',
+    1: '1',
+    2: '2',
+    3: '3',
+    4: '4',
+    5: '5',
+    Q: 'Q',
 };
 export const FAN_STATES_3_AUTO: Record<string, string> = {
-    A: 'A', '1': '1', '3': '3', '5': '5', Q: 'Q',
+    A: 'A',
+    1: '1',
+    3: '3',
+    5: '5',
+    Q: 'Q',
 };
 export const FAN_STATES_3: Record<string, string> = {
-    '1': '1', '3': '3', '5': '5',
+    1: '1',
+    3: '3',
+    5: '5',
 };
 
 // Derive fan states from fantype + protocol (mirrors firmware fan_5_auto / fan_3_auto logic)
+/**
+ *
+ */
 export function getFanStates(fantype: number, protocol: string): Record<string, string> {
     const proto = protocol.toLowerCase();
-    if (fantype === 2) return FAN_STATES_3;
-    if (fantype === 3 || (fantype === 0 && proto.startsWith('cn_wired'))) return FAN_STATES_3_AUTO;
+    if (fantype === 2) {
+        return FAN_STATES_3;
+    }
+    if (fantype === 3 || (fantype === 0 && proto.startsWith('cn_wired'))) {
+        return FAN_STATES_3_AUTO;
+    }
     return FAN_STATES_5_AUTO; // fantype=1, fantype=0+S21, fantype=0+other
 }

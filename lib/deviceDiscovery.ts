@@ -4,23 +4,66 @@
 
 import * as http from 'http';
 import { FIELDS, FIELD_WHITELIST } from './fieldDefinitions';
-import { TopicConfig, DEFAULT_TOPIC_CONFIG } from './topicBuilder';
+import type { TopicConfig } from './topicBuilder';
+import { DEFAULT_TOPIC_CONFIG } from './topicBuilder';
 
+/**
+ *
+ */
 export interface XgpioPin {
+    /**
+     *
+     */
     set: boolean;
+    /**
+     *
+     */
     out: boolean;
+    /**
+     *
+     */
     pwm: boolean;
+    /**
+     *
+     */
     adc: boolean;
+    /**
+     *
+     */
     name: string;
 }
 
+/**
+ *
+ */
 export interface DeviceProfile {
+    /**
+     *
+     */
     deviceId: string;
+    /**
+     *
+     */
     appName: string;
+    /**
+     *
+     */
     activeFields: Set<string>;
+    /**
+     *
+     */
     topicConfig: TopicConfig;
+    /**
+     *
+     */
     xgpioConfig: XgpioPin[];
+    /**
+     *
+     */
     ip: string;
+    /**
+     *
+     */
     fantype: number;
 }
 
@@ -28,12 +71,14 @@ function fetchPage(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
         const req = http.get(url, (res) => {
             let html = '';
-            res.on('data', (chunk: Buffer) => { html += chunk.toString(); });
+            res.on('data', (chunk: Buffer) => {
+                html += chunk.toString();
+            });
             res.on('end', () => resolve(html));
         });
         req.setTimeout(6000, () => {
             req.destroy();
-            reject(new Error('Timeout: ' + url));
+            reject(new Error(`Timeout: ${url}`));
         });
         req.on('error', reject);
     });
@@ -50,18 +95,20 @@ async function fetchDeviceFields(ip: string): Promise<{ activeFields: Set<string
     const matches = mainHtml.match(/\bo\.([a-zA-Z]\w*)\b/g) ?? [];
     // Device HTML uses lowercase field names; restore exact FIELDS key casing
     // (e.g. 'whheating' from HTML → 'Whheating' as defined in FIELDS)
-    const fieldsKeyMap = new Map(Object.keys(FIELDS).map(k => [k.toLowerCase(), k]));
+    const fieldsKeyMap = new Map(Object.keys(FIELDS).map((k) => [k.toLowerCase(), k]));
     const found = new Set(
         matches.map((m: string) => {
             const lower = m.slice(2).toLowerCase();
             return fieldsKeyMap.get(lower) ?? lower;
-        })
+        }),
     );
 
     // Remove disabled optional features (must run before BLE expansion)
     for (const key of Object.keys(FIELDS)) {
         const disabled = new RegExp(`id="no${key}"[^>]*checked`, 'i').test(extrasHtml);
-        if (disabled) found.delete(key);
+        if (disabled) {
+            found.delete(key);
+        }
     }
 
     // BLE: add ble sub-fields only if ble is still active after extras check
@@ -73,14 +120,18 @@ async function fetchDeviceFields(ip: string): Promise<{ activeFields: Set<string
     }
 
     // Always add whitelist fields
-    for (const f of FIELD_WHITELIST) found.add(f);
+    for (const f of FIELD_WHITELIST) {
+        found.add(f);
+    }
 
     // Extract fantype from fantype select (page=-2, already fetched)
     let fantype = 0;
     const fantypeBlock = extrasHtml.match(/name="_fantype"[\s\S]{0,600}?<\/select>/);
     if (fantypeBlock) {
         const sel = fantypeBlock[0].match(/<option value="(\d+)"[^>]*selected/);
-        if (sel) fantype = parseInt(sel[1], 10);
+        if (sel) {
+            fantype = parseInt(sel[1], 10);
+        }
     }
 
     return { activeFields: found, fantype };
@@ -92,7 +143,9 @@ function fetchDeviceId(ip: string): Promise<{ deviceId: string; appName: string 
     return new Promise((resolve, reject) => {
         const req = http.get(`http://${ip}/revk-settings?_page=0`, (res) => {
             let html = '';
-            res.on('data', (chunk: Buffer) => { html += chunk.toString(); });
+            res.on('data', (chunk: Buffer) => {
+                html += chunk.toString();
+            });
             res.on('end', () => {
                 const match = html.match(/<h1>([^\s<]+)/);
                 if (!match) {
@@ -107,7 +160,7 @@ function fetchDeviceId(ip: string): Promise<{ deviceId: string; appName: string 
         });
         req.setTimeout(6000, () => {
             req.destroy();
-            reject(new Error('Timeout reading settings: ' + ip));
+            reject(new Error(`Timeout reading settings: ${ip}`));
         });
         req.on('error', reject);
     });
@@ -122,7 +175,9 @@ function fetchXgpioConfig(ip: string): Promise<XgpioPin[]> {
     return new Promise((resolve) => {
         const req = http.get(`http://${ip}/revk-settings?_page=1`, (res) => {
             let html = '';
-            res.on('data', (chunk: Buffer) => { html += chunk.toString(); });
+            res.on('data', (chunk: Buffer) => {
+                html += chunk.toString();
+            });
             res.on('end', () => {
                 const config: XgpioPin[] = [];
                 for (let n = 1; n <= 5; n++) {
@@ -143,7 +198,10 @@ function fetchXgpioConfig(ip: string): Promise<XgpioPin[]> {
                 resolve(config);
             });
         });
-        req.setTimeout(6000, () => { req.destroy(); resolve(emptyConfig()); });
+        req.setTimeout(6000, () => {
+            req.destroy();
+            resolve(emptyConfig());
+        });
         req.on('error', () => resolve(emptyConfig()));
     });
 }
@@ -154,7 +212,9 @@ function fetchTopicConfig(ip: string): Promise<TopicConfig> {
     return new Promise((resolve) => {
         const req = http.get(`http://${ip}/revk-settings?_page=-3`, (res) => {
             let html = '';
-            res.on('data', (chunk: Buffer) => { html += chunk.toString(); });
+            res.on('data', (chunk: Buffer) => {
+                html += chunk.toString();
+            });
             res.on('end', () => {
                 function val(id: string): string | null {
                     const m =
@@ -164,18 +224,24 @@ function fetchTopicConfig(ip: string): Promise<TopicConfig> {
                 }
                 const topiccommand = val('topiccommand') ?? DEFAULT_TOPIC_CONFIG.topiccommand;
                 const topicsetting = val('topicsetting') ?? DEFAULT_TOPIC_CONFIG.topicsetting;
-                const topicstate   = val('topicstate')   ?? DEFAULT_TOPIC_CONFIG.topicstate;
-                const prefixapp    = new RegExp('id="prefixapp"[^>]*checked').test(html);
-                const prefixhost   = new RegExp('id="prefixhost"[^>]*checked').test(html);
+                const topicstate = val('topicstate') ?? DEFAULT_TOPIC_CONFIG.topicstate;
+                const prefixapp = new RegExp('id="prefixapp"[^>]*checked').test(html);
+                const prefixhost = new RegExp('id="prefixhost"[^>]*checked').test(html);
                 resolve({ topiccommand, topicsetting, topicstate, prefixapp, prefixhost });
             });
         });
-        req.setTimeout(6000, () => { req.destroy(); resolve({ ...DEFAULT_TOPIC_CONFIG }); });
+        req.setTimeout(6000, () => {
+            req.destroy();
+            resolve({ ...DEFAULT_TOPIC_CONFIG });
+        });
         req.on('error', () => resolve({ ...DEFAULT_TOPIC_CONFIG }));
     });
 }
 
 // Main discovery function: runs all 4 fetches in parallel, returns DeviceProfile
+/**
+ *
+ */
 export async function discoverDevice(ip: string): Promise<DeviceProfile> {
     const [{ activeFields, fantype }, { deviceId, appName }, xgpioConfig, topicConfig] = await Promise.all([
         fetchDeviceFields(ip),
