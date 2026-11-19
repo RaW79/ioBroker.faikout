@@ -16,10 +16,10 @@
         "de": "Erste Version"
       }
     },
-    "title": "Faikout",
+    "title": "Faikout AC",
     "titleLang": {
-      "en": "Faikout",
-      "de": "Faikout"
+      "en": "Faikout AC",
+      "de": "Faikout AC"
     },
     "desc": {
       "en": "Adapter for Faikout Daikin MQTT bridge",
