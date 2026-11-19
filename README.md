@@ -63,14 +63,14 @@ Multiple indoor units on one outdoor unit can be grouped together. Demand contro
 
 ### Installation
 
-The adapter is not yet in the ioBroker repository. Install directly from GitHub:
+The adapter is available on npm. Install directly from ioBroker Admin:
 
 1. ioBroker Admin -> **Adapters** -> enable expert mode -> **Install from own URL** (GitHub icon)
-2. Tab **Custom**, enter URL: `https://github.com/RaW79/ioBroker.faikout-ac`
-3. Click **Install** – the `build/` folder is included, no compilation needed
+2. Tab **npm**, enter: `iobroker.faikout-ac`
+3. Click **Install**
 4. Add a **Faikout** instance (`faikout-ac.0`)
 
-**Updates:** Adapters installed via GitHub do not show update notifications in ioBroker. Check the version badge above for new releases. To update, repeat steps 1–3 – the instance and configuration are preserved.
+**Updates:** ioBroker Admin will notify you when a new version is available on npm. Update from the **Adapters** tab as usual.
 
 ### Setup
 
@@ -139,14 +139,14 @@ Mehrere Innengeräte an einem Außengerät lassen sich zu einer Gruppe zusammenf
 
 ### Installation
 
-Der Adapter ist noch nicht im ioBroker-Repository. Installation direkt von GitHub:
+Der Adapter ist auf npm verfügbar. Installation direkt aus dem ioBroker Admin:
 
 1. ioBroker Admin -> **Adapter** -> Expertenmodus aktivieren -> **Aus eigener URL installieren** (GitHub-Symbol)
-2. Reiter **Benutzerdefiniert**, URL eintragen: `https://github.com/RaW79/ioBroker.faikout-ac`
-3. **Installieren** klicken – der Ordner `build/` ist enthalten, kein Kompilieren nötig
+2. Reiter **npm**, eintragen: `iobroker.faikout-ac`
+3. **Installieren** klicken
 4. Instanz von **Faikout** hinzufügen (`faikout-ac.0`)
 
-**Aktualisierung:** Über GitHub installierte Adapter zeigen in ioBroker keine Updates an. Ob eine neue Version vorliegt, lässt sich am Versionsbadge oben prüfen. Zum Aktualisieren die Installationsschritte 1–3 erneut ausführen – Instanz und Konfiguration bleiben erhalten.
+**Aktualisierung:** Der ioBroker Admin meldet neue Versionen automatisch. Update wie bei anderen Adaptern direkt im Reiter **Adapter**.
 
 ### Einrichtung
 
