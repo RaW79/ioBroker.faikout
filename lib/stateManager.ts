@@ -2,7 +2,7 @@
 // Manages ioBroker states for a single device.
 // Creates, updates and cleans up states based on DeviceProfile.
 
-import { FIELDS, CONFIG_FIELDS_DEF, FieldDef } from './fieldDefinitions';
+import { FIELDS, CONFIG_FIELDS_DEF, FieldDef, getFanStates } from './fieldDefinitions';
 import { DeviceProfile } from './deviceDiscovery';
 
 type Adapter = ioBroker.Adapter;
@@ -18,7 +18,7 @@ export class StateManager {
 
     // Create or update all states for a discovered device profile
     async createStates(profile: DeviceProfile, createConfigStates: boolean): Promise<void> {
-        const { deviceId, appName, ip, activeFields, topicConfig } = profile;
+        const { deviceId, appName, ip, activeFields, topicConfig, fantype } = profile;
 
         // Device channel
         await this.adapter.setObjectNotExistsAsync(this.deviceFolder, {
@@ -43,6 +43,13 @@ export class StateManager {
         });
         await this._ensureState(`${this.deviceFolder}.info.lastUpdate`, {
             name: 'Last Update', type: 'number', role: 'date', read: true, write: false, def: 0,
+        });
+        await this._ensureState(`${this.deviceFolder}.info.fantype`, {
+            name: 'Fan type', type: 'number', role: 'value', read: true, write: false, def: fantype,
+        });
+        await this.adapter.setStateAsync(`${this.deviceFolder}.info.fantype`, { val: fantype, ack: true });
+        await this._ensureState(`${this.deviceFolder}.info.protocol`, {
+            name: 'Protocol', type: 'string', role: 'info.firmware', read: true, write: false, def: '',
         });
 
         // Topics channel (stores resolved topic config for reference and re-use after restart)
@@ -165,11 +172,26 @@ export class StateManager {
             );
         }
 
+        // protocol – store in info, then update fan states map
+        if (json['protocol'] !== undefined && json['protocol'] !== null) {
+            const protocol = String(json['protocol']);
+            await this.adapter.setStateAsync(`${this.deviceFolder}.info.protocol`, { val: protocol, ack: true });
+            await this._updateFanStates(protocol);
+        }
+
         // Update lastUpdate timestamp
         await this.adapter.setStateAsync(
             `${this.deviceFolder}.info.lastUpdate`,
             { val: Date.now(), ack: true },
         );
+    }
+
+    // Update fan state's allowed values based on fantype + protocol
+    private async _updateFanStates(protocol: string): Promise<void> {
+        const fantypeState = await this.adapter.getStateAsync(`${this.deviceFolder}.info.fantype`);
+        const fantype = fantypeState?.val != null ? Number(fantypeState.val) : 0;
+        const states = getFanStates(fantype, protocol);
+        await this.adapter.extendObjectAsync(`${this.deviceFolder}.fan`, { common: { states } });
     }
 
     // Check if a state has been marked as user-modified (native.userModified = true)

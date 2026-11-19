@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FIELD_WHITELIST = exports.CONFIG_FIELDS_DEF = exports.FIELDS = void 0;
+exports.FAN_STATES_3 = exports.FAN_STATES_3_AUTO = exports.FAN_STATES_5_AUTO = exports.FIELD_WHITELIST = exports.CONFIG_FIELDS_DEF = exports.FIELDS = void 0;
+exports.getFanStates = getFanStates;
 exports.FIELDS = {
     power: {
         label: { en: 'Power on/off', de: 'Ein/Aus' },
@@ -32,7 +33,7 @@ exports.FIELDS = {
         type: 'string',
         writeTopic: 'fan',
         role: 'value.speed',
-        states: { A: 'Auto', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', Q: 'Quiet' },
+        states: { A: 'A', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', Q: 'Q' },
     },
     econo: {
         label: { en: 'Economy mode', de: 'Eco-Modus' },
@@ -380,5 +381,28 @@ exports.CONFIG_FIELDS_DEF = {
         writeOnly: true,
         role: 'switch',
     },
+    livestatus: {
+        label: { en: 'Live status push', de: 'Live-Status-Push' },
+        type: 'boolean',
+        writeOnly: true,
+        role: 'switch',
+    },
 };
 exports.FIELD_WHITELIST = new Set(['comp', 'anglev', 'angleh', 'env_set', 'restart', 'Whheating', 'Whcooling', 'Whoutside']);
+exports.FAN_STATES_5_AUTO = {
+    A: 'A', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', Q: 'Q',
+};
+exports.FAN_STATES_3_AUTO = {
+    A: 'A', '1': '1', '3': '3', '5': '5', Q: 'Q',
+};
+exports.FAN_STATES_3 = {
+    '1': '1', '3': '3', '5': '5',
+};
+function getFanStates(fantype, protocol) {
+    const proto = protocol.toLowerCase();
+    if (fantype === 2)
+        return exports.FAN_STATES_3;
+    if (fantype === 3 || (fantype === 0 && proto.startsWith('cn_wired')))
+        return exports.FAN_STATES_3_AUTO;
+    return exports.FAN_STATES_5_AUTO;
+}

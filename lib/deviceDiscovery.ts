@@ -21,6 +21,7 @@ export interface DeviceProfile {
     topicConfig: TopicConfig;
     xgpioConfig: XgpioPin[];
     ip: string;
+    fantype: number;
 }
 
 function fetchPage(url: string): Promise<string> {
@@ -40,7 +41,7 @@ function fetchPage(url: string): Promise<string> {
 
 // Step 1: Fetch active fields from device root page + extras page
 // Ports fetchDeviceFields() from generator
-async function fetchDeviceFields(ip: string): Promise<Set<string>> {
+async function fetchDeviceFields(ip: string): Promise<{ activeFields: Set<string>; fantype: number }> {
     const [mainHtml, extrasHtml] = await Promise.all([
         fetchPage(`http://${ip}/`),
         fetchPage(`http://${ip}/revk-settings?_page=-2`),
@@ -74,7 +75,15 @@ async function fetchDeviceFields(ip: string): Promise<Set<string>> {
     // Always add whitelist fields
     for (const f of FIELD_WHITELIST) found.add(f);
 
-    return found;
+    // Extract fantype from fantype select (page=-2, already fetched)
+    let fantype = 0;
+    const fantypeBlock = extrasHtml.match(/name="_fantype"[\s\S]{0,600}?<\/select>/);
+    if (fantypeBlock) {
+        const sel = fantypeBlock[0].match(/<option value="(\d+)"[^>]*selected/);
+        if (sel) fantype = parseInt(sel[1], 10);
+    }
+
+    return { activeFields: found, fantype };
 }
 
 // Step 2: Fetch device ID and app name from settings page
@@ -168,7 +177,7 @@ function fetchTopicConfig(ip: string): Promise<TopicConfig> {
 
 // Main discovery function: runs all 4 fetches in parallel, returns DeviceProfile
 export async function discoverDevice(ip: string): Promise<DeviceProfile> {
-    const [activeFields, { deviceId, appName }, xgpioConfig, topicConfig] = await Promise.all([
+    const [{ activeFields, fantype }, { deviceId, appName }, xgpioConfig, topicConfig] = await Promise.all([
         fetchDeviceFields(ip),
         fetchDeviceId(ip),
         fetchXgpioConfig(ip),
@@ -182,5 +191,6 @@ export async function discoverDevice(ip: string): Promise<DeviceProfile> {
         topicConfig,
         xgpioConfig,
         ip,
+        fantype,
     };
 }

@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.1",
+    "version": "0.1.31",
     "news": {
+      "0.1.3": {
+        "en": "Multi-split support: group devices sharing one outdoor unit, per-device independent demand calculation with shared outdoor sensor",
+        "de": "Multisplit-Unterstützung: Gerätegruppen je Außengerät, unabhängige Bedarfsregelung pro Innengerät mit gemeinsamem Außensensor"
+      },
       "0.1.0": {
         "en": "Initial release",
         "de": "Erste Version"

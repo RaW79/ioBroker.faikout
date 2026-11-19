@@ -46,17 +46,9 @@ class FaikoutAdapter extends utils.Adapter {
         this.stateManagers = new Map();
         this.topicToFolder = new Map();
         this.folderToTopics = new Map();
-        this.demandFolder = null;
-        this.demandOutdoorTempId = null;
-        this.demandRoomTempId = null;
-        this.demandGuardActive = false;
-        this.demandRunning = false;
-        this.demandLastRunTs = 0;
-        this.demandLastLogged = null;
-        this.demandDeviceCfg = {};
-        this.demandLastSent = null;
-        this.demandLastChangeTs = 0;
-        this.demandLastEventTs = 0;
+        this.demandCtxMap = new Map();
+        this.outdoorIdToFolders = new Map();
+        this.roomIdToFolders = new Map();
         this.scheduleFired = new Map();
         this.humidityStates = new Map();
         this.on('ready', this.onReady.bind(this));
@@ -103,6 +95,9 @@ class FaikoutAdapter extends utils.Adapter {
         this._setupSchedule();
         await this._setupHumidityControls();
         await this.subscribeStatesAsync('*');
+        for (const folder of this.demandCtxMap.keys()) {
+            void this._runDemandControl(folder);
+        }
     }
     _sanitizeDeviceNames(devices) {
         const usedNames = new Set();
@@ -182,10 +177,10 @@ class FaikoutAdapter extends utils.Adapter {
         await this.setStateAsync('info.connection', { val: connected, ack: true });
         if (connected) {
             this.log.info('MQTT connected');
-            if (this.demandFolder) {
-                this._publishDemandConfigParam(this.demandFolder, 'lockmode', '1');
-                if (this.demandDeviceCfg['demandLogLevel'] !== 'off') {
-                    this.log.info(`Demand control: lockmode activated for "${this.demandFolder}"`);
+            for (const ctx of this.demandCtxMap.values()) {
+                this._publishDemandConfigParam(ctx.folder, 'lockmode', '1');
+                if (ctx.cfg['demandLogLevel'] !== 'off') {
+                    this.log.info(`Demand control: lockmode activated for "${ctx.folder}"`);
                 }
             }
         }
@@ -201,27 +196,50 @@ class FaikoutAdapter extends utils.Adapter {
         }
     }
     onStateChange(id, state) {
-        if (state && (id === this.demandOutdoorTempId || id === this.demandRoomTempId)) {
-            this.demandLastEventTs = Date.now();
-            void this._runDemandControl();
-            return;
-        }
-        if (state?.ack && this.demandFolder) {
-            const folder = `${this.namespace}.${this.demandFolder}`;
-            if (id === `${folder}.power` || id === `${folder}.mode`) {
-                this.demandLastEventTs = Date.now();
-                void this._runDemandControl();
+        {
+            const foldersOd = this.outdoorIdToFolders.get(id);
+            if (state && foldersOd) {
+                for (const f of foldersOd) {
+                    const ctx = this.demandCtxMap.get(f);
+                    if (ctx) {
+                        ctx.lastEventTs = Date.now();
+                        void this._runDemandControl(f);
+                    }
+                }
+                return;
+            }
+            const foldersRm = this.roomIdToFolders.get(id);
+            if (state && foldersRm) {
+                for (const f of foldersRm) {
+                    const ctx = this.demandCtxMap.get(f);
+                    if (ctx) {
+                        ctx.lastEventTs = Date.now();
+                        void this._runDemandControl(f);
+                    }
+                }
                 return;
             }
         }
-        if (this.demandFolder && state && !state.ack) {
-            const dp = `${this.namespace}.${this.demandFolder}.demand_ctrl.`;
-            if (id.startsWith(dp)) {
-                void (async () => {
-                    await this.setStateAsync(id.slice(`${this.namespace}.`.length), { val: state.val, ack: true });
-                    void this._runDemandControl();
-                })();
-                return;
+        if (state?.ack && this.demandCtxMap.size > 0) {
+            for (const ctx of this.demandCtxMap.values()) {
+                const pfx = `${this.namespace}.${ctx.folder}`;
+                if (id === `${pfx}.power` || id === `${pfx}.mode`) {
+                    ctx.lastEventTs = Date.now();
+                    void this._runDemandControl(ctx.folder);
+                    return;
+                }
+            }
+        }
+        if (state && !state.ack && this.demandCtxMap.size > 0) {
+            for (const ctx of this.demandCtxMap.values()) {
+                const dp = `${this.namespace}.${ctx.folder}.demand_ctrl.`;
+                if (id.startsWith(dp)) {
+                    void (async () => {
+                        await this.setStateAsync(id.slice(`${this.namespace}.`.length), { val: state.val, ack: true });
+                        void this._runDemandControl(ctx.folder);
+                    })();
+                    return;
+                }
             }
         }
         if (state && !state.ack) {
@@ -356,6 +374,7 @@ class FaikoutAdapter extends utils.Adapter {
                     }
                 }
                 this.folderToTopics.set(folder, topics);
+                await this.setStateAsync(`${folder}.config.livestatus`, { val: true, ack: false });
                 this.log.info(`Discovery completed for "${name}": ${profile.deviceId} (${profile.appName}) – ${profile.activeFields.size} fields`);
                 if (obj.callback) {
                     this.sendTo(obj.from, obj.command, {
@@ -468,6 +487,9 @@ class FaikoutAdapter extends utils.Adapter {
                     catch (err) {
                         this.log.warn(`Schedule [${deviceName}] ${field} failed: ${err}`);
                     }
+                    const delayMs = Math.max(0, Number(action['delay'] ?? 0)) * 1000;
+                    if (delayMs > 0)
+                        await new Promise(resolve => setTimeout(resolve, delayMs));
                 }
                 if (fired)
                     this.scheduleFired.set(i, firedKey);
@@ -506,120 +528,105 @@ class FaikoutAdapter extends utils.Adapter {
     async _setupDemandControl() {
         const cfg = this.config;
         const devices = cfg['devices'] || [];
-        const demandDeviceEntry = devices.find(d => d['useDemand']);
-        if (!demandDeviceEntry) {
+        const demandDevices = devices.filter(d => d['enabled'] !== false && d['useDemand']);
+        if (demandDevices.length === 0) {
             this.log.info('Demand control: no device has useDemand checkbox set – skipping');
             return;
         }
-        const deviceName = (demandDeviceEntry['name'] || '').trim();
-        if (!deviceName) {
-            this.log.warn('Demand control: device name empty – skipping');
-            return;
-        }
         const FLAT_SKIP = new Set(['demandOutdoorTempId', 'demandRoomTempId']);
-        const deviceDemandCfg = {};
+        const flatDefaults = {};
         for (const [k, v] of Object.entries(cfg)) {
             if (k.startsWith('demand') && !FLAT_SKIP.has(k))
-                deviceDemandCfg[k] = v;
+                flatDefaults[k] = v;
         }
-        Object.assign(deviceDemandCfg, cfg[deviceName] || {});
-        if (!deviceDemandCfg['demandEnabled']) {
-            this.log.info(`Demand control: demandEnabled not set for "${deviceName}" in Bedarfsregelung tab – skipping`);
-            return;
-        }
-        this.demandDeviceCfg = deviceDemandCfg;
-        const folder = deviceName.replace(/[^a-zA-Z0-9_-]/g, '_');
-        this.demandFolder = folder;
-        const devCfg = this.demandDeviceCfg;
-        const outdoorId = (devCfg['demandOutdoorTempId'] || '').trim()
-            || `${this.namespace}.${folder}.outside`;
-        const roomId = (devCfg['demandRoomTempId'] || '').trim()
-            || `${this.namespace}.${folder}.env`;
-        this.demandOutdoorTempId = outdoorId;
-        this.demandRoomTempId = roomId;
-        if (!outdoorId.startsWith(`${this.namespace}.`)) {
-            await this.subscribeForeignStatesAsync(outdoorId);
-        }
-        if (!roomId.startsWith(`${this.namespace}.`)) {
-            await this.subscribeForeignStatesAsync(roomId);
-        }
-        const dp = `${folder}.demand_ctrl`;
-        await this.setObjectNotExistsAsync(dp, {
-            type: 'channel',
-            common: { name: { en: 'Demand Control', de: 'Bedarfsregelung' } },
-            native: {},
-        });
-        await this.setObjectNotExistsAsync(`${dp}.active`, {
-            type: 'state',
-            common: { name: { en: 'Demand control active', de: 'Bedarfsregelung aktiv' }, type: 'boolean', role: 'indicator', read: true, write: false, def: false },
-            native: {},
-        });
-        await this.setObjectNotExistsAsync(`${dp}.demand_calc`, {
-            type: 'state',
-            common: { name: { en: 'Calculated demand', de: 'Berechneter Bedarf' }, type: 'number', unit: '%', role: 'value', read: true, write: false, min: 0, max: 100 },
-            native: {},
-        });
-        await this.setObjectNotExistsAsync(`${dp}.override_active`, {
-            type: 'state',
-            common: { name: { en: 'Manual override active', de: 'Manuelle Übersteuerung aktiv' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
-            native: {},
-        });
-        await this.setObjectNotExistsAsync(`${dp}.override_value`, {
-            type: 'state',
-            common: { name: { en: 'Manual override demand', de: 'Manueller Bedarfswert' }, type: 'number', unit: '%', role: 'level', read: true, write: true, min: 0, max: 100, def: 50 },
-            native: {},
-        });
-        await this.setObjectNotExistsAsync(`${dp}.guard_active`, {
-            type: 'state',
-            common: { name: { en: 'Guard active', de: 'Guard aktiv' }, type: 'boolean', role: 'indicator', read: true, write: false, def: false },
-            native: {},
-        });
-        await this.setObjectNotExistsAsync(`${dp}.outdoor_temp`, {
-            type: 'state',
-            common: { name: { en: 'Outdoor temperature (used)', de: 'Verwendete Außentemperatur' }, type: 'number', unit: '°C', role: 'value.temperature', read: true, write: false },
-            native: {},
-        });
-        await this.setObjectNotExistsAsync(`${dp}.room_temp`, {
-            type: 'state',
-            common: { name: { en: 'Room temperature (used)', de: 'Verwendete Raumtemperatur' }, type: 'number', unit: '°C', role: 'value.temperature', read: true, write: false },
-            native: {},
-        });
-        await this.setStateAsync(`${dp}.active`, { val: true, ack: true });
-        this.setInterval(() => {
-            if (Date.now() - this.demandLastEventTs >= 180_000) {
-                void this._runDemandControl();
+        for (const deviceEntry of demandDevices) {
+            const deviceName = (deviceEntry['name'] || '').trim();
+            if (!deviceName) {
+                this.log.warn('Demand control: device name empty – skipping entry');
+                continue;
             }
-        }, 180_000);
-        this.log.info(`Demand control active for "${deviceName}" | outdoor: ${outdoorId} | room: ${roomId}`);
-        void this._runDemandControl();
+            const devCfg = Object.assign({}, flatDefaults, cfg[deviceName] || {});
+            if (!devCfg['demandEnabled']) {
+                this.log.info(`Demand control: demandEnabled not set for "${deviceName}" – skipping`);
+                continue;
+            }
+            const folder = deviceName.replace(/[^a-zA-Z0-9_-]/g, '_');
+            const group = (deviceEntry['group'] || '').trim();
+            const outdoorId = (devCfg['demandOutdoorTempId'] || '').trim()
+                || `${this.namespace}.${folder}.outside`;
+            const roomId = (devCfg['demandRoomTempId'] || '').trim()
+                || `${this.namespace}.${folder}.env`;
+            const ctx = {
+                folder, outdoorId, roomId, cfg: devCfg, group,
+                guardActive: false, running: false,
+                lastRunTs: 0, lastLogged: null,
+                lastSent: null, lastChangeTs: 0, lastEventTs: 0,
+            };
+            this.demandCtxMap.set(folder, ctx);
+            const od = this.outdoorIdToFolders.get(outdoorId) ?? [];
+            if (!od.includes(folder))
+                od.push(folder);
+            this.outdoorIdToFolders.set(outdoorId, od);
+            const rm = this.roomIdToFolders.get(roomId) ?? [];
+            if (!rm.includes(folder))
+                rm.push(folder);
+            this.roomIdToFolders.set(roomId, rm);
+            if (!outdoorId.startsWith(`${this.namespace}.`)) {
+                await this.subscribeForeignStatesAsync(outdoorId);
+            }
+            if (!roomId.startsWith(`${this.namespace}.`)) {
+                await this.subscribeForeignStatesAsync(roomId);
+            }
+            const dp = `${folder}.demand_ctrl`;
+            await this.setObjectNotExistsAsync(dp, {
+                type: 'channel',
+                common: { name: { en: 'Demand Control', de: 'Bedarfsregelung' } },
+                native: {},
+            });
+            const stBase = { type: 'state', native: {} };
+            await this.setObjectNotExistsAsync(`${dp}.active`, { ...stBase, common: { name: { en: 'Demand control active', de: 'Bedarfsregelung aktiv' }, type: 'boolean', role: 'indicator', read: true, write: false, def: false } });
+            await this.setObjectNotExistsAsync(`${dp}.demand_calc`, { ...stBase, common: { name: { en: 'Calculated demand', de: 'Berechneter Bedarf' }, type: 'number', unit: '%', role: 'value', read: true, write: false, min: 0, max: 100 } });
+            await this.setObjectNotExistsAsync(`${dp}.override_active`, { ...stBase, common: { name: { en: 'Manual override active', de: 'Manuelle Übersteuerung aktiv' }, type: 'boolean', role: 'switch', read: true, write: true, def: false } });
+            await this.setObjectNotExistsAsync(`${dp}.override_value`, { ...stBase, common: { name: { en: 'Manual override demand', de: 'Manueller Bedarfswert' }, type: 'number', unit: '%', role: 'level', read: true, write: true, min: 0, max: 100, def: 50 } });
+            await this.setObjectNotExistsAsync(`${dp}.guard_active`, { ...stBase, common: { name: { en: 'Guard active', de: 'Guard aktiv' }, type: 'boolean', role: 'indicator', read: true, write: false, def: false } });
+            await this.setObjectNotExistsAsync(`${dp}.outdoor_temp`, { ...stBase, common: { name: { en: 'Outdoor temperature used', de: 'Verwendete Außentemperatur' }, type: 'number', unit: '°C', role: 'value.temperature', read: true, write: false } });
+            await this.setObjectNotExistsAsync(`${dp}.room_temp`, { ...stBase, common: { name: { en: 'Room temperature used', de: 'Verwendete Raumtemperatur' }, type: 'number', unit: '°C', role: 'value.temperature', read: true, write: false } });
+            await this.setStateAsync(`${dp}.active`, { val: true, ack: true });
+            this.setInterval(() => {
+                if (Date.now() - ctx.lastEventTs >= 180_000)
+                    void this._runDemandControl(folder);
+            }, 180_000);
+            this.log.info(`Demand control active for "${deviceName}" | outdoor: ${outdoorId} | room: ${roomId}`);
+            void this._runDemandControl(folder);
+        }
     }
-    async _runDemandControl() {
-        if (this.demandRunning)
+    async _runDemandControl(folder) {
+        const ctx = this.demandCtxMap.get(folder);
+        if (!ctx)
+            return;
+        if (ctx.running)
             return;
         const now = Date.now();
-        if (now - this.demandLastRunTs < 60_000)
+        if (now - ctx.lastRunTs < 60_000)
             return;
-        this.demandRunning = true;
-        this.demandLastRunTs = now;
+        ctx.running = true;
+        ctx.lastRunTs = now;
         try {
-            await this._runDemandControlCore();
+            await this._runDemandControlCore(ctx);
         }
         finally {
-            this.demandRunning = false;
+            ctx.running = false;
         }
     }
-    async _runDemandControlCore() {
-        const cfg = this.demandDeviceCfg;
-        const folder = this.demandFolder;
-        if (!folder || !this.demandOutdoorTempId || !this.demandRoomTempId)
-            return;
+    async _runDemandControlCore(ctx) {
+        const { cfg, folder, outdoorId, roomId } = ctx;
         const ns = `${this.namespace}.`;
-        const outdoorState = this.demandOutdoorTempId.startsWith(ns)
-            ? await this.getStateAsync(this.demandOutdoorTempId.slice(ns.length))
-            : await this.getForeignStateAsync(this.demandOutdoorTempId);
-        const roomState = this.demandRoomTempId.startsWith(ns)
-            ? await this.getStateAsync(this.demandRoomTempId.slice(ns.length))
-            : await this.getForeignStateAsync(this.demandRoomTempId);
+        const outdoorState = outdoorId.startsWith(ns)
+            ? await this.getStateAsync(outdoorId.slice(ns.length))
+            : await this.getForeignStateAsync(outdoorId);
+        const roomState = roomId.startsWith(ns)
+            ? await this.getStateAsync(roomId.slice(ns.length))
+            : await this.getForeignStateAsync(roomId);
         if (outdoorState?.val == null || roomState?.val == null)
             return;
         const outdoor = Number(outdoorState.val);
@@ -672,11 +679,20 @@ class FaikoutAdapter extends utils.Adapter {
                 }
             }
         }
-        await this._checkGuard(folder, cfg, room);
+        await this._checkGuard(ctx, room);
         demand = Math.min(Number(cfg['demandMaxDemand'] ?? 95), demand);
         demand = Math.max(Number(cfg['demandMinDemand'] ?? 30), demand);
         demand = Math.round(demand);
-        await this.setStateAsync(`${dp}.guard_active`, { val: this.demandGuardActive, ack: true });
+        if (ctx.group) {
+            let groupFloor = demand;
+            for (const peer of this.demandCtxMap.values()) {
+                if (peer.folder !== folder && peer.group === ctx.group) {
+                    groupFloor = Math.max(groupFloor, Number(peer.cfg['demandMinDemand'] ?? 30));
+                }
+            }
+            demand = Math.max(demand, groupFloor);
+        }
+        await this.setStateAsync(`${dp}.guard_active`, { val: ctx.guardActive, ack: true });
         await this.setStateAsync(`${dp}.demand_calc`, { val: demand, ack: true });
         if (!isActive) {
             this.log.debug(`Demand control skipped: power=${String(powerState?.val)} mode=${String(modeState?.val ?? '?')}`);
@@ -686,53 +702,54 @@ class FaikoutAdapter extends utils.Adapter {
         if (overrideActive) {
             const overrideDemand = Math.round(Number((await this.getStateAsync(`${dp}.override_value`))?.val ?? 50));
             await this.setStateAsync(`${dp}.demand_calc`, { val: overrideDemand, ack: true });
-            this._sendDemand(folder, overrideDemand);
+            this._sendDemand(ctx, overrideDemand);
             this.log.debug(`Demand override: ${overrideDemand}%`);
             return;
         }
         if (cfg['demandLogLevel'] === 'extended') {
             const boostStr = boostApplied > 0 ? `+${boostApplied}%(${boostStageDesc})` : '–';
             const taperStr = taperApplied > 0 ? `-${taperApplied.toFixed(1)}%` : '–';
-            const guardStr = this.demandGuardActive ? 'EIN' : 'AUS';
+            const guardStr = ctx.guardActive ? 'EIN' : 'AUS';
             this.log.info(`Demand [${folder}] outdoor=${outdoor}°C room=${room}°C` +
                 ` | base=${baseDemand.toFixed(0)}% boost=${boostStr} taper=${taperStr}` +
                 ` → target=${demand}% | guard=${guardStr}`);
         }
-        else if (demand !== this.demandLastLogged) {
+        else if (demand !== ctx.lastLogged) {
             this.log.info(`Demand [${folder}] outdoor=${outdoor}°C room=${room}°C → target=${demand}%`);
-            this.demandLastLogged = demand;
+            ctx.lastLogged = demand;
         }
-        this._scheduleDemand(folder, demand);
+        this._scheduleDemand(ctx, demand);
     }
-    _scheduleDemand(folder, target) {
-        const cfg = this.demandDeviceCfg;
+    _scheduleDemand(ctx, target) {
+        const { cfg, folder } = ctx;
         const delayDown = Number(cfg['demandDelayReduce'] ?? 0) * 1000;
         const delayUp = Number(cfg['demandDelayIncrease'] ?? 300) * 1000;
-        if (this.demandLastSent === null) {
-            this._sendDemand(folder, target);
+        if (ctx.lastSent === null) {
+            this._sendDemand(ctx, target);
             return;
         }
-        if (target === this.demandLastSent)
+        if (target === ctx.lastSent)
             return;
-        const goingUp = target > this.demandLastSent;
+        const goingUp = target > ctx.lastSent;
         const delay = goingUp ? delayUp : delayDown;
-        const elapsed = Date.now() - this.demandLastChangeTs;
+        const elapsed = Date.now() - ctx.lastChangeTs;
         if (delay <= 0 || elapsed >= delay) {
-            this._sendDemand(folder, target);
+            this._sendDemand(ctx, target);
         }
         else {
-            this.log.info(`Demand [${folder}] ${goingUp ? '↑' : '↓'} ${this.demandLastSent}%→${target}% gehalten, noch ${Math.round((delay - elapsed) / 1000)}s`);
+            this.log.info(`Demand [${folder}] ${goingUp ? '↑' : '↓'} ${ctx.lastSent}%→${target}% gehalten, noch ${Math.round((delay - elapsed) / 1000)}s`);
         }
     }
-    _sendDemand(folder, demand) {
-        this.demandLastSent = demand;
-        this.demandLastChangeTs = Date.now();
-        void this.setStateAsync(`${folder}.demand`, { val: demand, ack: false }).catch(() => {
-            this.log.warn(`Demand state not found for "${folder}" – run Discovery first`);
+    _sendDemand(ctx, demand) {
+        ctx.lastSent = demand;
+        ctx.lastChangeTs = Date.now();
+        void this.setStateAsync(`${ctx.folder}.demand`, { val: demand, ack: false }).catch(() => {
+            this.log.warn(`Demand state not found for "${ctx.folder}" – run Discovery first`);
         });
-        this.log.debug(`Demand [${folder}] sent=${demand}%`);
+        this.log.debug(`Demand [${ctx.folder}] sent=${demand}%`);
     }
-    async _checkGuard(folder, cfg, room) {
+    async _checkGuard(ctx, room) {
+        const { cfg, folder } = ctx;
         if (!cfg['demandGuardEnabled'])
             return;
         const autotState = await this.getStateAsync(`${folder}.autot`);
@@ -745,14 +762,14 @@ class FaikoutAdapter extends utils.Adapter {
         const heatbackNormal = Number(cfg['demandHeatbackNormal'] ?? 3);
         const heatbackGuard = Number(cfg['demandHeatbackGuard'] ?? 6);
         const logOff = cfg['demandLogLevel'] === 'off';
-        if (room >= guardThreshold && !this.demandGuardActive) {
-            this.demandGuardActive = true;
+        if (room >= guardThreshold && !ctx.guardActive) {
+            ctx.guardActive = true;
             this._publishGuardHeatback(folder, heatbackGuard);
             if (!logOff)
                 this.log.info(`Demand guard ON: room=${room}°C >= threshold=${guardThreshold.toFixed(2)}°C → heatback=${heatbackGuard}`);
         }
-        else if (room <= autot && this.demandGuardActive) {
-            this.demandGuardActive = false;
+        else if (room <= autot && ctx.guardActive) {
+            ctx.guardActive = false;
             this._publishGuardHeatback(folder, heatbackNormal);
             if (!logOff)
                 this.log.info(`Demand guard OFF: room=${room}°C <= autot=${autot}°C → heatback=${heatbackNormal}`);
@@ -990,8 +1007,8 @@ class FaikoutAdapter extends utils.Adapter {
     }
     async onUnload(callback) {
         try {
-            if (this.demandFolder) {
-                await this.setStateAsync(`${this.demandFolder}.demand_ctrl.active`, { val: false, ack: true });
+            for (const ctx of this.demandCtxMap.values()) {
+                await this.setStateAsync(`${ctx.folder}.demand_ctrl.active`, { val: false, ack: true });
             }
             if (this.mqttClient) {
                 await this.mqttClient.disconnect();

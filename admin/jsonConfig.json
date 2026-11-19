@@ -46,6 +46,14 @@
           "type": "staticText",
           "label": { "en": "1. Devices tab: add one row per Faikout device (name and IP address)", "de": "1. Geräte-Tab: eine Zeile je Faikout-Gerät anlegen (Name und IP-Adresse)" }
         },
+        "info_setup_1b": {
+          "type": "staticText",
+          "label": { "en": "   · Demand Control and/or Humidity Control checkboxes: activate per device as needed", "de": "   · Checkboxen Bedarfssteuerung und/oder Feuchte Regelung je Gerät aktivieren falls gewünscht" }
+        },
+        "info_setup_1c": {
+          "type": "staticText",
+          "label": { "en": "   · Multi-split: assign all indoor units of the same outdoor unit to the same group (A–E); single-split devices stay on Single-Split", "de": "   · Multisplit: alle Innengeräte desselben Außengeräts auf dieselbe Gruppe (A–E) setzen; Single-Split-Geräte bleiben auf Single-Split" }
+        },
         "info_setup_2": {
           "type": "staticText",
           "label": { "en": "2. MQTT Broker tab: enter broker host, port and credentials", "de": "2. MQTT Broker-Tab: Broker-Host, Port und Zugangsdaten eintragen" }
@@ -126,8 +134,8 @@
         "info_options_envset_1": {
           "type": "staticText",
           "label": {
-            "en": "env_set allows an external temperature value (e.g. from a room sensor) to be written to the Faikout device. The device uses this value in its control logic as an environment reference temperature. Write to env_set from your automation at the desired interval – the adapter forwards the value immediately each time.",
-            "de": "env_set ermöglicht es, einen externen Temperaturwert (z.B. eines Raumsensors) an das Faikout-Gerät zu schreiben. Das Gerät verwendet diesen Wert in seiner Regellogik als Umgebungsreferenztemperatur. Der Datenpunkt wird aus der Automation im gewünschten Intervall beschrieben – der Adapter leitet den Wert sofort weiter."
+            "en": "env_set allows an external temperature value (e.g. from a room sensor) to be written to the Faikout device. The device uses this value in its control logic as an environment reference temperature. The state can be written from an automation at the desired interval – the adapter forwards the value immediately.",
+            "de": "env_set ermöglicht es, einen externen Temperaturwert (z.B. eines Raumsensors) an das Faikout-Gerät zu schreiben. Das Gerät verwendet diesen Wert in seiner Regellogik als Umgebungsreferenztemperatur. Der Datenpunkt kann aus einer Automation im gewünschten Intervall beschrieben werden – der Adapter leitet den Wert sofort weiter."
           }
         },
         "info_options_envset_2": {
@@ -137,10 +145,17 @@
             "de": "Das Faikout-Gerät erwartet innerhalb eines 300-Sekunden-Fensters einen aktuellen env_set-Wert – bleibt dieser aus, werden der externe Sensor und dessen Berücksichtigung in der Regellogik verworfen."
           }
         },
+        "info_options_envset_3": {
+          "type": "staticText",
+          "label": {
+            "en": "Alternatively the tab 'External Sensor' is available.",
+            "de": "Alternativ steht der Tab 'Externer Sensor' zur Verfügung."
+          }
+        },
         "div_version": { "type": "divider" },
         "info_version": {
           "type": "staticText",
-          "label": { "en": "v0.1.1", "de": "v0.1.1" },
+          "label": { "en": "v0.1.31", "de": "v0.1.31" },
           "style": { "fontSize": "11px", "color": "#aaa", "textAlign": "right" }
         }
       }
@@ -186,6 +201,21 @@
               "title": { "en": "Humidity ctrl", "de": "Feuchte Regelung" },
               "width": "120px",
               "default": false
+            },
+            {
+              "type": "select",
+              "attr": "group",
+              "title": { "en": "Multi-split group", "de": "Multisplit-Gruppe" },
+              "width": "140px",
+              "default": "",
+              "options": [
+                { "value": "",  "label": { "en": "Single-Split", "de": "Single-Split" } },
+                { "value": "A", "label": { "en": "Group A",      "de": "Gruppe A"      } },
+                { "value": "B", "label": { "en": "Group B",      "de": "Gruppe B"      } },
+                { "value": "C", "label": { "en": "Group C",      "de": "Gruppe C"      } },
+                { "value": "D", "label": { "en": "Group D",      "de": "Gruppe D"      } },
+                { "value": "E", "label": { "en": "Group E",      "de": "Gruppe E"      } }
+              ]
             },
             {
               "type": "sendTo",

@@ -5,11 +5,12 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ioBroker-Adapter für **Faikout** – den ESP32-basierten Daikin-Controller von [RevK](https://github.com/revk/ESP32-Faikout).
-Der Adapter verbindet sich per MQTT mit dem Faikout, erkennt jedes Gerät per HTTP und legt alle Datenpunkte automatisch an.
 
-> **⚠️ Frühe Betaphase.** Erfolgreich getestet mit mehreren **Single-Split**-Daikin-Geräten (mehrere Geräte in einer Instanz).
-> Multi-Split-Anlagen sind noch nicht getestet. Feedback und Issues sind willkommen.
-Der Adapter ergänzt zwei Regelfunktionen, die weder Faikout noch Daikin selbst bieten:
+Der Adapter verbindet sich per MQTT mit einem oder mehreren Faikout-Geräten und erkennt bei der Einrichtung automatisch, welche Funktionen das jeweilige Gerät unterstützt. Alle zugehörigen Datenpunkte werden vollständig angelegt und die MQTT-Kommunikation dauerhaft aktuell gehalten – eine manuelle Konfiguration von Topics oder Datenpunkten ist nicht nötig. Sensoren, Steuerbefehle und Geräteparameter stehen direkt in ioBroker zur Verfügung und lassen sich in Skripten, Visualisierungen und Automationen frei nutzen.
+
+Darüber hinaus ergänzt der Adapter zwei Regelfunktionen, die weder Faikout noch Daikin selbst bieten:
+
+> **⚠️ Frühe Betaphase.** Erfolgreich getestet mit mehreren **Single-Split**-Daikin-Geräten. Multi-Split-Unterstützung ab v0.1.3 implementiert, Praxistests laufen. Feedback und Issues sind willkommen.
 
 ## Automatische Bedarfsregelung
 
@@ -33,10 +34,15 @@ Der Adapter berechnet aus Raumtemperatur und Luftfeuchte (BLE-Sensor des Faikout
 
 ![Konfiguration der Feuchteregelung](doc/feuchteregelung.png)
 
+## Multi-Split-Unterstützung
+
+Mehrere Innengeräte an einem Außengerät lassen sich zu einer Gruppe zusammenfassen. Die Bedarfsregelung rechnet für jedes Innengerät unabhängig (eigene Raumtemperatur, eigene Kennlinie), setzt aber als Untergrenze das höchste `Mindest-Demand` aller Gruppenmitglieder. So wird verhindert, dass das Außengerät durch ein Gerät mit sehr niedrigem Bedarf zu stark gedrosselt wird, während ein anderes noch Heizleistung braucht. Der Außentemperatursensor wird innerhalb der Gruppe geteilt: wird er bei einem Gerät geändert, übernehmen alle anderen Gruppenmitglieder automatisch dieselbe Auswahl.
+
 ## Weitere Funktionen
 
 - Automatische Geräteerkennung (es werden nur die auf dem Gerät aktiven Felder angelegt)
 - Mehrere Faikout-Geräte pro Adapter-Instanz
+- Multi-Split: Geräte einer Außeneinheit als Gruppe konfigurieren (Gruppen A–E im Geräte-Tab)
 - Zeitplan: wochentagsabhängige Schaltzeiten je Gerät mit mehreren Aktionen (z. B. Power, Lüfter, Powerful, Sollwert, manueller Demand-Wert)
 - Externen Temperatursensor verknüpfen: ein beliebiger ioBroker-Datenpunkt wird zyklisch als Raumtemperatur (`env`) an den Faikout übertragen und dient dort als Regelgröße
 
@@ -62,7 +68,7 @@ Der Adapter ist noch nicht im ioBroker-Repository. Installation direkt von GitHu
 ## Einrichtung
 
 1. Reiter **MQTT Connection**: Broker-Host, Port und Zugangsdaten eintragen
-2. Reiter **Geräte**: eine Zeile pro Faikout anlegen (Name + IP-Adresse)
+2. Reiter **Geräte**: eine Zeile pro Faikout anlegen (Name + IP-Adresse); Checkboxen **Bedarfssteuerung** und **Feuchte Regelung** je Gerät aktivieren falls gewünscht; bei Multi-Split-Anlagen alle Innengeräte desselben Außengeräts auf dieselbe Gruppe (A–E) setzen, Single-Split-Geräte bleiben auf "Single-Split"
 3. Speichern, dann für jedes Gerät **Erkennen** klicken
 4. Die Datenpunkte erscheinen unter `faikout-ac.0.<Name>.*`
 

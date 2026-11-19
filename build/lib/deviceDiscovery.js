@@ -75,7 +75,14 @@ async function fetchDeviceFields(ip) {
     }
     for (const f of fieldDefinitions_1.FIELD_WHITELIST)
         found.add(f);
-    return found;
+    let fantype = 0;
+    const fantypeBlock = extrasHtml.match(/name="_fantype"[\s\S]{0,600}?<\/select>/);
+    if (fantypeBlock) {
+        const sel = fantypeBlock[0].match(/<option value="(\d+)"[^>]*selected/);
+        if (sel)
+            fantype = parseInt(sel[1], 10);
+    }
+    return { activeFields: found, fantype };
 }
 function fetchDeviceId(ip) {
     return new Promise((resolve, reject) => {
@@ -153,7 +160,7 @@ function fetchTopicConfig(ip) {
     });
 }
 async function discoverDevice(ip) {
-    const [activeFields, { deviceId, appName }, xgpioConfig, topicConfig] = await Promise.all([
+    const [{ activeFields, fantype }, { deviceId, appName }, xgpioConfig, topicConfig] = await Promise.all([
         fetchDeviceFields(ip),
         fetchDeviceId(ip),
         fetchXgpioConfig(ip),
@@ -166,5 +173,6 @@ async function discoverDevice(ip) {
         topicConfig,
         xgpioConfig,
         ip,
+        fantype,
     };
 }

@@ -2,3 +2,6 @@ node_modules/
 *.js.map
 .env
 npm-debug.log
+.claude/
+CLAUDE.md
+PROGRESS.md

@@ -8,7 +8,7 @@ class StateManager {
         this.deviceFolder = deviceFolder;
     }
     async createStates(profile, createConfigStates) {
-        const { deviceId, appName, ip, activeFields, topicConfig } = profile;
+        const { deviceId, appName, ip, activeFields, topicConfig, fantype } = profile;
         await this.adapter.setObjectNotExistsAsync(this.deviceFolder, {
             type: 'channel',
             common: { name: appName || deviceId },
@@ -29,6 +29,13 @@ class StateManager {
         });
         await this._ensureState(`${this.deviceFolder}.info.lastUpdate`, {
             name: 'Last Update', type: 'number', role: 'date', read: true, write: false, def: 0,
+        });
+        await this._ensureState(`${this.deviceFolder}.info.fantype`, {
+            name: 'Fan type', type: 'number', role: 'value', read: true, write: false, def: fantype,
+        });
+        await this.adapter.setStateAsync(`${this.deviceFolder}.info.fantype`, { val: fantype, ack: true });
+        await this._ensureState(`${this.deviceFolder}.info.protocol`, {
+            name: 'Protocol', type: 'string', role: 'info.firmware', read: true, write: false, def: '',
         });
         await this._ensureChannel(`${this.deviceFolder}.topics`, 'MQTT Topics');
         await this._ensureState(`${this.deviceFolder}.topics.state`, {
@@ -129,7 +136,18 @@ class StateManager {
         if (json['autob'] !== undefined && json['autob'] !== null) {
             await this.adapter.setStateAsync(`${this.deviceFolder}.autob`, { val: String(json['autob']), ack: true });
         }
+        if (json['protocol'] !== undefined && json['protocol'] !== null) {
+            const protocol = String(json['protocol']);
+            await this.adapter.setStateAsync(`${this.deviceFolder}.info.protocol`, { val: protocol, ack: true });
+            await this._updateFanStates(protocol);
+        }
         await this.adapter.setStateAsync(`${this.deviceFolder}.info.lastUpdate`, { val: Date.now(), ack: true });
+    }
+    async _updateFanStates(protocol) {
+        const fantypeState = await this.adapter.getStateAsync(`${this.deviceFolder}.info.fantype`);
+        const fantype = fantypeState?.val != null ? Number(fantypeState.val) : 0;
+        const states = (0, fieldDefinitions_1.getFanStates)(fantype, protocol);
+        await this.adapter.extendObjectAsync(`${this.deviceFolder}.fan`, { common: { states } });
     }
     isUserModified(key) {
         void key;

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.faikout-ac",
-  "version": "0.1.1",
+  "version": "0.1.31",
   "description": "ioBroker adapter for Faikout Daikin MQTT bridge",
   "author": "RaW07",
   "license": "MIT",
