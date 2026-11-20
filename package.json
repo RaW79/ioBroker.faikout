@@ -24,7 +24,7 @@
     "prebuild": "rimraf build",
     "test": "mocha test/*.test.js --exit",
     "test:package": "mocha test/package.test.js --exit",
-    "test:integration": "node -e \"console.log('No integration tests defined')\"",
+    "test:integration": "mocha test/integration.js --timeout 60000 --exit",
     "lint": "eslint -c eslint.config.mjs .",
     "build-admin": "cd src-admin && npm install && npm run build"
   },
