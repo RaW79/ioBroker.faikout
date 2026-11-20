@@ -95,7 +95,7 @@ class FaikoutMqttClient {
         if (this.reconnectTimer !== null) {
             return;
         }
-        this.reconnectTimer = setTimeout(() => {
+        this.reconnectTimer = this.options.setTimeoutFn(() => {
             this.reconnectTimer = null;
             if (!this.intentionalDisconnect) {
                 if (this.client) {
@@ -111,7 +111,7 @@ class FaikoutMqttClient {
     async disconnect() {
         this.intentionalDisconnect = true;
         if (this.reconnectTimer !== null) {
-            clearTimeout(this.reconnectTimer);
+            this.options.clearTimeoutFn(this.reconnectTimer);
             this.reconnectTimer = null;
         }
         if (this.client) {

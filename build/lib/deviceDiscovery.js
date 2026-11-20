@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.discoverDevice = discoverDevice;
-const http = __importStar(require("http"));
+const http = __importStar(require("node:http"));
 const fieldDefinitions_1 = require("./fieldDefinitions");
 const topicBuilder_1 = require("./topicBuilder");
 function fetchPage(url) {

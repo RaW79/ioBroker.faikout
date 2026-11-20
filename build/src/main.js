@@ -80,6 +80,8 @@ class FaikoutAdapter extends utils.Adapter {
             username: mqttUser || undefined,
             password: mqttPassword || undefined,
             clientId: `iobroker-faikout-${instanceId}`,
+            setTimeoutFn: (cb, ms) => this.setTimeout(cb, ms),
+            clearTimeoutFn: (id) => this.clearTimeout(id),
         }, (topic, payload) => {
             void this._handleMqttMessage(topic, payload);
         }, (connected) => {
@@ -535,7 +537,7 @@ class FaikoutAdapter extends utils.Adapter {
                     }
                     const delayMs = Math.max(0, Number(action.delay ?? 0)) * 1000;
                     if (delayMs > 0) {
-                        await new Promise((resolve) => setTimeout(resolve, delayMs));
+                        await new Promise((resolve) => this.setTimeout(resolve, delayMs));
                     }
                 }
                 if (fired) {
