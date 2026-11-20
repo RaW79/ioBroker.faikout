@@ -2,4 +2,3 @@ node_modules/
 *.js.map
 .env
 npm-debug.log
-.commitinfo
