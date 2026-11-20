@@ -70,6 +70,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.92
+- Fix CI test setup for repochecker compliance
+
 ### 0.1.91
 - Switch to npm trusted publishing (OIDC)
 

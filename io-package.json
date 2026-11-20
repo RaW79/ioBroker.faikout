@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.91",
+    "version": "0.1.92",
     "news": {
+      "0.1.92": {
+        "en": "Fix CI test setup for repochecker compliance",
+        "de": "CI-Test-Setup fuer Repochecker-Konformitaet korrigiert",
+        "ru": "Исправлена настройка CI-тестов для соответствия репочекеру",
+        "pt": "Correcção da configuração de testes CI para conformidade com repochecker",
+        "nl": "CI-testconfiguratie gecorrigeerd voor repochecker-conformiteit",
+        "fr": "Correction de la configuration des tests CI pour la conformité repochecker",
+        "it": "Correzione configurazione test CI per conformità repochecker",
+        "es": "Corrección de la configuración de pruebas CI para conformidad con repochecker",
+        "pl": "Poprawka konfiguracji testów CI dla zgodności z repochecker",
+        "uk": "Виправлення налаштування CI-тестів для відповідності репочекеру",
+        "zh-cn": "修复CI测试配置以符合repochecker要求"
+      },
       "0.1.91": {
         "en": "Switch to npm trusted publishing (OIDC)",
         "de": "Umstellung auf npm Trusted Publishing (OIDC)",
