@@ -93,19 +93,6 @@
         "pl": "Tryby harmonogramu, poprawka tytułu adaptera, poprawka wykrywania języka",
         "uk": "Режими розкладу, виправлення заголовка адаптера, виправлення визначення мови",
         "zh-cn": "计划模式，适配器标题修复，语言检测修复"
-      },
-      "0.1.4": {
-        "en": "Full bilingual UI (EN/DE) for all admin tabs",
-        "de": "Vollstaendige zweisprachige Oberflaeche (EN/DE) fuer alle Admin-Tabs",
-        "ru": "Полный двуязычный интерфейс (EN/DE) для всех вкладок администратора",
-        "pt": "Interface bilingue completa (EN/DE) para todos os separadores de administração",
-        "nl": "Volledige tweetalige UI (EN/DE) voor alle beheertabs",
-        "fr": "Interface entièrement bilingue (EN/DE) pour tous les onglets d'administration",
-        "it": "Interfaccia completamente bilingue (EN/DE) per tutte le schede di amministrazione",
-        "es": "Interfaz completamente bilingüe (EN/DE) para todas las pestañas de administración",
-        "pl": "Pełny dwujęzyczny interfejs (EN/DE) dla wszystkich kart administracyjnych",
-        "uk": "Повністю двомовний інтерфейс (EN/DE) для всіх вкладок адміністратора",
-        "zh-cn": "所有管理标签页的完整双语界面（EN/DE）"
       }
     },
     "titleLang": {
