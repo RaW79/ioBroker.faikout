@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "news": {
+      "0.1.8": {
+        "en": "Switch to npm trusted publishing (OIDC), remove npm token",
+        "de": "Umstellung auf npm Trusted Publishing (OIDC), npm-Token entfernt",
+        "ru": "Переход на npm trusted publishing (OIDC), удален npm-токен",
+        "pt": "Mudança para npm trusted publishing (OIDC), token npm removido",
+        "nl": "Overstap naar npm trusted publishing (OIDC), npm-token verwijderd",
+        "fr": "Migration vers npm trusted publishing (OIDC), token npm supprimé",
+        "it": "Passaggio a npm trusted publishing (OIDC), token npm rimosso",
+        "es": "Migración a npm trusted publishing (OIDC), token npm eliminado",
+        "pl": "Przejście na npm trusted publishing (OIDC), token npm usunięty",
+        "uk": "Перехід на npm trusted publishing (OIDC), токен npm видалено",
+        "zh-cn": "切换到npm可信发布（OIDC），移除npm令牌"
+      },
       "0.1.7": {
         "en": "Responsive layout fixes, installation instructions update",
         "de": "Responsive Layout-Korrekturen, Installationsanleitung aktualisiert",

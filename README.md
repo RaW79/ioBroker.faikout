@@ -70,6 +70,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.8
+- Switch to npm trusted publishing (OIDC)
+
 ### 0.1.7
 - Responsive layout fixes for all admin tabs, installation instructions updated
 
