@@ -6,14 +6,32 @@
       "type": "panel",
       "label": {
         "en": "Info",
-        "de": "Info"
+        "de": "Info",
+        "ru": "Инфо",
+        "pt": "Info",
+        "nl": "Info",
+        "fr": "Info",
+        "it": "Info",
+        "es": "Info",
+        "pl": "Info",
+        "uk": "Інфо",
+        "zh-cn": "信息"
       },
       "items": {
         "info_title": {
           "type": "staticText",
           "label": {
             "en": "Faikout AC Adapter",
-            "de": "Faikout AC Adapter"
+            "de": "Faikout AC Adapter",
+            "ru": "Faikout AC Adapter",
+            "pt": "Faikout AC Adapter",
+            "nl": "Faikout AC Adapter",
+            "fr": "Faikout AC Adapter",
+            "it": "Faikout AC Adapter",
+            "es": "Faikout AC Adapter",
+            "pl": "Faikout AC Adapter",
+            "uk": "Faikout AC Adapter",
+            "zh-cn": "Faikout AC Adapter"
           },
           "style": {
             "fontSize": "32px",
@@ -30,7 +48,16 @@
           "type": "staticText",
           "label": {
             "en": "Connects ioBroker to one or more Faikout devices via an existing MQTT broker. States are updated automatically via MQTT push. Discovery must be triggered manually per device using the Discover button in the Devices tab. States found during discovery are created automatically; states no longer present are removed when discovery is re-run. No states are created or removed in ioBroker without explicitly triggering discovery.",
-            "de": "Verbindet ioBroker mit einem oder mehreren Faikout-Devices über einen existierenden MQTT-Broker. Datenpunkte werden automatisch per MQTT aktualisiert. Die Erkennung muss einmalig je Gerät über den Discover-Button im Geräte-Tab ausgelöst werden. Bei der Erkennung gefundene Funktionen werden automatisch als Datenpunkte angelegt oder bei erneuter Ausführung entfernt. Es findet keine Veränderung von Datenpunkten in ioBroker ohne manuelle Ausführung der Erkennung statt."
+            "de": "Verbindet ioBroker mit einem oder mehreren Faikout-Devices über einen existierenden MQTT-Broker. Datenpunkte werden automatisch per MQTT aktualisiert. Die Erkennung muss einmalig je Gerät über den Discover-Button im Geräte-Tab ausgelöst werden. Bei der Erkennung gefundene Funktionen werden automatisch als Datenpunkte angelegt oder bei erneuter Ausführung entfernt. Es findet keine Veränderung von Datenpunkten in ioBroker ohne manuelle Ausführung der Erkennung statt.",
+            "ru": "Подключает ioBroker к одному или нескольким устройствам Faikout через существующий MQTT-брокер. Состояния обновляются автоматически через MQTT push. Обнаружение должно запускаться вручную для каждого устройства с помощью кнопки «Обнаружить» на вкладке «Устройства». Состояния, найденные при обнаружении, создаются автоматически; состояния, которые больше не присутствуют, удаляются при повторном обнаружении. Состояния в ioBroker не создаются и не удаляются без явного запуска обнаружения.",
+            "pt": "Liga o ioBroker a um ou mais dispositivos Faikout através de um broker MQTT existente. Os estados são actualizados automaticamente via MQTT push. A detecção deve ser activada manualmente por dispositivo com o botão Detectar no separador Dispositivos. Os estados encontrados durante a detecção são criados automaticamente; os estados que já não existem são removidos quando a detecção é executada novamente. Nenhum estado é criado ou removido no ioBroker sem activar explicitamente a detecção.",
+            "nl": "Verbindt ioBroker met een of meer Faikout-apparaten via een bestaande MQTT-broker. Staten worden automatisch bijgewerkt via MQTT push. Discovery moet handmatig per apparaat worden geactiveerd via de Discover-knop in het tabblad Apparaten. Staten die tijdens discovery worden gevonden, worden automatisch aangemaakt; staten die niet langer aanwezig zijn, worden verwijderd wanneer discovery opnieuw wordt uitgevoerd. Er worden geen staten in ioBroker aangemaakt of verwijderd zonder discovery expliciet te activeren.",
+            "fr": "Connecte ioBroker à un ou plusieurs appareils Faikout via un broker MQTT existant. Les états sont mis à jour automatiquement via MQTT push. La détection doit être déclenchée manuellement par appareil avec le bouton Détecter dans l'onglet Appareils. Les états trouvés lors de la détection sont créés automatiquement; les états qui ne sont plus présents sont supprimés lors de la réexécution. Aucun état n'est créé ou supprimé dans ioBroker sans déclencher explicitement la détection.",
+            "it": "Collega ioBroker a uno o più dispositivi Faikout tramite un broker MQTT esistente. Gli stati vengono aggiornati automaticamente tramite MQTT push. Il rilevamento deve essere attivato manualmente per ogni dispositivo usando il pulsante Rileva nella scheda Dispositivi. Gli stati trovati durante il rilevamento vengono creati automaticamente; gli stati non più presenti vengono rimossi quando il rilevamento viene rieseguito. Nessuno stato viene creato o rimosso in ioBroker senza attivare esplicitamente il rilevamento.",
+            "es": "Conecta ioBroker con uno o más dispositivos Faikout a través de un broker MQTT existente. Los estados se actualizan automáticamente a través de MQTT push. La detección debe activarse manualmente por dispositivo usando el botón Detectar en la pestaña Dispositivos. Los estados encontrados durante la detección se crean automáticamente; los estados que ya no están presentes se eliminan cuando se vuelve a ejecutar la detección. No se crean ni eliminan estados en ioBroker sin activar explícitamente la detección.",
+            "pl": "Łączy ioBroker z jednym lub kilkoma urządzeniami Faikout za pośrednictwem istniejącego brokera MQTT. Stany są aktualizowane automatycznie przez MQTT push. Wykrywanie musi być wyzwalane ręcznie dla każdego urządzenia za pomocą przycisku Wykryj w zakładce Urządzenia. Stany znalezione podczas wykrywania są tworzone automatycznie; stany, które nie są już obecne, są usuwane po ponownym uruchomieniu wykrywania. Żadne stany nie są tworzone ani usuwane w ioBroker bez jawnego wyzwolenia wykrywania.",
+            "uk": "Підключає ioBroker до одного або кількох пристроїв Faikout через існуючий MQTT-брокер. Стани оновлюються автоматично через MQTT push. Виявлення має запускатися вручну для кожного пристрою за допомогою кнопки «Виявити» на вкладці «Пристрої». Стани, знайдені під час виявлення, створюються автоматично; стани, яких більше немає, видаляються при повторному запуску виявлення. Жодні стани не створюються та не видаляються в ioBroker без явного запуску виявлення.",
+            "zh-cn": "通过现有MQTT代理将ioBroker连接到一个或多个Faikout设备。状态通过MQTT推送自动更新。必须在设备选项卡中使用发现按钮手动触发每个设备的发现。发现期间找到的状态会自动创建；重新运行发现时，不再存在的状态会被删除。不明确触发发现，ioBroker中不会创建或删除任何状态。"
           },
           "style": {
             "fontSize": "15px"
@@ -48,7 +75,16 @@
           "type": "staticText",
           "label": {
             "en": "Design Principles",
-            "de": "Designprinzipien"
+            "de": "Designprinzipien",
+            "ru": "Принципы проектирования",
+            "pt": "Princípios de design",
+            "nl": "Ontwerpprincipes",
+            "fr": "Principes de conception",
+            "it": "Principi di progettazione",
+            "es": "Principios de diseño",
+            "pl": "Zasady projektowania",
+            "uk": "Принципи проектування",
+            "zh-cn": "设计原则"
           },
           "style": {
             "fontWeight": "bold",
@@ -65,7 +101,16 @@
           "type": "staticText",
           "label": {
             "en": "The adapter communicates with Faikout devices through their native interfaces: MQTT for real-time data and partly HTTP for device discovery.",
-            "de": "Der Adapter kommuniziert mit Faikout-Geräten über deren native Schnittstellen: MQTT für Echtzeit-Daten und teils über HTTP für die Geräteerkennung."
+            "de": "Der Adapter kommuniziert mit Faikout-Geräten über deren native Schnittstellen: MQTT für Echtzeit-Daten und teils über HTTP für die Geräteerkennung.",
+            "ru": "Адаптер взаимодействует с устройствами Faikout через их нативные интерфейсы: MQTT для данных в реальном времени и частично HTTP для обнаружения устройств.",
+            "pt": "O adaptador comunica com os dispositivos Faikout através das suas interfaces nativas: MQTT para dados em tempo real e parcialmente HTTP para a detecção de dispositivos.",
+            "nl": "De adapter communiceert met Faikout-apparaten via hun native interfaces: MQTT voor realtime data en deels HTTP voor apparaatdetectie.",
+            "fr": "L'adaptateur communique avec les appareils Faikout via leurs interfaces natives: MQTT pour les données en temps réel et en partie HTTP pour la détection des appareils.",
+            "it": "L'adattatore comunica con i dispositivi Faikout tramite le loro interfacce native: MQTT per i dati in tempo reale e in parte HTTP per il rilevamento dei dispositivi.",
+            "es": "El adaptador se comunica con los dispositivos Faikout a través de sus interfaces nativas: MQTT para datos en tiempo real y en parte HTTP para el descubrimiento de dispositivos.",
+            "pl": "Adapter komunikuje się z urządzeniami Faikout przez ich natywne interfejsy: MQTT dla danych w czasie rzeczywistym i częściowo HTTP do wykrywania urządzeń.",
+            "uk": "Адаптер взаємодіє з пристроями Faikout через їхні рідні інтерфейси: MQTT для даних у реальному часі та частково HTTP для виявлення пристроїв.",
+            "zh-cn": "适配器通过Faikout设备的原生接口与其通信：MQTT用于实时数据，部分使用HTTP用于设备发现。"
           },
           "style": {
             "fontSize": "15px"
@@ -80,7 +125,16 @@
           "type": "staticText",
           "label": {
             "en": "There is no dependency on implementation details of any other platform.",
-            "de": "Es bestehen keine Abhängigkeiten von Implementierungsdetails anderer Plattformen."
+            "de": "Es bestehen keine Abhängigkeiten von Implementierungsdetails anderer Plattformen.",
+            "ru": "Нет зависимости от деталей реализации каких-либо других платформ.",
+            "pt": "Não existe dependência de detalhes de implementação de nenhuma outra plataforma.",
+            "nl": "Er is geen afhankelijkheid van implementatiedetails van een ander platform.",
+            "fr": "Il n'y a aucune dépendance aux détails d'implémentation d'une autre plateforme.",
+            "it": "Non vi è alcuna dipendenza dai dettagli di implementazione di nessun'altra piattaforma.",
+            "es": "No hay dependencia de los detalles de implementación de ninguna otra plataforma.",
+            "pl": "Brak zależności od szczegółów implementacji jakiejkolwiek innej platformy.",
+            "uk": "Немає залежності від деталей реалізації будь-яких інших платформ.",
+            "zh-cn": "不依赖任何其他平台的实现细节。"
           },
           "style": {
             "fontWeight": "bold",
@@ -96,7 +150,16 @@
           "type": "staticText",
           "label": {
             "en": "The MQTT broker already running in the network is used directly, no additional infrastructure required. The Faikout device remains accessible to other automation platforms at the same time, in the spirit of an open platform approach rather than a device-specific standalone solution.",
-            "de": "Der im Netzwerk vorhandene MQTT-Broker wird direkt genutzt, ohne zusätzliche Infrastruktur. Das Faikout-Gerät bleibt damit gleichzeitig für andere Automatisierungsplattformen zugänglich, im Sinne einer offenen Plattformlösung und nicht einer gerätespezifischen Einzellösung."
+            "de": "Der im Netzwerk vorhandene MQTT-Broker wird direkt genutzt, ohne zusätzliche Infrastruktur. Das Faikout-Gerät bleibt damit gleichzeitig für andere Automatisierungsplattformen zugänglich, im Sinne einer offenen Plattformlösung und nicht einer gerätespezifischen Einzellösung.",
+            "ru": "Используется существующий в сети MQTT-брокер напрямую, дополнительная инфраструктура не требуется. Устройство Faikout остаётся одновременно доступным для других платформ автоматизации — в духе открытого платформенного подхода, а не устройства-специфичного изолированного решения.",
+            "pt": "O broker MQTT já em execução na rede é utilizado directamente, sem necessidade de infraestrutura adicional. O dispositivo Faikout permanece acessível a outras plataformas de automação ao mesmo tempo, no espírito de uma abordagem de plataforma aberta em vez de uma solução independente específica do dispositivo.",
+            "nl": "De MQTT-broker die al in het netwerk draait, wordt direct gebruikt, zonder extra infrastructuur. Het Faikout-apparaat blijft tegelijkertijd toegankelijk voor andere automatiseringsplatforms, in de geest van een open platformbenadering in plaats van een apparaatspecifieke standalone oplossing.",
+            "fr": "Le broker MQTT déjà en cours d'exécution dans le réseau est utilisé directement, sans infrastructure supplémentaire. L'appareil Faikout reste accessible aux autres plateformes d'automatisation en même temps, dans l'esprit d'une approche de plateforme ouverte plutôt qu'une solution autonome spécifique à l'appareil.",
+            "it": "Il broker MQTT già in esecuzione nella rete viene utilizzato direttamente, senza infrastrutture aggiuntive. Il dispositivo Faikout rimane accessibile ad altre piattaforme di automazione allo stesso tempo, nello spirito di un approccio a piattaforma aperta piuttosto che una soluzione standalone specifica del dispositivo.",
+            "es": "El broker MQTT que ya se ejecuta en la red se utiliza directamente, sin necesidad de infraestructura adicional. El dispositivo Faikout permanece accesible a otras plataformas de automatización al mismo tiempo, en el espíritu de un enfoque de plataforma abierta en lugar de una solución independiente específica del dispositivo.",
+            "pl": "Broker MQTT już działający w sieci jest używany bezpośrednio, bez dodatkowej infrastruktury. Urządzenie Faikout pozostaje jednocześnie dostępne dla innych platform automatyki, w duchu otwartego podejścia platformowego, a nie rozwiązania standalone specyficznego dla urządzenia.",
+            "uk": "MQTT-брокер, що вже працює в мережі, використовується напряму, без додаткової інфраструктури. Пристрій Faikout залишається одночасно доступним для інших платформ автоматизації, у дусі відкритого платформного підходу, а не автономного рішення для конкретного пристрою.",
+            "zh-cn": "直接使用网络中已运行的MQTT代理，无需额外基础设施。Faikout设备同时对其他自动化平台保持可访问，体现开放平台理念而非设备专用的独立解决方案。"
           },
           "style": {
             "fontSize": "15px"
@@ -114,7 +177,16 @@
           "type": "staticText",
           "label": {
             "en": "Prerequisites",
-            "de": "Voraussetzungen"
+            "de": "Voraussetzungen",
+            "ru": "Требования",
+            "pt": "Pré-requisitos",
+            "nl": "Vereisten",
+            "fr": "Prérequis",
+            "it": "Prerequisiti",
+            "es": "Requisitos previos",
+            "pl": "Wymagania",
+            "uk": "Передумови",
+            "zh-cn": "前提条件"
           },
           "style": {
             "fontWeight": "bold",
@@ -131,7 +203,16 @@
           "type": "staticText",
           "label": {
             "en": "Faikout device reachable by IP address in the local network",
-            "de": "Faikout-Gerät per IP-Adresse im lokalen Netzwerk erreichbar"
+            "de": "Faikout-Gerät per IP-Adresse im lokalen Netzwerk erreichbar",
+            "ru": "Устройство Faikout доступно по IP-адресу в локальной сети",
+            "pt": "Dispositivo Faikout acessível por endereço IP na rede local",
+            "nl": "Faikout-apparaat bereikbaar via IP-adres in het lokale netwerk",
+            "fr": "Appareil Faikout accessible par adresse IP dans le réseau local",
+            "it": "Dispositivo Faikout raggiungibile tramite indirizzo IP nella rete locale",
+            "es": "Dispositivo Faikout accesible por dirección IP en la red local",
+            "pl": "Urządzenie Faikout dostępne pod adresem IP w sieci lokalnej",
+            "uk": "Пристрій Faikout доступний за IP-адресою в локальній мережі",
+            "zh-cn": "Faikout设备可通过本地网络中的IP地址访问"
           },
           "style": {
             "fontSize": "15px"
@@ -146,7 +227,16 @@
           "type": "staticText",
           "label": {
             "en": "MQTT broker (e.g. Mosquitto) running and reachable by this ioBroker instance as an MQTT client",
-            "de": "MQTT-Broker (z.B. Mosquitto) läuft und ist für diese ioBroker-Instanz als MQTT-Client erreichbar"
+            "de": "MQTT-Broker (z.B. Mosquitto) läuft und ist für diese ioBroker-Instanz als MQTT-Client erreichbar",
+            "ru": "MQTT-брокер (например Mosquitto) работает и доступен для этого экземпляра ioBroker как MQTT-клиент",
+            "pt": "Broker MQTT (p.ex. Mosquitto) a funcionar e acessível por esta instância ioBroker como cliente MQTT",
+            "nl": "MQTT-broker (bijv. Mosquitto) actief en bereikbaar voor deze ioBroker-instantie als MQTT-client",
+            "fr": "Broker MQTT (p.ex. Mosquitto) en cours d'exécution et accessible par cette instance ioBroker en tant que client MQTT",
+            "it": "Broker MQTT (es. Mosquitto) in esecuzione e raggiungibile da questa istanza ioBroker come client MQTT",
+            "es": "Broker MQTT (p.ej. Mosquitto) en ejecución y accesible por esta instancia de ioBroker como cliente MQTT",
+            "pl": "Broker MQTT (np. Mosquitto) uruchomiony i dostępny dla tej instancji ioBroker jako klient MQTT",
+            "uk": "MQTT-брокер (напр. Mosquitto) працює та доступний для цього екземпляра ioBroker як MQTT-клієнт",
+            "zh-cn": "MQTT代理（如Mosquitto）正在运行且可被该ioBroker实例作为MQTT客户端访问"
           },
           "style": {
             "fontSize": "15px"
@@ -161,7 +251,16 @@
           "type": "staticText",
           "label": {
             "en": "Faikout device configured to publish its data to that broker",
-            "de": "Faikout-Gerät ist so konfiguriert, dass es seine Daten an diesen Broker sendet"
+            "de": "Faikout-Gerät ist so konfiguriert, dass es seine Daten an diesen Broker sendet",
+            "ru": "Устройство Faikout настроено на публикацию данных в этот брокер",
+            "pt": "Dispositivo Faikout configurado para publicar os seus dados nesse broker",
+            "nl": "Faikout-apparaat geconfigureerd om zijn data naar die broker te publiceren",
+            "fr": "Appareil Faikout configuré pour publier ses données sur ce broker",
+            "it": "Dispositivo Faikout configurato per pubblicare i propri dati su quel broker",
+            "es": "Dispositivo Faikout configurado para publicar sus datos en ese broker",
+            "pl": "Urządzenie Faikout skonfigurowane do publikowania danych do tego brokera",
+            "uk": "Пристрій Faikout налаштований на публікацію даних до цього брокера",
+            "zh-cn": "Faikout设备已配置为向该代理发布数据"
           },
           "style": {
             "fontSize": "15px"
@@ -179,7 +278,16 @@
           "type": "staticText",
           "label": {
             "en": "Setup",
-            "de": "Einrichtung"
+            "de": "Einrichtung",
+            "ru": "Настройка",
+            "pt": "Configuração",
+            "nl": "Instelling",
+            "fr": "Configuration",
+            "it": "Configurazione",
+            "es": "Configuración",
+            "pl": "Konfiguracja",
+            "uk": "Налаштування",
+            "zh-cn": "设置"
           },
           "style": {
             "fontWeight": "bold",
@@ -196,7 +304,16 @@
           "type": "staticText",
           "label": {
             "en": "1. Devices tab: add one row per Faikout device (name and IP address)",
-            "de": "1. Geräte-Tab: eine Zeile je Faikout-Gerät anlegen (Name und IP-Adresse)"
+            "de": "1. Geräte-Tab: eine Zeile je Faikout-Gerät anlegen (Name und IP-Adresse)",
+            "ru": "1. Вкладка «Устройства»: добавить одну строку на каждое устройство Faikout (имя и IP-адрес)",
+            "pt": "1. Separador Dispositivos: adicionar uma linha por dispositivo Faikout (nome e endereço IP)",
+            "nl": "1. Tabblad Apparaten: één rij per Faikout-apparaat toevoegen (naam en IP-adres)",
+            "fr": "1. Onglet Appareils: ajouter une ligne par appareil Faikout (nom et adresse IP)",
+            "it": "1. Scheda Dispositivi: aggiungere una riga per ogni dispositivo Faikout (nome e indirizzo IP)",
+            "es": "1. Pestaña Dispositivos: añadir una fila por dispositivo Faikout (nombre y dirección IP)",
+            "pl": "1. Zakładka Urządzenia: dodaj jeden wiersz na każde urządzenie Faikout (nazwa i adres IP)",
+            "uk": "1. Вкладка «Пристрої»: додати один рядок на кожен пристрій Faikout (ім'я та IP-адреса)",
+            "zh-cn": "1. 设备选项卡：每个Faikout设备添加一行（名称和IP地址）"
           },
           "style": {
             "fontSize": "15px"
@@ -211,7 +328,16 @@
           "type": "staticText",
           "label": {
             "en": "   · Demand Control and/or Humidity Control checkboxes: activate per device as needed",
-            "de": "   · Checkboxen Bedarfssteuerung und/oder Feuchte Regelung je Gerät aktivieren falls gewünscht"
+            "de": "   · Checkboxen Bedarfssteuerung und/oder Feuchte Regelung je Gerät aktivieren falls gewünscht",
+            "ru": "   · Флажки «Управление нагрузкой» и/или «Управление влажностью»: активировать для каждого устройства по необходимости",
+            "pt": "   · Caixas de verificação Controlo de Demanda e/ou Controlo de Humidade: activar por dispositivo conforme necessário",
+            "nl": "   · Demand Control en/of Humidity Control selectievakjes: per apparaat activeren indien nodig",
+            "fr": "   · Cases Contrôle de demande et/ou Contrôle d'humidité: activer par appareil selon les besoins",
+            "it": "   · Caselle Demand Control e/o Humidity Control: attivare per dispositivo secondo necessità",
+            "es": "   · Casillas Demand Control y/o Humidity Control: activar por dispositivo según sea necesario",
+            "pl": "   · Pola wyboru Demand Control i/lub Humidity Control: aktywuj dla każdego urządzenia według potrzeb",
+            "uk": "   · Прапорці «Контроль попиту» та/або «Контроль вологості»: активувати для кожного пристрою за потреби",
+            "zh-cn": "   · 需求控制和/或湿度控制复选框：根据需要为每个设备激活"
           },
           "style": {
             "fontSize": "15px"
@@ -225,8 +351,17 @@
         "info_setup_1c": {
           "type": "staticText",
           "label": {
-            "en": "   · Multi-split: assign all indoor units of the same outdoor unit to the same group (A–E); single-split devices stay on Single-Split",
-            "de": "   · Multisplit: alle Innengeräte desselben Außengeräts auf dieselbe Gruppe (A–E) setzen; Single-Split-Geräte bleiben auf Single-Split"
+            "en": "   · Multi-split: assign all indoor units of the same outdoor unit to the same group (A-E); single-split devices stay on Single-Split",
+            "de": "   · Multisplit: alle Innengeräte desselben Außengeräts auf dieselbe Gruppe (A-E) setzen; Single-Split-Geräte bleiben auf Single-Split",
+            "ru": "   · Мультисплит: назначить все внутренние блоки одного внешнего блока в одну группу (A-E); устройства типа «одиночный сплит» остаются в Single-Split",
+            "pt": "   · Multi-split: atribuir todas as unidades internas da mesma unidade externa ao mesmo grupo (A-E); dispositivos single-split permanecem em Single-Split",
+            "nl": "   · Multi-split: alle binnenunits van hetzelfde buitenapparaat aan dezelfde groep toewijzen (A-E); single-split apparaten blijven op Single-Split",
+            "fr": "   · Multi-split: attribuer toutes les unités intérieures du même groupe extérieur au même groupe (A-E); les appareils single-split restent sur Single-Split",
+            "it": "   · Multi-split: assegnare tutte le unità interne della stessa unità esterna allo stesso gruppo (A-E); i dispositivi single-split rimangono su Single-Split",
+            "es": "   · Multi-split: asignar todas las unidades interiores de la misma unidad exterior al mismo grupo (A-E); los dispositivos single-split permanecen en Single-Split",
+            "pl": "   · Multi-split: przypisz wszystkie jednostki wewnętrzne tej samej jednostki zewnętrznej do tej samej grupy (A-E); urządzenia single-split pozostają na Single-Split",
+            "uk": "   · Мультисплит: призначити всі внутрішні блоки одного зовнішнього блоку до однієї групи (A-E); пристрої single-split залишаються на Single-Split",
+            "zh-cn": "   · 多联机：将同一外机的所有内机分配到同一组（A-E）；单联机保持Single-Split"
           },
           "style": {
             "fontSize": "15px"
@@ -241,7 +376,16 @@
           "type": "staticText",
           "label": {
             "en": "2. MQTT Broker tab: enter broker host, port and credentials",
-            "de": "2. MQTT Broker-Tab: Broker-Host, Port und Zugangsdaten eintragen"
+            "de": "2. MQTT Broker-Tab: Broker-Host, Port und Zugangsdaten eintragen",
+            "ru": "2. Вкладка «MQTT Broker»: ввести хост брокера, порт и учётные данные",
+            "pt": "2. Separador MQTT Broker: introduzir host do broker, porta e credenciais",
+            "nl": "2. Tabblad MQTT Broker: broker-host, poort en inloggegevens invoeren",
+            "fr": "2. Onglet MQTT Broker: saisir l'hôte du broker, le port et les identifiants",
+            "it": "2. Scheda MQTT Broker: inserire host broker, porta e credenziali",
+            "es": "2. Pestaña MQTT Broker: introducir host del broker, puerto y credenciales",
+            "pl": "2. Zakładka MQTT Broker: wprowadź hosta brokera, port i dane logowania",
+            "uk": "2. Вкладка «MQTT Broker»: введіть хост брокера, порт та облікові дані",
+            "zh-cn": "2. MQTT代理选项卡：输入代理主机、端口和凭据"
           },
           "style": {
             "fontSize": "15px"
@@ -256,7 +400,16 @@
           "type": "staticText",
           "label": {
             "en": "3. Save – the adapter starts and restores subscriptions from previous discoveries",
-            "de": "3. Speichern – der Adapter startet und stellt Subscriptions aus früheren Erkennungen wieder her"
+            "de": "3. Speichern – der Adapter startet und stellt Subscriptions aus früheren Erkennungen wieder her",
+            "ru": "3. Сохранить – адаптер запустится и восстановит подписки из предыдущих обнаружений",
+            "pt": "3. Guardar – o adaptador inicia e restaura as subscrições das detecções anteriores",
+            "nl": "3. Opslaan – de adapter start en herstelt abonnementen van eerdere discovery's",
+            "fr": "3. Sauvegarder – l'adaptateur démarre et restaure les abonnements des découvertes précédentes",
+            "it": "3. Salva – l'adattatore si avvia e ripristina le sottoscrizioni dalle scoperte precedenti",
+            "es": "3. Guardar – el adaptador se inicia y restaura las suscripciones de las detecciones anteriores",
+            "pl": "3. Zapisz – adapter uruchamia się i przywraca subskrypcje z poprzednich wykryć",
+            "uk": "3. Зберегти – адаптер запускається та відновлює підписки з попередніх виявлень",
+            "zh-cn": "3. 保存 - 适配器启动并恢复之前发现的订阅"
           },
           "style": {
             "fontSize": "15px"
@@ -271,7 +424,16 @@
           "type": "staticText",
           "label": {
             "en": "4. Click Discover per device to run detection and create states",
-            "de": "4. Je Gerät auf Erkennen klicken, um die Erkennung zu starten und Datenpunkte anzulegen"
+            "de": "4. Je Gerät auf Erkennen klicken, um die Erkennung zu starten und Datenpunkte anzulegen",
+            "ru": "4. Нажать «Обнаружить» для каждого устройства, чтобы запустить обнаружение и создать состояния",
+            "pt": "4. Clicar em Detectar por dispositivo para executar a detecção e criar estados",
+            "nl": "4. Klik per apparaat op Discover om detectie uit te voeren en staten aan te maken",
+            "fr": "4. Cliquer sur Détecter par appareil pour exécuter la détection et créer les états",
+            "it": "4. Cliccare Rileva per dispositivo per eseguire il rilevamento e creare gli stati",
+            "es": "4. Hacer clic en Detectar por dispositivo para ejecutar la detección y crear estados",
+            "pl": "4. Kliknij Wykryj dla każdego urządzenia, aby uruchomić wykrywanie i tworzyć stany",
+            "uk": "4. Натиснути «Виявити» для кожного пристрою, щоб запустити виявлення та створити стани",
+            "zh-cn": "4. 每个设备点击发现以运行检测并创建状态"
           },
           "style": {
             "fontSize": "15px"
@@ -286,7 +448,16 @@
           "type": "staticText",
           "label": {
             "en": "5. States appear under faikout-ac.0.{Name}.*",
-            "de": "5. Datenpunkte erscheinen unter faikout-ac.0.{Name}.*"
+            "de": "5. Datenpunkte erscheinen unter faikout-ac.0.{Name}.*",
+            "ru": "5. Состояния появляются в faikout-ac.0.{Name}.*",
+            "pt": "5. Os estados aparecem em faikout-ac.0.{Name}.*",
+            "nl": "5. Staten verschijnen onder faikout-ac.0.{Name}.*",
+            "fr": "5. Les états apparaissent sous faikout-ac.0.{Name}.*",
+            "it": "5. Gli stati appaiono sotto faikout-ac.0.{Name}.*",
+            "es": "5. Los estados aparecen bajo faikout-ac.0.{Name}.*",
+            "pl": "5. Stany pojawiają się pod faikout-ac.0.{Name}.*",
+            "uk": "5. Стани з'являються в faikout-ac.0.{Name}.*",
+            "zh-cn": "5. 状态出现在faikout-ac.0.{Name}.*下"
           },
           "style": {
             "fontSize": "15px"
@@ -301,7 +472,16 @@
           "type": "staticText",
           "label": {
             "en": " ",
-            "de": " "
+            "de": " ",
+            "ru": " ",
+            "pt": " ",
+            "nl": " ",
+            "fr": " ",
+            "it": " ",
+            "es": " ",
+            "pl": " ",
+            "uk": " ",
+            "zh-cn": " "
           },
           "sm": 12,
           "xs": 12,
@@ -313,7 +493,16 @@
           "type": "staticText",
           "label": {
             "en": "6. Deleting a device from the list removes all its states completely",
-            "de": "6. Durch Löschen des Gerätes werden dessen Datenpunkte komplett entfernt"
+            "de": "6. Durch Löschen des Gerätes werden dessen Datenpunkte komplett entfernt",
+            "ru": "6. Удаление устройства из списка полностью удаляет все его состояния",
+            "pt": "6. Eliminar um dispositivo da lista remove todos os seus estados completamente",
+            "nl": "6. Een apparaat uit de lijst verwijderen verwijdert al zijn staten volledig",
+            "fr": "6. La suppression d'un appareil de la liste supprime complètement tous ses états",
+            "it": "6. Eliminare un dispositivo dall'elenco rimuove completamente tutti i suoi stati",
+            "es": "6. Eliminar un dispositivo de la lista elimina completamente todos sus estados",
+            "pl": "6. Usunięcie urządzenia z listy całkowicie usuwa wszystkie jego stany",
+            "uk": "6. Видалення пристрою зі списку повністю видаляє всі його стани",
+            "zh-cn": "6. 从列表中删除设备将完全删除其所有状态"
           },
           "style": {
             "fontSize": "15px"
@@ -328,7 +517,16 @@
           "type": "staticText",
           "label": {
             "en": "7. Discovery can be re-run at any time – changes are detected and states are added or removed automatically",
-            "de": "7. Ein erneutes Ausführen der Erkennung ist jederzeit möglich – Änderungen werden erkannt und Datenpunkte automatisch gelöscht und/oder ergänzt"
+            "de": "7. Ein erneutes Ausführen der Erkennung ist jederzeit möglich – Änderungen werden erkannt und Datenpunkte automatisch gelöscht und/oder ergänzt",
+            "ru": "7. Обнаружение можно запускать повторно в любое время – изменения обнаруживаются, состояния добавляются или удаляются автоматически",
+            "pt": "7. A detecção pode ser executada novamente a qualquer momento – as alterações são detectadas e os estados são adicionados ou removidos automaticamente",
+            "nl": "7. Discovery kan op elk moment opnieuw worden uitgevoerd – wijzigingen worden gedetecteerd en staten worden automatisch toegevoegd of verwijderd",
+            "fr": "7. La détection peut être réexécutée à tout moment – les modifications sont détectées et les états sont ajoutés ou supprimés automatiquement",
+            "it": "7. Il rilevamento può essere rieseguito in qualsiasi momento – le modifiche vengono rilevate e gli stati vengono aggiunti o rimossi automaticamente",
+            "es": "7. La detección puede volver a ejecutarse en cualquier momento – los cambios se detectan y los estados se añaden o eliminan automáticamente",
+            "pl": "7. Wykrywanie można ponownie uruchomić w dowolnym momencie – zmiany są wykrywane, a stany są automatycznie dodawane lub usuwane",
+            "uk": "7. Виявлення можна запустити повторно в будь-який час – зміни виявляються, а стани додаються або видаляються автоматично",
+            "zh-cn": "7. 随时可以重新运行发现 - 自动检测更改并添加或删除状态"
           },
           "style": {
             "fontSize": "15px"
@@ -346,7 +544,16 @@
           "type": "staticText",
           "label": {
             "en": "State structure per device",
-            "de": "Datenpunkt-Struktur je Gerät"
+            "de": "Datenpunkt-Struktur je Gerät",
+            "ru": "Структура состояний для каждого устройства",
+            "pt": "Estrutura de estados por dispositivo",
+            "nl": "Statusstructuur per apparaat",
+            "fr": "Structure des états par appareil",
+            "it": "Struttura degli stati per dispositivo",
+            "es": "Estructura de estados por dispositivo",
+            "pl": "Struktura stanów na urządzenie",
+            "uk": "Структура станів на пристрій",
+            "zh-cn": "每个设备的状态结构"
           },
           "style": {
             "fontWeight": "bold",
@@ -363,7 +570,16 @@
           "type": "staticText",
           "label": {
             "en": "{Name}.info.*    – device metadata and connection status",
-            "de": "{Name}.info.*    – Gerätemetadaten und Verbindungsstatus"
+            "de": "{Name}.info.*    – Gerätemetadaten und Verbindungsstatus",
+            "ru": "{Name}.info.*    – метаданные устройства и статус подключения",
+            "pt": "{Name}.info.*    – metadados do dispositivo e estado de ligação",
+            "nl": "{Name}.info.*    – apparaatmetadata en verbindingsstatus",
+            "fr": "{Name}.info.*    – métadonnées de l'appareil et état de connexion",
+            "it": "{Name}.info.*    – metadati del dispositivo e stato di connessione",
+            "es": "{Name}.info.*    – metadatos del dispositivo y estado de conexión",
+            "pl": "{Name}.info.*    – metadane urządzenia i status połączenia",
+            "uk": "{Name}.info.*    – метадані пристрою та статус підключення",
+            "zh-cn": "{Name}.info.*    – 设备元数据和连接状态"
           },
           "style": {
             "fontSize": "15px"
@@ -378,7 +594,16 @@
           "type": "staticText",
           "label": {
             "en": "{Name}.topics.*  – resolved MQTT topic paths",
-            "de": "{Name}.topics.*  – aufgelöste MQTT-Topic-Pfade"
+            "de": "{Name}.topics.*  – aufgelöste MQTT-Topic-Pfade",
+            "ru": "{Name}.topics.*  – разрешённые пути MQTT-топиков",
+            "pt": "{Name}.topics.*  – caminhos de tópicos MQTT resolvidos",
+            "nl": "{Name}.topics.*  – opgeloste MQTT-onderwerpspaden",
+            "fr": "{Name}.topics.*  – chemins de topics MQTT résolus",
+            "it": "{Name}.topics.*  – percorsi topic MQTT risolti",
+            "es": "{Name}.topics.*  – rutas de topics MQTT resueltos",
+            "pl": "{Name}.topics.*  – rozwiązane ścieżki tematów MQTT",
+            "uk": "{Name}.topics.*  – розвʼязані шляхи MQTT-топіків",
+            "zh-cn": "{Name}.topics.*  – 解析的MQTT主题路径"
           },
           "style": {
             "fontSize": "15px"
@@ -393,7 +618,16 @@
           "type": "staticText",
           "label": {
             "en": "{Name}.<field>   – sensor and status values (read-only)",
-            "de": "{Name}.<field>   – Sensor- und Statuswerte (nur lesen)"
+            "de": "{Name}.<field>   – Sensor- und Statuswerte (nur lesen)",
+            "ru": "{Name}.<field>   – значения датчиков и статуса (только чтение)",
+            "pt": "{Name}.<field>   – valores de sensores e estado (só leitura)",
+            "nl": "{Name}.<field>   – sensor- en statuswaarden (alleen-lezen)",
+            "fr": "{Name}.<field>   – valeurs de capteurs et d'état (lecture seule)",
+            "it": "{Name}.<field>   – valori di sensori e stato (sola lettura)",
+            "es": "{Name}.<field>   – valores de sensores y estado (solo lectura)",
+            "pl": "{Name}.<field>   – wartości czujników i stanu (tylko odczyt)",
+            "uk": "{Name}.<field>   – значення датчиків та статусу (лише читання)",
+            "zh-cn": "{Name}.<field>   – 传感器和状态值（只读）"
           },
           "style": {
             "fontSize": "15px"
@@ -408,7 +642,16 @@
           "type": "staticText",
           "label": {
             "en": "{Name}.config.*  – write-only config commands",
-            "de": "{Name}.config.*  – Nur-Schreiben-Konfigurationsbefehle"
+            "de": "{Name}.config.*  – Nur-Schreiben-Konfigurationsbefehle",
+            "ru": "{Name}.config.*  – команды конфигурации (только запись)",
+            "pt": "{Name}.config.*  – comandos de configuração (só escrita)",
+            "nl": "{Name}.config.*  – configuratieopdrachten (alleen schrijven)",
+            "fr": "{Name}.config.*  – commandes de configuration (écriture seule)",
+            "it": "{Name}.config.*  – comandi di configurazione (solo scrittura)",
+            "es": "{Name}.config.*  – comandos de configuración (solo escritura)",
+            "pl": "{Name}.config.*  – polecenia konfiguracji (tylko zapis)",
+            "uk": "{Name}.config.*  – команди конфігурації (лише запис)",
+            "zh-cn": "{Name}.config.*  – 只写配置命令"
           },
           "style": {
             "fontSize": "15px"
@@ -423,7 +666,16 @@
           "type": "staticText",
           "label": {
             "en": "{Name}.ble.*     – BLE sensor data (only if device has BLE active)",
-            "de": "{Name}.ble.*     – BLE-Sensordaten (nur wenn Gerät BLE aktiv hat)"
+            "de": "{Name}.ble.*     – BLE-Sensordaten (nur wenn Gerät BLE aktiv hat)",
+            "ru": "{Name}.ble.*     – данные BLE-сенсора (только если на устройстве активирован BLE)",
+            "pt": "{Name}.ble.*     – dados do sensor BLE (apenas se o dispositivo tiver BLE activo)",
+            "nl": "{Name}.ble.*     – BLE-sensordata (alleen als apparaat BLE actief heeft)",
+            "fr": "{Name}.ble.*     – données du capteur BLE (uniquement si l'appareil a BLE actif)",
+            "it": "{Name}.ble.*     – dati del sensore BLE (solo se il dispositivo ha BLE attivo)",
+            "es": "{Name}.ble.*     – datos del sensor BLE (solo si el dispositivo tiene BLE activo)",
+            "pl": "{Name}.ble.*     – dane czujnika BLE (tylko jeśli urządzenie ma aktywne BLE)",
+            "uk": "{Name}.ble.*     – дані BLE-сенсора (лише якщо на пристрої активований BLE)",
+            "zh-cn": "{Name}.ble.*     – BLE传感器数据（仅当设备启用BLE时）"
           },
           "style": {
             "fontSize": "15px"
@@ -441,7 +693,16 @@
           "type": "staticText",
           "label": {
             "en": "Options",
-            "de": "Optionen"
+            "de": "Optionen",
+            "ru": "Параметры",
+            "pt": "Opções",
+            "nl": "Opties",
+            "fr": "Options",
+            "it": "Opzioni",
+            "es": "Opciones",
+            "pl": "Opcje",
+            "uk": "Параметри",
+            "zh-cn": "选项"
           },
           "style": {
             "fontWeight": "bold",
@@ -458,7 +719,16 @@
           "type": "staticText",
           "label": {
             "en": "Config states",
-            "de": "Config-Datenpunkte"
+            "de": "Config-Datenpunkte",
+            "ru": "Состояния конфигурации",
+            "pt": "Estados de configuração",
+            "nl": "Config-staten",
+            "fr": "États de configuration",
+            "it": "Stati di configurazione",
+            "es": "Estados de configuración",
+            "pl": "Stany konfiguracji",
+            "uk": "Стани конфігурації",
+            "zh-cn": "配置状态"
           },
           "style": {
             "fontWeight": "bold"
@@ -473,7 +743,16 @@
           "type": "staticText",
           "label": {
             "en": "Write-only states are created under {Name}.config.* for Faikout device configuration parameters. Writing a value sends it to the device immediately – there is no read-back or confirmation in ioBroker. Some parameters take effect immediately, others require a device restart. Use with care.",
-            "de": "Unter {Name}.config.* werden Nur-Schreiben-Datenpunkte für Faikout-Geräteparameter angelegt. Ein geschriebener Wert wird sofort an das Gerät gesendet – es gibt keine Rücklesefunktion oder Bestätigung in ioBroker. Manche Parameter wirken sofort, andere erfordern einen Neustart. Bitte mit Bedacht verwenden."
+            "de": "Unter {Name}.config.* werden Nur-Schreiben-Datenpunkte für Faikout-Geräteparameter angelegt. Ein geschriebener Wert wird sofort an das Gerät gesendet – es gibt keine Rücklesefunktion oder Bestätigung in ioBroker. Manche Parameter wirken sofort, andere erfordern einen Neustart. Bitte mit Bedacht verwenden.",
+            "ru": "Под {Name}.config.* создаются состояния только для записи для параметров конфигурации устройства Faikout. Записанное значение немедленно отправляется на устройство – обратного считывания или подтверждения в ioBroker нет. Некоторые параметры вступают в силу немедленно, другие требуют перезапуска устройства. Используйте с осторожностью.",
+            "pt": "São criados estados de escrita em {Name}.config.* para os parâmetros de configuração do dispositivo Faikout. A escrita de um valor envia-o imediatamente para o dispositivo – não há leitura de retorno ou confirmação no ioBroker. Alguns parâmetros têm efeito imediato, outros requerem um reinício do dispositivo. Use com cuidado.",
+            "nl": "Schrijf-enkel-staten worden aangemaakt onder {Name}.config.* voor Faikout-apparaatconfiguratieparameters. Het schrijven van een waarde stuurt deze onmiddellijk naar het apparaat – er is geen terugkoppeling of bevestiging in ioBroker. Sommige parameters hebben onmiddellijk effect, andere vereisen een herstart van het apparaat. Gebruik met zorg.",
+            "fr": "Des états en écriture seule sont créés sous {Name}.config.* pour les paramètres de configuration de l'appareil Faikout. L'écriture d'une valeur l'envoie immédiatement à l'appareil – il n'y a pas de lecture en retour ni de confirmation dans ioBroker. Certains paramètres prennent effet immédiatement, d'autres nécessitent un redémarrage de l'appareil. À utiliser avec précaution.",
+            "it": "Gli stati di sola scrittura vengono creati sotto {Name}.config.* per i parametri di configurazione del dispositivo Faikout. La scrittura di un valore lo invia immediatamente al dispositivo – non c'è lettura di ritorno o conferma in ioBroker. Alcuni parametri hanno effetto immediato, altri richiedono il riavvio del dispositivo. Usare con attenzione.",
+            "es": "Se crean estados de solo escritura bajo {Name}.config.* para los parámetros de configuración del dispositivo Faikout. Escribir un valor lo envía al dispositivo inmediatamente – no hay lectura de retorno ni confirmación en ioBroker. Algunos parámetros surten efecto inmediatamente, otros requieren un reinicio del dispositivo. Use con cuidado.",
+            "pl": "Stany tylko do zapisu są tworzone pod {Name}.config.* dla parametrów konfiguracji urządzenia Faikout. Zapisanie wartości wysyła ją natychmiast do urządzenia – nie ma odczytu zwrotnego ani potwierdzenia w ioBroker. Niektóre parametry działają natychmiast, inne wymagają restartu urządzenia. Używaj ostrożnie.",
+            "uk": "Під {Name}.config.* створюються стани лише для запису для параметрів конфігурації пристрою Faikout. Записане значення негайно надсилається на пристрій – зворотного зчитування або підтвердження в ioBroker немає. Деякі параметри набирають чинності негайно, інші вимагають перезапуску пристрою. Використовуйте обережно.",
+            "zh-cn": "在{Name}.config.*下为Faikout设备配置参数创建只写状态。写入值会立即发送到设备 - ioBroker中没有回读或确认。某些参数立即生效，其他参数需要设备重启。请谨慎使用。"
           },
           "style": {
             "fontSize": "15px"
@@ -488,7 +767,16 @@
           "type": "staticText",
           "label": {
             "en": "env_set – External temperature input",
-            "de": "env_set – Externer Temperatureingang"
+            "de": "env_set – Externer Temperatureingang",
+            "ru": "env_set – Внешний вход температуры",
+            "pt": "env_set – Entrada de temperatura externa",
+            "nl": "env_set – Externe temperatuurinvoer",
+            "fr": "env_set – Entrée de température externe",
+            "it": "env_set – Ingresso temperatura esterna",
+            "es": "env_set – Entrada de temperatura externa",
+            "pl": "env_set – Zewnetrzne wejscie temperatury",
+            "uk": "env_set – Зовнішній вхід температури",
+            "zh-cn": "env_set – 外部温度输入"
           },
           "style": {
             "fontWeight": "bold"
@@ -503,7 +791,16 @@
           "type": "staticText",
           "label": {
             "en": "env_set allows an external temperature value (e.g. from a room sensor) to be written to the Faikout device. The device uses this value in its control logic as an environment reference temperature. The state can be written from an automation at the desired interval – the adapter forwards the value immediately.",
-            "de": "env_set ermöglicht es, einen externen Temperaturwert (z.B. eines Raumsensors) an das Faikout-Gerät zu schreiben. Das Gerät verwendet diesen Wert in seiner Regellogik als Umgebungsreferenztemperatur. Der Datenpunkt kann aus einer Automation im gewünschten Intervall beschrieben werden – der Adapter leitet den Wert sofort weiter."
+            "de": "env_set ermöglicht es, einen externen Temperaturwert (z.B. eines Raumsensors) an das Faikout-Gerät zu schreiben. Das Gerät verwendet diesen Wert in seiner Regellogik als Umgebungsreferenztemperatur. Der Datenpunkt kann aus einer Automation im gewünschten Intervall beschrieben werden – der Adapter leitet den Wert sofort weiter.",
+            "ru": "env_set позволяет записать внешнее значение температуры (например, от комнатного датчика) на устройство Faikout. Устройство использует это значение в логике управления как опорную температуру окружающей среды. Состояние можно записывать из автоматизации с нужным интервалом – адаптер немедленно пересылает значение.",
+            "pt": "env_set permite escrever um valor de temperatura externo (p.ex. de um sensor de sala) para o dispositivo Faikout. O dispositivo usa este valor na sua lógica de controlo como temperatura de referência ambiental. O estado pode ser escrito a partir de uma automação no intervalo desejado – o adaptador encaminha o valor imediatamente.",
+            "nl": "env_set maakt het mogelijk een externe temperatuurwaarde (bijv. van een kamersensor) naar het Faikout-apparaat te schrijven. Het apparaat gebruikt deze waarde in zijn regellogica als omgevingsreferentietemperatuur. De staat kan vanuit een automatisering op het gewenste interval worden geschreven – de adapter stuurt de waarde onmiddellijk door.",
+            "fr": "env_set permet d'écrire une valeur de température externe (p.ex. d'un capteur de pièce) sur l'appareil Faikout. L'appareil utilise cette valeur dans sa logique de contrôle comme température de référence ambiante. L'état peut être écrit depuis une automation à l'intervalle souhaité – l'adaptateur transmet immédiatement la valeur.",
+            "it": "env_set consente di scrivere un valore di temperatura esterno (es. da un sensore di stanza) sul dispositivo Faikout. Il dispositivo usa questo valore nella sua logica di controllo come temperatura di riferimento ambientale. Lo stato può essere scritto da un'automazione all'intervallo desiderato – l'adattatore inoltra immediatamente il valore.",
+            "es": "env_set permite escribir un valor de temperatura externo (p.ej. de un sensor de habitación) en el dispositivo Faikout. El dispositivo usa este valor en su lógica de control como temperatura de referencia ambiental. El estado se puede escribir desde una automatización en el intervalo deseado – el adaptador reenvía el valor inmediatamente.",
+            "pl": "env_set umożliwia zapisanie zewnętrznej wartości temperatury (np. z czujnika pokojowego) do urządzenia Faikout. Urządzenie używa tej wartości w logice sterowania jako referencyjną temperaturę otoczenia. Stan można zapisywać z automatyki w żądanym interwale – adapter natychmiast przekazuje wartość.",
+            "uk": "env_set дозволяє записати зовнішнє значення температури (напр. від кімнатного датчика) на пристрій Faikout. Пристрій використовує це значення в логіці керування як опорну температуру навколишнього середовища. Стан можна записувати з автоматизації з потрібним інтервалом – адаптер негайно пересилає значення.",
+            "zh-cn": "env_set允许将外部温度值（例如来自房间传感器）写入Faikout设备。设备在其控制逻辑中将此值用作环境参考温度。可以从自动化以所需间隔写入状态 - 适配器立即转发值。"
           },
           "style": {
             "fontSize": "15px"
@@ -518,7 +815,16 @@
           "type": "staticText",
           "label": {
             "en": "The Faikout device expects a fresh env_set value within a 300-second window – if no value arrives in time, the external sensor and its influence on the control logic are discarded.",
-            "de": "Das Faikout-Gerät erwartet innerhalb eines 300-Sekunden-Fensters einen aktuellen env_set-Wert – bleibt dieser aus, werden der externe Sensor und dessen Berücksichtigung in der Regellogik verworfen."
+            "de": "Das Faikout-Gerät erwartet innerhalb eines 300-Sekunden-Fensters einen aktuellen env_set-Wert – bleibt dieser aus, werden der externe Sensor und dessen Berücksichtigung in der Regellogik verworfen.",
+            "ru": "Устройство Faikout ожидает свежее значение env_set в течение 300-секундного окна – если значение не поступает вовремя, внешний датчик и его влияние на логику управления отбрасываются.",
+            "pt": "O dispositivo Faikout espera um valor env_set fresco dentro de uma janela de 300 segundos – se nenhum valor chegar a tempo, o sensor externo e sua influência na lógica de controlo são descartados.",
+            "nl": "Het Faikout-apparaat verwacht een verse env_set-waarde binnen een venster van 300 seconden – als er geen waarde op tijd binnenkomt, worden de externe sensor en zijn invloed op de regellogica genegeerd.",
+            "fr": "L'appareil Faikout attend une valeur env_set fraîche dans une fenêtre de 300 secondes – si aucune valeur n'arrive à temps, le capteur externe et son influence sur la logique de contrôle sont ignorés.",
+            "it": "Il dispositivo Faikout si aspetta un valore env_set aggiornato entro una finestra di 300 secondi – se nessun valore arriva in tempo, il sensore esterno e la sua influenza sulla logica di controllo vengono scartati.",
+            "es": "El dispositivo Faikout espera un valor env_set actualizado dentro de una ventana de 300 segundos – si no llega ningún valor a tiempo, el sensor externo y su influencia en la lógica de control son descartados.",
+            "pl": "Urządzenie Faikout oczekuje świeżej wartości env_set w oknie 300 sekund – jeśli żadna wartość nie dotrze na czas, zewnętrzny czujnik i jego wpływ na logikę sterowania są odrzucane.",
+            "uk": "Пристрій Faikout очікує свіже значення env_set у вікні 300 секунд – якщо значення не надходить вчасно, зовнішній датчик та його вплив на логіку керування відкидаються.",
+            "zh-cn": "Faikout设备在300秒时间窗口内等待新鲜的env_set值 - 如果值未及时到达，外部传感器及其对控制逻辑的影响将被丢弃。"
           },
           "style": {
             "fontSize": "15px"
@@ -533,7 +839,16 @@
           "type": "staticText",
           "label": {
             "en": "Alternatively the tab 'External Sensor' is available.",
-            "de": "Alternativ steht der Tab 'Externer Sensor' zur Verfügung."
+            "de": "Alternativ steht der Tab 'Externer Sensor' zur Verfügung.",
+            "ru": "Альтернативно доступна вкладка «Внешний датчик».",
+            "pt": "Em alternativa, o separador 'Sensor Externo' está disponível.",
+            "nl": "Als alternatief is het tabblad 'Externe Sensor' beschikbaar.",
+            "fr": "L'onglet 'Capteur externe' est également disponible.",
+            "it": "In alternativa è disponibile la scheda 'Sensore esterno'.",
+            "es": "Alternativamente, está disponible la pestaña 'Sensor externo'.",
+            "pl": "Alternatywnie dostępna jest zakładka 'Zewnetrzny czujnik'.",
+            "uk": "Альтернативно доступна вкладка «Зовнішній датчик».",
+            "zh-cn": "或者可以使用外部传感器选项卡。"
           },
           "style": {
             "fontSize": "15px"
@@ -550,8 +865,17 @@
         "info_version": {
           "type": "staticText",
           "label": {
-            "en": "v0.1.33",
-            "de": "v0.1.33"
+            "en": "v0.1.91",
+            "de": "v0.1.91",
+            "ru": "v0.1.91",
+            "pt": "v0.1.91",
+            "nl": "v0.1.91",
+            "fr": "v0.1.91",
+            "it": "v0.1.91",
+            "es": "v0.1.91",
+            "pl": "v0.1.91",
+            "uk": "v0.1.91",
+            "zh-cn": "v0.1.91"
           },
           "style": {
             "fontSize": "11px",
@@ -570,12 +894,26 @@
       "type": "panel",
       "label": {
         "en": "Devices",
-        "de": "Geräte"
+        "de": "Geräte",
+        "ru": "Устройства",
+        "pt": "Dispositivos",
+        "nl": "Apparaten",
+        "fr": "Appareils",
+        "it": "Dispositivi",
+        "es": "Dispositivos",
+        "pl": "Urządzenia",
+        "uk": "Пристрої",
+        "zh-cn": "设备"
       },
       "items": {
         "devices": {
           "type": "table",
           "noDelete": false,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
           "uniqueColumns": [
             "name"
           ],
@@ -585,7 +923,16 @@
               "attr": "enabled",
               "title": {
                 "en": "Enabled",
-                "de": "Aktiv"
+                "de": "Aktiv",
+                "ru": "Вкл.",
+                "pt": "Activo",
+                "nl": "Actief",
+                "fr": "Activé",
+                "it": "Attivo",
+                "es": "Activo",
+                "pl": "Aktywny",
+                "uk": "Вкл.",
+                "zh-cn": "启用"
               },
               "width": "80px",
               "default": true
@@ -595,7 +942,16 @@
               "attr": "name",
               "title": {
                 "en": "Name",
-                "de": "Name"
+                "de": "Name",
+                "ru": "Имя",
+                "pt": "Nome",
+                "nl": "Naam",
+                "fr": "Nom",
+                "it": "Nome",
+                "es": "Nombre",
+                "pl": "Nazwa",
+                "uk": "Ім'я",
+                "zh-cn": "名称"
               },
               "default": "MyFaikout"
             },
@@ -604,7 +960,16 @@
               "attr": "ip",
               "title": {
                 "en": "IP Address",
-                "de": "IP-Adresse"
+                "de": "IP-Adresse",
+                "ru": "IP-адрес",
+                "pt": "Endereço IP",
+                "nl": "IP-adres",
+                "fr": "Adresse IP",
+                "it": "Indirizzo IP",
+                "es": "Dirección IP",
+                "pl": "Adres IP",
+                "uk": "IP-адреса",
+                "zh-cn": "IP地址"
               },
               "default": "192.168.0.100"
             },
@@ -613,7 +978,16 @@
               "attr": "useDemand",
               "title": {
                 "en": "Demand ctrl",
-                "de": "Bedarfssteuerung"
+                "de": "Bedarfssteuerung",
+                "ru": "Упр. нагрузкой",
+                "pt": "Ctrl. demanda",
+                "nl": "Vraagregeling",
+                "fr": "Ctrl. demande",
+                "it": "Ctrl. domanda",
+                "es": "Ctrl. demanda",
+                "pl": "Sterow. potrz.",
+                "uk": "Упр. навантаж.",
+                "zh-cn": "需求控制"
               },
               "width": "120px",
               "default": false
@@ -623,7 +997,16 @@
               "attr": "useHumidity",
               "title": {
                 "en": "Humidity ctrl",
-                "de": "Feuchte Regelung"
+                "de": "Feuchte Regelung",
+                "ru": "Упр. влажностью",
+                "pt": "Ctrl. humidade",
+                "nl": "Vochtigheidsr.",
+                "fr": "Ctrl. humidité",
+                "it": "Ctrl. umidità",
+                "es": "Ctrl. humedad",
+                "pl": "Sterow. wilg.",
+                "uk": "Упр. вологістю",
+                "zh-cn": "湿度控制"
               },
               "width": "120px",
               "default": false
@@ -750,13 +1133,31 @@
               "attr": "_discover",
               "title": {
                 "en": "State discovery",
-                "de": "Datenpunkte-Erkennen"
+                "de": "Datenpunkte-Erkennen",
+                "ru": "Обнаружение состояний",
+                "pt": "Detecção de estados",
+                "nl": "Statusdetectie",
+                "fr": "Détection d'états",
+                "it": "Rilevamento stati",
+                "es": "Detección de estados",
+                "pl": "Wykrywanie stanów",
+                "uk": "Виявлення станів",
+                "zh-cn": "状态发现"
               },
               "command": "discovery",
               "jsonData": "{\"name\": \"${data.name}\"}",
               "label": {
-                "en": "Erkennen",
-                "de": "Erkennen"
+                "en": "Discover",
+                "de": "Erkennen",
+                "ru": "Обнаружить",
+                "pt": "Detectar",
+                "nl": "Ontdekken",
+                "fr": "Détecter",
+                "it": "Rileva",
+                "es": "Detectar",
+                "pl": "Wykryj",
+                "uk": "Виявити",
+                "zh-cn": "发现"
               },
               "variant": "outlined",
               "width": "120px"
@@ -766,13 +1167,31 @@
               "attr": "_delete",
               "title": {
                 "en": "Delete states",
-                "de": "Datenpunkte-Löschen"
+                "de": "Datenpunkte-Löschen",
+                "ru": "Удалить состояния",
+                "pt": "Eliminar estados",
+                "nl": "Staten verwijderen",
+                "fr": "Supprimer états",
+                "it": "Elimina stati",
+                "es": "Eliminar estados",
+                "pl": "Usuń stany",
+                "uk": "Видалити стани",
+                "zh-cn": "删除状态"
               },
               "command": "deleteDevice",
               "jsonData": "{\"name\": \"${data.name}\"}",
               "label": {
-                "en": "Löschen",
-                "de": "Löschen"
+                "en": "Delete",
+                "de": "Löschen",
+                "ru": "Удалить",
+                "pt": "Eliminar",
+                "nl": "Verwijderen",
+                "fr": "Supprimer",
+                "it": "Elimina",
+                "es": "Eliminar",
+                "pl": "Usuń",
+                "uk": "Видалити",
+                "zh-cn": "删除"
               },
               "variant": "outlined",
               "width": "100px"
@@ -785,14 +1204,32 @@
       "type": "panel",
       "label": {
         "en": "MQTT Connection",
-        "de": "MQTT Connection"
+        "de": "MQTT Connection",
+        "ru": "MQTT-соединение",
+        "pt": "Conexão MQTT",
+        "nl": "MQTT-verbinding",
+        "fr": "Connexion MQTT",
+        "it": "Connessione MQTT",
+        "es": "Conexión MQTT",
+        "pl": "Połączenie MQTT",
+        "uk": "MQTT-з'єднання",
+        "zh-cn": "MQTT连接"
       },
       "items": {
         "mqttHost": {
           "type": "text",
           "label": {
             "en": "Broker host",
-            "de": "Broker-Host"
+            "de": "Broker-Host",
+            "ru": "Хост брокера",
+            "pt": "Host do broker",
+            "nl": "Broker-host",
+            "fr": "Hôte du broker",
+            "it": "Host broker",
+            "es": "Host del broker",
+            "pl": "Host brokera",
+            "uk": "Хост брокера",
+            "zh-cn": "代理主机"
           },
           "default": "localhost",
           "xs": 12,
@@ -805,7 +1242,16 @@
           "type": "number",
           "label": {
             "en": "Broker port",
-            "de": "Broker-Port"
+            "de": "Broker-Port",
+            "ru": "Порт брокера",
+            "pt": "Porta do broker",
+            "nl": "Broker-poort",
+            "fr": "Port du broker",
+            "it": "Porta broker",
+            "es": "Puerto del broker",
+            "pl": "Port brokera",
+            "uk": "Порт брокера",
+            "zh-cn": "代理端口"
           },
           "default": 1883,
           "min": 1,
@@ -820,7 +1266,16 @@
           "type": "text",
           "label": {
             "en": "Username",
-            "de": "Benutzername"
+            "de": "Benutzername",
+            "ru": "Имя пользователя",
+            "pt": "Nome de utilizador",
+            "nl": "Gebruikersnaam",
+            "fr": "Nom d'utilisateur",
+            "it": "Nome utente",
+            "es": "Nombre de usuario",
+            "pl": "Nazwa użytkownika",
+            "uk": "Ім'я користувача",
+            "zh-cn": "用户名"
           },
           "default": "",
           "xs": 12,
@@ -833,7 +1288,16 @@
           "type": "password",
           "label": {
             "en": "Password",
-            "de": "Passwort"
+            "de": "Passwort",
+            "ru": "Пароль",
+            "pt": "Palavra-passe",
+            "nl": "Wachtwoord",
+            "fr": "Mot de passe",
+            "it": "Password",
+            "es": "Contraseña",
+            "pl": "Hasło",
+            "uk": "Пароль",
+            "zh-cn": "密码"
           },
           "default": "",
           "xs": 12,
@@ -848,7 +1312,16 @@
       "type": "panel",
       "label": {
         "en": "Schedule",
-        "de": "Zeitplan"
+        "de": "Zeitplan",
+        "ru": "Расписание",
+        "pt": "Agenda",
+        "nl": "Schema",
+        "fr": "Horaire",
+        "it": "Programma",
+        "es": "Horario",
+        "pl": "Harmonogram",
+        "uk": "Розклад",
+        "zh-cn": "计划"
       },
       "items": {
         "scheduleConfig": {
@@ -864,7 +1337,16 @@
       "type": "panel",
       "label": {
         "en": "External Sensor",
-        "de": "Externer Sensor"
+        "de": "Externer Sensor",
+        "ru": "Внешний датчик",
+        "pt": "Sensor externo",
+        "nl": "Externe sensor",
+        "fr": "Capteur externe",
+        "it": "Sensore esterno",
+        "es": "Sensor externo",
+        "pl": "Zewnetrzny czujnik",
+        "uk": "Зовнішній датчик",
+        "zh-cn": "外部传感器"
       },
       "items": {
         "envSensorConfig": {
@@ -880,7 +1362,16 @@
       "type": "panel",
       "label": {
         "en": "Demand Control",
-        "de": "Bedarfsregelung"
+        "de": "Bedarfsregelung",
+        "ru": "Регулировка нагрузки",
+        "pt": "Controlo de demanda",
+        "nl": "Vraagregeling",
+        "fr": "Contrôle de demande",
+        "it": "Controllo domanda",
+        "es": "Control de demanda",
+        "pl": "Sterowanie zapotrzebowaniem",
+        "uk": "Регулювання навантаження",
+        "zh-cn": "需求控制"
       },
       "items": {
         "demandTabs": {
@@ -896,7 +1387,16 @@
       "type": "panel",
       "label": {
         "en": "Humidity Control",
-        "de": "Feuchte Regelung"
+        "de": "Feuchte Regelung",
+        "ru": "Регулировка влажности",
+        "pt": "Controlo de humidade",
+        "nl": "Vochtigheidsbeheer",
+        "fr": "Contrôle de l'humidité",
+        "it": "Controllo umidità",
+        "es": "Control de humedad",
+        "pl": "Sterowanie wilgotnością",
+        "uk": "Регулювання вологості",
+        "zh-cn": "湿度控制"
       },
       "items": {
         "humidityTabs": {
