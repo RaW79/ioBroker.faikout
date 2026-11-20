@@ -96,6 +96,8 @@ Install via ioBroker Admin:
 
 ## License
 
-MIT License – Copyright (c) 2026 RWS <RWS@nurfuerspam.de>
+MIT License
+
+Copyright (c) 2026 RWS <RWS@nurfuerspam.de>
 
 See [LICENSE](LICENSE) file for details.

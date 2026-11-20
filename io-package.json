@@ -29,19 +29,6 @@
         "uk": "Виправлено npm trusted publishing",
         "zh-cn": "修复npm可信发布"
       },
-      "0.1.8": {
-        "en": "Switch to npm trusted publishing (OIDC)",
-        "de": "Umstellung auf npm Trusted Publishing (OIDC)",
-        "ru": "Переход на npm trusted publishing (OIDC)",
-        "pt": "Mudança para npm trusted publishing (OIDC)",
-        "nl": "Overstap naar npm trusted publishing (OIDC)",
-        "fr": "Migration vers npm trusted publishing (OIDC)",
-        "it": "Passaggio a npm trusted publishing (OIDC)",
-        "es": "Migración a npm trusted publishing (OIDC)",
-        "pl": "Przejście na npm trusted publishing (OIDC)",
-        "uk": "Перехід на npm trusted publishing (OIDC)",
-        "zh-cn": "切换到npm可信发布（OIDC）"
-      },
       "0.1.7": {
         "en": "Responsive layout fixes, installation instructions update",
         "de": "Responsive Layout-Korrekturen, Installationsanleitung aktualisiert",
