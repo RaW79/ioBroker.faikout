@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "news": {
+      "0.1.9": {
+        "en": "Fix npm OIDC publish: set NPM_CONFIG_PROVENANCE for trusted publishing",
+        "de": "npm OIDC-Publish behoben: NPM_CONFIG_PROVENANCE fuer Trusted Publishing gesetzt",
+        "ru": "Исправлена публикация npm OIDC: установлен NPM_CONFIG_PROVENANCE",
+        "pt": "Corrigida publicação npm OIDC: NPM_CONFIG_PROVENANCE definido",
+        "nl": "npm OIDC publish gerepareerd: NPM_CONFIG_PROVENANCE ingesteld",
+        "fr": "Correction publication npm OIDC: NPM_CONFIG_PROVENANCE défini",
+        "it": "Corretto publish npm OIDC: NPM_CONFIG_PROVENANCE impostato",
+        "es": "Corregida publicación npm OIDC: NPM_CONFIG_PROVENANCE configurado",
+        "pl": "Naprawiono publikację npm OIDC: ustawiono NPM_CONFIG_PROVENANCE",
+        "uk": "Виправлено публікацію npm OIDC: встановлено NPM_CONFIG_PROVENANCE",
+        "zh-cn": "修复npm OIDC发布：设置NPM_CONFIG_PROVENANCE"
+      },
       "0.1.8": {
         "en": "Switch to npm trusted publishing (OIDC), remove npm token",
         "de": "Umstellung auf npm Trusted Publishing (OIDC), npm-Token entfernt",

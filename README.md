@@ -70,6 +70,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.9
+- Fix npm OIDC trusted publishing
+
 ### 0.1.8
 - Switch to npm trusted publishing (OIDC)
 
