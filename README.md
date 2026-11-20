@@ -58,10 +58,8 @@ Multiple indoor units on one outdoor unit can be grouped together. Demand contro
 
 Install via ioBroker Admin:
 
-1. ioBroker Admin -> **Adapters** -> enable expert mode -> **Install from own URL** (GitHub icon)
-2. Tab **npm**, enter: `iobroker.faikout-ac`
-3. Click **Install**
-4. Add a **Faikout** instance (`faikout-ac.0`)
+1. ioBroker Admin -> **Adapters** -> search for `faikout` -> click **Install**
+2. Add a **Faikout** instance (`faikout-ac.0`)
 
 ## Setup
 
@@ -71,6 +69,9 @@ Install via ioBroker Admin:
 4. States appear under `faikout-ac.0.<Name>.*`
 
 ## Changelog
+
+### 0.1.7
+- Responsive layout fixes for all admin tabs, installation instructions updated
 
 ### 0.1.6
 - Repochecker fixes: multilingual translations (11 languages), node:http, this.setTimeout, prettier config

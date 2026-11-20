@@ -20,7 +20,11 @@
             "fontFamily": "xkcd Script, cursive",
             "letterSpacing": "-1px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_desc": {
           "type": "staticText",
@@ -31,7 +35,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "div_design": {
           "type": "divider"
@@ -47,7 +55,11 @@
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_design_1": {
           "type": "staticText",
@@ -58,7 +70,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_design_2": {
           "type": "staticText",
@@ -70,7 +86,11 @@
             "fontWeight": "bold",
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_design_3": {
           "type": "staticText",
@@ -81,7 +101,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "div_prereq": {
           "type": "divider"
@@ -97,7 +121,11 @@
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_prereq_1": {
           "type": "staticText",
@@ -108,7 +136,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_prereq_2": {
           "type": "staticText",
@@ -119,7 +151,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_prereq_3": {
           "type": "staticText",
@@ -130,7 +166,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "div_setup": {
           "type": "divider"
@@ -146,7 +186,11 @@
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_1": {
           "type": "staticText",
@@ -157,7 +201,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_1b": {
           "type": "staticText",
@@ -168,7 +216,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_1c": {
           "type": "staticText",
@@ -179,7 +231,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_2": {
           "type": "staticText",
@@ -190,7 +246,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_3": {
           "type": "staticText",
@@ -201,7 +261,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_4": {
           "type": "staticText",
@@ -212,7 +276,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_5": {
           "type": "staticText",
@@ -223,7 +291,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_gap": {
           "type": "staticText",
@@ -231,7 +303,11 @@
             "en": " ",
             "de": " "
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_6": {
           "type": "staticText",
@@ -242,7 +318,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_setup_7": {
           "type": "staticText",
@@ -253,7 +333,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "div_states": {
           "type": "divider"
@@ -269,7 +353,11 @@
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_states_1": {
           "type": "staticText",
@@ -280,7 +368,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_states_2": {
           "type": "staticText",
@@ -291,7 +383,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_states_3": {
           "type": "staticText",
@@ -302,7 +398,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_states_4": {
           "type": "staticText",
@@ -313,7 +413,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_states_5": {
           "type": "staticText",
@@ -324,7 +428,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "div_options": {
           "type": "divider"
@@ -340,7 +448,11 @@
             "fontSize": "22px",
             "fontFamily": "xkcd Script, cursive"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_options_config_head": {
           "type": "staticText",
@@ -351,7 +463,11 @@
           "style": {
             "fontWeight": "bold"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_options_config_1": {
           "type": "staticText",
@@ -362,7 +478,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_options_envset_head": {
           "type": "staticText",
@@ -373,7 +493,11 @@
           "style": {
             "fontWeight": "bold"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_options_envset_1": {
           "type": "staticText",
@@ -384,7 +508,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_options_envset_2": {
           "type": "staticText",
@@ -395,7 +523,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "info_options_envset_3": {
           "type": "staticText",
@@ -406,7 +538,11 @@
           "style": {
             "fontSize": "15px"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "div_version": {
           "type": "divider"
@@ -422,7 +558,11 @@
             "color": "#aaa",
             "textAlign": "right"
           },
-          "sm": 12
+          "sm": 12,
+          "xs": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         }
       }
     },
@@ -654,7 +794,12 @@
             "en": "Broker host",
             "de": "Broker-Host"
           },
-          "default": "localhost"
+          "default": "localhost",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
         },
         "mqttPort": {
           "type": "number",
@@ -664,7 +809,12 @@
           },
           "default": 1883,
           "min": 1,
-          "max": 65535
+          "max": 65535,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
         },
         "mqttUser": {
           "type": "text",
@@ -672,7 +822,12 @@
             "en": "Username",
             "de": "Benutzername"
           },
-          "default": ""
+          "default": "",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
         },
         "mqttPassword": {
           "type": "password",
@@ -680,7 +835,12 @@
             "en": "Password",
             "de": "Passwort"
           },
-          "default": ""
+          "default": "",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
         }
       }
     },

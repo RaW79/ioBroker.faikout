@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "news": {
+      "0.1.7": {
+        "en": "Responsive layout fixes, installation instructions update",
+        "de": "Responsive Layout-Korrekturen, Installationsanleitung aktualisiert",
+        "ru": "Исправления адаптивного макета, обновление инструкций по установке",
+        "pt": "Correções de layout responsivo, actualização das instruções de instalação",
+        "nl": "Responsieve lay-outcorrecties, installatie-instructies bijgewerkt",
+        "fr": "Corrections de mise en page responsive, mise à jour des instructions d'installation",
+        "it": "Correzioni layout responsive, aggiornamento istruzioni di installazione",
+        "es": "Correcciones de diseño adaptable, actualización de instrucciones de instalación",
+        "pl": "Poprawki responsywnego układu, aktualizacja instrukcji instalacji",
+        "uk": "Виправлення адаптивного макету, оновлення інструкцій із встановлення",
+        "zh-cn": "响应式布局修复，更新安装说明"
+      },
       "0.1.6": {
         "en": "Repochecker fixes: translations, node:http, this.setTimeout, prettier config",
         "de": "Repochecker-Korrekturen: Uebersetzungen, node:http, this.setTimeout, Prettier-Konfiguration",
