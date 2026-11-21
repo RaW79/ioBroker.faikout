@@ -643,14 +643,40 @@ class FaikoutAdapter extends utils.Adapter {
             const dp = `${folder}.demand_ctrl`;
             await this.setObjectNotExistsAsync(dp, {
                 type: 'channel',
-                common: { name: { en: 'Demand Control', de: 'Bedarfsregelung', ru: 'Регулирование мощности', pt: 'Controlo de demanda', nl: 'Vraagregeling', fr: 'Régulation de la demande', it: 'Controllo domanda', es: 'Control de demanda', pl: 'Sterowanie zapotrzebowaniem', uk: 'Регулювання попиту', 'zh-cn': '需求控制' } },
+                common: {
+                    name: {
+                        en: 'Demand Control',
+                        de: 'Bedarfsregelung',
+                        ru: 'Регулирование мощности',
+                        pt: 'Controlo de demanda',
+                        nl: 'Vraagregeling',
+                        fr: 'Régulation de la demande',
+                        it: 'Controllo domanda',
+                        es: 'Control de demanda',
+                        pl: 'Sterowanie zapotrzebowaniem',
+                        uk: 'Регулювання попиту',
+                        'zh-cn': '需求控制',
+                    },
+                },
                 native: {},
             });
             const stBase = { type: 'state', native: {} };
             await this.setObjectNotExistsAsync(`${dp}.active`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Demand control active', de: 'Bedarfsregelung aktiv', ru: 'Регулирование мощности активно', pt: 'Controlo de demanda ativo', nl: 'Vraagregeling actief', fr: 'Régulation de demande active', it: 'Controllo domanda attivo', es: 'Control de demanda activo', pl: 'Sterowanie zapotrzebowaniem aktywne', uk: 'Регулювання попиту активне', 'zh-cn': '需求控制已激活' },
+                    name: {
+                        en: 'Demand control active',
+                        de: 'Bedarfsregelung aktiv',
+                        ru: 'Регулирование мощности активно',
+                        pt: 'Controlo de demanda ativo',
+                        nl: 'Vraagregeling actief',
+                        fr: 'Régulation de demande active',
+                        it: 'Controllo domanda attivo',
+                        es: 'Control de demanda activo',
+                        pl: 'Sterowanie zapotrzebowaniem aktywne',
+                        uk: 'Регулювання попиту активне',
+                        'zh-cn': '需求控制已激活',
+                    },
                     type: 'boolean',
                     role: 'indicator',
                     read: true,
@@ -661,7 +687,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.demand_calc`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Calculated demand', de: 'Berechneter Bedarf', ru: 'Расчётный спрос', pt: 'Demanda calculada', nl: 'Berekende vraag', fr: 'Demande calculée', it: 'Domanda calcolata', es: 'Demanda calculada', pl: 'Obliczone zapotrzebowanie', uk: 'Розрахований попит', 'zh-cn': '计算需求' },
+                    name: {
+                        en: 'Calculated demand',
+                        de: 'Berechneter Bedarf',
+                        ru: 'Расчётный спрос',
+                        pt: 'Demanda calculada',
+                        nl: 'Berekende vraag',
+                        fr: 'Demande calculée',
+                        it: 'Domanda calcolata',
+                        es: 'Demanda calculada',
+                        pl: 'Obliczone zapotrzebowanie',
+                        uk: 'Розрахований попит',
+                        'zh-cn': '计算需求',
+                    },
                     type: 'number',
                     unit: '%',
                     role: 'value',
@@ -674,7 +712,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.override_active`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Manual override active', de: 'Manuelle Übersteuerung aktiv', ru: 'Ручное переопределение активно', pt: 'Substituição manual ativa', nl: 'Handmatige override actief', fr: 'Remplacement manuel actif', it: 'Override manuale attivo', es: 'Anulación manual activa', pl: 'Ręczne nadpisanie aktywne', uk: 'Ручне перевизначення активне', 'zh-cn': '手动覆盖已激活' },
+                    name: {
+                        en: 'Manual override active',
+                        de: 'Manuelle Übersteuerung aktiv',
+                        ru: 'Ручное переопределение активно',
+                        pt: 'Substituição manual ativa',
+                        nl: 'Handmatige override actief',
+                        fr: 'Remplacement manuel actif',
+                        it: 'Override manuale attivo',
+                        es: 'Anulación manual activa',
+                        pl: 'Ręczne nadpisanie aktywne',
+                        uk: 'Ручне перевизначення активне',
+                        'zh-cn': '手动覆盖已激活',
+                    },
                     type: 'boolean',
                     role: 'switch',
                     read: true,
@@ -685,7 +735,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.override_value`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Manual override demand', de: 'Manueller Bedarfswert', ru: 'Значение ручного переопределения', pt: 'Valor de substituição manual', nl: 'Handmatige override waarde', fr: 'Valeur de remplacement manuel', it: 'Valore override manuale', es: 'Valor de anulación manual', pl: 'Wartość ręcznego nadpisania', uk: 'Значення ручного перевизначення', 'zh-cn': '手动覆盖需求值' },
+                    name: {
+                        en: 'Manual override demand',
+                        de: 'Manueller Bedarfswert',
+                        ru: 'Значение ручного переопределения',
+                        pt: 'Valor de substituição manual',
+                        nl: 'Handmatige override waarde',
+                        fr: 'Valeur de remplacement manuel',
+                        it: 'Valore override manuale',
+                        es: 'Valor de anulación manual',
+                        pl: 'Wartość ręcznego nadpisania',
+                        uk: 'Значення ручного перевизначення',
+                        'zh-cn': '手动覆盖需求值',
+                    },
                     type: 'number',
                     unit: '%',
                     role: 'level',
@@ -699,7 +761,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.guard_active`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Guard active', de: 'Guard aktiv', ru: 'Защита активна', pt: 'Guarda ativo', nl: 'Guard actief', fr: 'Protection active', it: 'Guard attivo', es: 'Guard activo', pl: 'Guard aktywny', uk: 'Guard активний', 'zh-cn': 'Guard 已激活' },
+                    name: {
+                        en: 'Guard active',
+                        de: 'Guard aktiv',
+                        ru: 'Защита активна',
+                        pt: 'Guarda ativo',
+                        nl: 'Guard actief',
+                        fr: 'Protection active',
+                        it: 'Guard attivo',
+                        es: 'Guard activo',
+                        pl: 'Guard aktywny',
+                        uk: 'Guard активний',
+                        'zh-cn': 'Guard 已激活',
+                    },
                     type: 'boolean',
                     role: 'indicator',
                     read: true,
@@ -710,7 +784,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.outdoor_temp`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Outdoor temperature used', de: 'Verwendete Außentemperatur', ru: 'Используемая уличная температура', pt: 'Temperatura exterior utilizada', nl: 'Gebruikte buitentemperatuur', fr: 'Température extérieure utilisée', it: 'Temperatura esterna utilizzata', es: 'Temperatura exterior utilizada', pl: 'Użyta temperatura zewnętrzna', uk: 'Використана вулична температура', 'zh-cn': '使用的室外温度' },
+                    name: {
+                        en: 'Outdoor temperature used',
+                        de: 'Verwendete Außentemperatur',
+                        ru: 'Используемая уличная температура',
+                        pt: 'Temperatura exterior utilizada',
+                        nl: 'Gebruikte buitentemperatuur',
+                        fr: 'Température extérieure utilisée',
+                        it: 'Temperatura esterna utilizzata',
+                        es: 'Temperatura exterior utilizada',
+                        pl: 'Użyta temperatura zewnętrzna',
+                        uk: 'Використана вулична температура',
+                        'zh-cn': '使用的室外温度',
+                    },
                     type: 'number',
                     unit: '°C',
                     role: 'value.temperature',
@@ -721,7 +807,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.room_temp`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Room temperature used', de: 'Verwendete Raumtemperatur', ru: 'Используемая комнатная температура', pt: 'Temperatura interior utilizada', nl: 'Gebruikte kamertemperatuur', fr: 'Température ambiante utilisée', it: 'Temperatura ambiente utilizzata', es: 'Temperatura interior utilizada', pl: 'Użyta temperatura pokojowa', uk: 'Використана кімнатна температура', 'zh-cn': '使用的室温' },
+                    name: {
+                        en: 'Room temperature used',
+                        de: 'Verwendete Raumtemperatur',
+                        ru: 'Используемая комнатная температура',
+                        pt: 'Temperatura interior utilizada',
+                        nl: 'Gebruikte kamertemperatuur',
+                        fr: 'Température ambiante utilisée',
+                        it: 'Temperatura ambiente utilizzata',
+                        es: 'Temperatura interior utilizada',
+                        pl: 'Użyta temperatura pokojowa',
+                        uk: 'Використана кімнатна температура',
+                        'zh-cn': '使用的室温',
+                    },
                     type: 'number',
                     unit: '°C',
                     role: 'value.temperature',
@@ -982,13 +1080,39 @@ class FaikoutAdapter extends utils.Adapter {
             const stBase = { type: 'state', native: {} };
             await this.setObjectNotExistsAsync(dp, {
                 type: 'channel',
-                common: { name: { en: 'Humidity Control', de: 'Feuchtesteuerung', ru: 'Управление влажностью', pt: 'Controlo de humidade', nl: 'Vochtigheidsbeheer', fr: "Régulation de l'humidité", it: 'Controllo umidità', es: 'Control de humedad', pl: 'Sterowanie wilgotnością', uk: 'Керування вологістю', 'zh-cn': '湿度控制' } },
+                common: {
+                    name: {
+                        en: 'Humidity Control',
+                        de: 'Feuchtesteuerung',
+                        ru: 'Управление влажностью',
+                        pt: 'Controlo de humidade',
+                        nl: 'Vochtigheidsbeheer',
+                        fr: "Régulation de l'humidité",
+                        it: 'Controllo umidità',
+                        es: 'Control de humedad',
+                        pl: 'Sterowanie wilgotnością',
+                        uk: 'Керування вологістю',
+                        'zh-cn': '湿度控制',
+                    },
+                },
                 native: {},
             });
             await this.setObjectNotExistsAsync(`${dp}.auto`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Humidity auto', de: 'Feuchte-Automatik', ru: 'Авто-режим влажности', pt: 'Humidade automática', nl: 'Vochtigheid automatisch', fr: 'Humidité auto', it: 'Umidità automatica', es: 'Humedad automática', pl: 'Wilgotność auto', uk: 'Авторежим вологості', 'zh-cn': '湿度自动' },
+                    name: {
+                        en: 'Humidity auto',
+                        de: 'Feuchte-Automatik',
+                        ru: 'Авто-режим влажности',
+                        pt: 'Humidade automática',
+                        nl: 'Vochtigheid automatisch',
+                        fr: 'Humidité auto',
+                        it: 'Umidità automatica',
+                        es: 'Humedad automática',
+                        pl: 'Wilgotność auto',
+                        uk: 'Авторежим вологості',
+                        'zh-cn': '湿度自动',
+                    },
                     type: 'boolean',
                     role: 'switch',
                     read: true,
@@ -999,7 +1123,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.mode`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Humidity mode', de: 'Feuchte-Modus', ru: 'Режим влажности', pt: 'Modo de humidade', nl: 'Vochtigheidsmodus', fr: 'Mode humidité', it: 'Modalità umidità', es: 'Modo humedad', pl: 'Tryb wilgotności', uk: 'Режим вологості', 'zh-cn': '湿度模式' },
+                    name: {
+                        en: 'Humidity mode',
+                        de: 'Feuchte-Modus',
+                        ru: 'Режим влажности',
+                        pt: 'Modo de humidade',
+                        nl: 'Vochtigheidsmodus',
+                        fr: 'Mode humidité',
+                        it: 'Modalità umidità',
+                        es: 'Modo humedad',
+                        pl: 'Tryb wilgotności',
+                        uk: 'Режим вологості',
+                        'zh-cn': '湿度模式',
+                    },
                     type: 'number',
                     role: 'value',
                     read: true,
@@ -1011,7 +1147,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.mode_text`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Humidity mode text', de: 'Feuchte-Modus Text', ru: 'Текст режима влажности', pt: 'Texto do modo de humidade', nl: 'Vochtigheidsmodus tekst', fr: 'Texte du mode humidité', it: 'Testo modalità umidità', es: 'Texto de modo humedad', pl: 'Tekst trybu wilgotności', uk: 'Текст режиму вологості', 'zh-cn': '湿度模式文本' },
+                    name: {
+                        en: 'Humidity mode text',
+                        de: 'Feuchte-Modus Text',
+                        ru: 'Текст режима влажности',
+                        pt: 'Texto do modo de humidade',
+                        nl: 'Vochtigheidsmodus tekst',
+                        fr: 'Texte du mode humidité',
+                        it: 'Testo modalità umidità',
+                        es: 'Texto de modo humedad',
+                        pl: 'Tekst trybu wilgotności',
+                        uk: 'Текст режиму вологості',
+                        'zh-cn': '湿度模式文本',
+                    },
                     type: 'string',
                     role: 'text',
                     read: true,
@@ -1022,7 +1170,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.dew_point`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Dew point', de: 'Taupunkt', ru: 'Точка росы', pt: 'Ponto de orvalho', nl: 'Dauwpunt', fr: 'Point de rosée', it: 'Punto di rugiada', es: 'Punto de rocío', pl: 'Punkt rosy', uk: 'Точка роси', 'zh-cn': '露点' },
+                    name: {
+                        en: 'Dew point',
+                        de: 'Taupunkt',
+                        ru: 'Точка росы',
+                        pt: 'Ponto de orvalho',
+                        nl: 'Dauwpunt',
+                        fr: 'Point de rosée',
+                        it: 'Punto di rugiada',
+                        es: 'Punto de rocío',
+                        pl: 'Punkt rosy',
+                        uk: 'Точка роси',
+                        'zh-cn': '露点',
+                    },
                     type: 'number',
                     unit: '°C',
                     role: 'value.temperature',
@@ -1033,7 +1193,19 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`${dp}.dew_point_diff`, {
                 ...stBase,
                 common: {
-                    name: { en: 'Dew point distance', de: 'Taupunkt-Abstand', ru: 'Расстояние до точки росы', pt: 'Distância ao ponto de orvalho', nl: 'Dauwpuntafstand', fr: 'Distance au point de rosée', it: 'Distanza dal punto di rugiada', es: 'Distancia al punto de rocío', pl: 'Odległość od punktu rosy', uk: 'Відстань до точки роси', 'zh-cn': '露点距离' },
+                    name: {
+                        en: 'Dew point distance',
+                        de: 'Taupunkt-Abstand',
+                        ru: 'Расстояние до точки росы',
+                        pt: 'Distância ao ponto de orvalho',
+                        nl: 'Dauwpuntafstand',
+                        fr: 'Distance au point de rosée',
+                        it: 'Distanza dal punto di rugiada',
+                        es: 'Distancia al punto de rocío',
+                        pl: 'Odległość od punktu rosy',
+                        uk: 'Відстань до точки роси',
+                        'zh-cn': '露点距离',
+                    },
                     type: 'number',
                     unit: 'K',
                     role: 'value',
