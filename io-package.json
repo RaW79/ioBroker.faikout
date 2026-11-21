@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "faikout-ac",
-        "version": "0.1.94",
+        "version": "0.1.95",
         "news": {
+            "0.1.95": {
+                "en": "Fix log message language, admin version requirement, interval validation",
+                "de": "Log-Meldungssprache, Admin-Versionsanforderung, Intervall-Validierung korrigiert",
+                "ru": "Исправлены язык лог-сообщений, требование версии admin, валидация интервала",
+                "pt": "Correcção de idioma de mensagens de log, requisito de versão admin, validação de intervalo",
+                "nl": "Logberichttaal, admin-versievereiste, intervalvalidatie gecorrigeerd",
+                "fr": "Correction langue messages log, exigence version admin, validation intervalle",
+                "it": "Correzione lingua messaggi log, requisito versione admin, validazione intervallo",
+                "es": "Corrección idioma mensajes log, requisito versión admin, validación intervalo",
+                "pl": "Poprawka języka komunikatów log, wymóg wersji admin, walidacja interwału",
+                "uk": "Виправлення мови лог-повідомлень, вимоги версії admin, валідації інтервалу",
+                "zh-cn": "修复日志消息语言、admin版本要求、间隔验证"
+            },
             "0.1.94": {
                 "en": "Fix object structure: missing channel, read/write flags, 11-language state names",
                 "de": "Objektstruktur korrigiert: fehlender Channel, read/write-Flags, 11-sprachige State-Namen",
