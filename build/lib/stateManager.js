@@ -102,7 +102,7 @@ class StateManager {
                 'zh-cn': '连接',
             },
             type: 'boolean',
-            role: 'indicator.connection',
+            role: 'indicator.connected',
             read: true,
             write: false,
             def: false,
@@ -477,7 +477,7 @@ class StateManager {
     }
     async _ensureState(id, common) {
         const { def: defaultVal, ...rest } = common;
-        await this.adapter.setObjectNotExistsAsync(id, {
+        await this.adapter.extendObjectAsync(id, {
             type: 'state',
             common: rest,
             native: { userModified: false },

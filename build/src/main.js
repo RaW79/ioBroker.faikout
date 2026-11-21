@@ -570,7 +570,7 @@ class FaikoutAdapter extends utils.Adapter {
         for (const entry of entries) {
             const deviceName = (entry.deviceName || '').trim();
             const sensorStateId = (entry.sensorStateId || '').trim();
-            const intervalSec = Math.max(10, Number(entry.intervalSec ?? 30));
+            const intervalSec = Math.min(Math.max(10, Number(entry.intervalSec ?? 30)), 2_147_483);
             if (!deviceName || !sensorStateId) {
                 continue;
             }
@@ -659,7 +659,7 @@ class FaikoutAdapter extends utils.Adapter {
                 await this.subscribeForeignStatesAsync(roomId);
             }
             const dp = `${folder}.demand_ctrl`;
-            await this.setObjectNotExistsAsync(dp, {
+            await this.extendObjectAsync(dp, {
                 type: 'channel',
                 common: {
                     name: {
@@ -679,7 +679,7 @@ class FaikoutAdapter extends utils.Adapter {
                 native: {},
             });
             const stBase = { type: 'state', native: {} };
-            await this.setObjectNotExistsAsync(`${dp}.active`, {
+            await this.extendObjectAsync(`${dp}.active`, {
                 ...stBase,
                 common: {
                     name: {
@@ -702,7 +702,7 @@ class FaikoutAdapter extends utils.Adapter {
                     def: false,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.demand_calc`, {
+            await this.extendObjectAsync(`${dp}.demand_calc`, {
                 ...stBase,
                 common: {
                     name: {
@@ -727,7 +727,7 @@ class FaikoutAdapter extends utils.Adapter {
                     max: 100,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.override_active`, {
+            await this.extendObjectAsync(`${dp}.override_active`, {
                 ...stBase,
                 common: {
                     name: {
@@ -750,7 +750,7 @@ class FaikoutAdapter extends utils.Adapter {
                     def: false,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.override_value`, {
+            await this.extendObjectAsync(`${dp}.override_value`, {
                 ...stBase,
                 common: {
                     name: {
@@ -776,7 +776,7 @@ class FaikoutAdapter extends utils.Adapter {
                     def: 50,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.guard_active`, {
+            await this.extendObjectAsync(`${dp}.guard_active`, {
                 ...stBase,
                 common: {
                     name: {
@@ -799,7 +799,7 @@ class FaikoutAdapter extends utils.Adapter {
                     def: false,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.outdoor_temp`, {
+            await this.extendObjectAsync(`${dp}.outdoor_temp`, {
                 ...stBase,
                 common: {
                     name: {
@@ -822,7 +822,7 @@ class FaikoutAdapter extends utils.Adapter {
                     write: false,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.room_temp`, {
+            await this.extendObjectAsync(`${dp}.room_temp`, {
                 ...stBase,
                 common: {
                     name: {
@@ -1096,7 +1096,7 @@ class FaikoutAdapter extends utils.Adapter {
                 humHumStateId: '',
             }, humCfg[deviceName] ?? {});
             const stBase = { type: 'state', native: {} };
-            await this.setObjectNotExistsAsync(dp, {
+            await this.extendObjectAsync(dp, {
                 type: 'channel',
                 common: {
                     name: {
@@ -1115,7 +1115,7 @@ class FaikoutAdapter extends utils.Adapter {
                 },
                 native: {},
             });
-            await this.setObjectNotExistsAsync(`${dp}.auto`, {
+            await this.extendObjectAsync(`${dp}.auto`, {
                 ...stBase,
                 common: {
                     name: {
@@ -1138,7 +1138,7 @@ class FaikoutAdapter extends utils.Adapter {
                     def: false,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.mode`, {
+            await this.extendObjectAsync(`${dp}.mode`, {
                 ...stBase,
                 common: {
                     name: {
@@ -1162,7 +1162,7 @@ class FaikoutAdapter extends utils.Adapter {
                     states: { 0: 'OFF', 1: 'MONITORING', 2: 'DRY', 3: 'RUN-ON', 4: 'PAUSE', 5: 'FRESHNESS!' },
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.mode_text`, {
+            await this.extendObjectAsync(`${dp}.mode_text`, {
                 ...stBase,
                 common: {
                     name: {
@@ -1185,7 +1185,7 @@ class FaikoutAdapter extends utils.Adapter {
                     def: 'OFF',
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.dew_point`, {
+            await this.extendObjectAsync(`${dp}.dew_point`, {
                 ...stBase,
                 common: {
                     name: {
@@ -1208,7 +1208,7 @@ class FaikoutAdapter extends utils.Adapter {
                     write: false,
                 },
             });
-            await this.setObjectNotExistsAsync(`${dp}.dew_point_diff`, {
+            await this.extendObjectAsync(`${dp}.dew_point_diff`, {
                 ...stBase,
                 common: {
                     name: {
@@ -1373,7 +1373,7 @@ class FaikoutAdapter extends utils.Adapter {
             const realMode = await this.getStateAsync(`${folder}.mode`);
             const realPower = await this.getStateAsync(`${folder}.power`);
             if (realPower?.val !== false && realMode?.val !== 'D') {
-                this.log.warn(`Humidity [${folder}] override – going to NACHLAUF`);
+                this.log.warn(`Humidity [${folder}] override – going to RUN-ON`);
                 await startNachlauf('ueberwachung');
                 await setMode(MODI.NL);
                 return;
