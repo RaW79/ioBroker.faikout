@@ -70,6 +70,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.96
+- Fix state roles (fan, mode, env_set, info.connection), update existing objects on upgrade
+
 ### 0.1.94
 - Fix object structure: missing humidity_ctrl channel, read/write flags on config states, 11-language state names
 

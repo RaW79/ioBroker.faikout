@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "faikout-ac",
-        "version": "0.1.95",
+        "version": "0.1.96",
         "news": {
+            "0.1.96": {
+                "en": "Fix state roles (fan, mode, env_set, info.connection), update existing objects on upgrade",
+                "de": "State-Rollen korrigiert (fan, mode, env_set, info.connection), bestehende Objekte bei Update aktualisiert",
+                "ru": "Исправлены роли состояний (fan, mode, env_set, info.connection), обновление существующих объектов",
+                "pt": "Correcção de roles de estados (fan, mode, env_set, info.connection), actualização de objectos existentes",
+                "nl": "Staatrollen gecorrigeerd (fan, mode, env_set, info.connection), bestaande objecten bijgewerkt",
+                "fr": "Correction des rôles d'états (fan, mode, env_set, info.connection), mise à jour des objets existants",
+                "it": "Correzione ruoli stati (fan, mode, env_set, info.connection), aggiornamento oggetti esistenti",
+                "es": "Corrección de roles de estados (fan, mode, env_set, info.connection), actualización de objetos existentes",
+                "pl": "Poprawka ról stanów (fan, mode, env_set, info.connection), aktualizacja istniejących obiektów",
+                "uk": "Виправлення ролей станів (fan, mode, env_set, info.connection), оновлення існуючих об'єктів",
+                "zh-cn": "修复状态角色 (fan, mode, env_set, info.connection)，升级时更新现有对象"
+            },
             "0.1.95": {
                 "en": "Fix log message language, admin version requirement, interval validation",
                 "de": "Log-Meldungssprache, Admin-Versionsanforderung, Intervall-Validierung korrigiert",
@@ -80,45 +93,6 @@
                 "pl": "Naprawiono npm trusted publishing",
                 "uk": "Виправлено npm trusted publishing",
                 "zh-cn": "修复npm可信发布"
-            },
-            "0.1.7": {
-                "en": "Responsive layout fixes, installation instructions update",
-                "de": "Responsive Layout-Korrekturen, Installationsanleitung aktualisiert",
-                "ru": "Исправления адаптивного макета, обновление инструкций по установке",
-                "pt": "Correções de layout responsivo, actualização das instruções de instalação",
-                "nl": "Responsieve lay-outcorrecties, installatie-instructies bijgewerkt",
-                "fr": "Corrections de mise en page responsive, mise à jour des instructions d'installation",
-                "it": "Correzioni layout responsive, aggiornamento istruzioni di installazione",
-                "es": "Correcciones de diseño adaptable, actualización de instrucciones de instalación",
-                "pl": "Poprawki responsywnego układu, aktualizacja instrukcji instalacji",
-                "uk": "Виправлення адаптивного макету, оновлення інструкцій із встановлення",
-                "zh-cn": "响应式布局修复，更新安装说明"
-            },
-            "0.1.6": {
-                "en": "Repochecker fixes: translations, node:http, this.setTimeout, prettier config",
-                "de": "Repochecker-Korrekturen: Uebersetzungen, node:http, this.setTimeout, Prettier-Konfiguration",
-                "ru": "Исправления репочекера: переводы, node:http, this.setTimeout, конфигурация Prettier",
-                "pt": "Correcções do repochecker: traduções, node:http, this.setTimeout, configuração Prettier",
-                "nl": "Repochecker-correcties: vertalingen, node:http, this.setTimeout, Prettier-configuratie",
-                "fr": "Corrections du repochecker: traductions, node:http, this.setTimeout, configuration Prettier",
-                "it": "Correzioni repochecker: traduzioni, node:http, this.setTimeout, configurazione Prettier",
-                "es": "Correcciones del repochecker: traducciones, node:http, this.setTimeout, configuración Prettier",
-                "pl": "Poprawki repochecker: tłumaczenia, node:http, this.setTimeout, konfiguracja Prettier",
-                "uk": "Виправлення репочекера: переклади, node:http, this.setTimeout, конфігурація Prettier",
-                "zh-cn": "修复repochecker问题：翻译、node:http、this.setTimeout、Prettier配置"
-            },
-            "0.1.5": {
-                "en": "Schedule modes, adapter title fix, language detection fix",
-                "de": "Zeitplan-Modi, Adapter-Titel korrigiert, Spracherkennung behoben",
-                "ru": "Режимы расписания, исправление заголовка адаптера, исправление определения языка",
-                "pt": "Modos de agendamento, correcção do título do adaptador, correcção da detecção de idioma",
-                "nl": "Planningsmodi, correctie adaptertitel, correctie taaldetectie",
-                "fr": "Modes de planification, correction du titre de l'adaptateur, correction de la détection de la langue",
-                "it": "Modalità di pianificazione, correzione del titolo dell'adattatore, correzione del rilevamento della lingua",
-                "es": "Modos de programación, corrección del título del adaptador, corrección de la detección de idioma",
-                "pl": "Tryby harmonogramu, poprawka tytułu adaptera, poprawka wykrywania języka",
-                "uk": "Режими розкладу, виправлення заголовка адаптера, виправлення визначення мови",
-                "zh-cn": "计划模式，适配器标题修复，语言检测修复"
             }
         },
         "titleLang": {
@@ -249,7 +223,16 @@
             "common": {
                 "name": {
                     "en": "Connection",
-                    "de": "Verbindung"
+                    "de": "Verbindung",
+                    "ru": "Соединение",
+                    "pt": "Conexão",
+                    "nl": "Verbinding",
+                    "fr": "Connexion",
+                    "it": "Connessione",
+                    "es": "Conexión",
+                    "pl": "Połączenie",
+                    "uk": "Зʼєднання",
+                    "zh-cn": "连接"
                 },
                 "role": "indicator.connected",
                 "type": "boolean",

@@ -131,7 +131,7 @@ export const FIELDS: Record<string, FieldDef> = {
         },
         type: 'string',
         writeTopic: 'mode',
-        role: 'value.mode.airconditioner',
+        role: 'text',
         states: { H: 'Heat', C: 'Cool', A: 'Auto', D: 'Dry', F: 'Fan' },
     },
     fan: {
@@ -150,7 +150,7 @@ export const FIELDS: Record<string, FieldDef> = {
         },
         type: 'string',
         writeTopic: 'fan',
-        role: 'value.speed',
+        role: 'text',
         states: { A: 'A', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', Q: 'Q' },
     },
     econo: {
@@ -733,7 +733,7 @@ export const FIELDS: Record<string, FieldDef> = {
         unit: '°C',
         writeTopic: 'control',
         writeOnly: true,
-        role: 'level.temperature',
+        role: 'level',
     },
     restart: {
         label: {
