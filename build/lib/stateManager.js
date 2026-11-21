@@ -14,9 +14,9 @@ class StateManager {
             common: { name: appName || deviceId },
             native: {},
         });
-        await this._ensureChannel(`${this.deviceFolder}.info`, 'Device Information');
+        await this._ensureChannel(`${this.deviceFolder}.info`, { en: 'Device Information', de: 'Geräteinformationen', ru: 'Информация об устройстве', pt: 'Informações do dispositivo', nl: 'Apparaatinformatie', fr: "Informations sur l'appareil", it: 'Informazioni dispositivo', es: 'Información del dispositivo', pl: 'Informacje o urządzeniu', uk: 'Інформація про пристрій', 'zh-cn': '设备信息' });
         await this._ensureState(`${this.deviceFolder}.info.deviceId`, {
-            name: 'Device ID',
+            name: { en: 'Device ID', de: 'Geräte-ID', ru: 'ID устройства', pt: 'ID do dispositivo', nl: 'Apparaat-ID', fr: "ID de l'appareil", it: 'ID dispositivo', es: 'ID del dispositivo', pl: 'ID urządzenia', uk: 'ID пристрою', 'zh-cn': '设备 ID' },
             type: 'string',
             role: 'info.address',
             read: true,
@@ -24,7 +24,7 @@ class StateManager {
             def: deviceId,
         });
         await this._ensureState(`${this.deviceFolder}.info.appName`, {
-            name: 'App Name',
+            name: { en: 'App Name', de: 'App-Name', ru: 'Имя приложения', pt: 'Nome do aplicativo', nl: 'App-naam', fr: "Nom de l'application", it: 'Nome app', es: 'Nombre de la app', pl: 'Nazwa aplikacji', uk: 'Назва програми', 'zh-cn': '应用名称' },
             type: 'string',
             role: 'info.name',
             read: true,
@@ -32,7 +32,7 @@ class StateManager {
             def: appName,
         });
         await this._ensureState(`${this.deviceFolder}.info.ip`, {
-            name: 'IP Address',
+            name: { en: 'IP Address', de: 'IP-Adresse', ru: 'IP-адрес', pt: 'Endereço IP', nl: 'IP-adres', fr: 'Adresse IP', it: 'Indirizzo IP', es: 'Dirección IP', pl: 'Adres IP', uk: 'IP-адреса', 'zh-cn': 'IP 地址' },
             type: 'string',
             role: 'info.ip',
             read: true,
@@ -40,7 +40,7 @@ class StateManager {
             def: ip,
         });
         await this._ensureState(`${this.deviceFolder}.info.connection`, {
-            name: 'Connection',
+            name: { en: 'Connection', de: 'Verbindung', ru: 'Соединение', pt: 'Conexão', nl: 'Verbinding', fr: 'Connexion', it: 'Connessione', es: 'Conexión', pl: 'Połączenie', uk: "Зʼєднання", 'zh-cn': '连接' },
             type: 'boolean',
             role: 'indicator.connection',
             read: true,
@@ -48,7 +48,7 @@ class StateManager {
             def: false,
         });
         await this._ensureState(`${this.deviceFolder}.info.lastUpdate`, {
-            name: 'Last Update',
+            name: { en: 'Last Update', de: 'Letztes Update', ru: 'Последнее обновление', pt: 'Última atualização', nl: 'Laatste update', fr: 'Dernière mise à jour', it: 'Ultimo aggiornamento', es: 'Última actualización', pl: 'Ostatnia aktualizacja', uk: 'Останнє оновлення', 'zh-cn': '最后更新' },
             type: 'number',
             role: 'date',
             read: true,
@@ -56,7 +56,7 @@ class StateManager {
             def: 0,
         });
         await this._ensureState(`${this.deviceFolder}.info.fantype`, {
-            name: 'Fan type',
+            name: { en: 'Fan type', de: 'Lüftertyp', ru: 'Тип вентилятора', pt: 'Tipo de ventilador', nl: 'Ventilatortype', fr: 'Type de ventilateur', it: 'Tipo ventilatore', es: 'Tipo de ventilador', pl: 'Typ wentylatora', uk: 'Тип вентилятора', 'zh-cn': '风扇类型' },
             type: 'number',
             role: 'value',
             read: true,
@@ -65,16 +65,16 @@ class StateManager {
         });
         await this.adapter.setStateAsync(`${this.deviceFolder}.info.fantype`, { val: fantype, ack: true });
         await this._ensureState(`${this.deviceFolder}.info.protocol`, {
-            name: 'Protocol',
+            name: { en: 'Protocol', de: 'Protokoll', ru: 'Протокол', pt: 'Protocolo', nl: 'Protocol', fr: 'Protocole', it: 'Protocollo', es: 'Protocolo', pl: 'Protokół', uk: 'Протокол', 'zh-cn': '协议' },
             type: 'string',
             role: 'info.firmware',
             read: true,
             write: false,
             def: '',
         });
-        await this._ensureChannel(`${this.deviceFolder}.topics`, 'MQTT Topics');
+        await this._ensureChannel(`${this.deviceFolder}.topics`, { en: 'MQTT Topics', de: 'MQTT-Topics', ru: 'MQTT-топики', pt: 'Tópicos MQTT', nl: 'MQTT-topics', fr: 'Topics MQTT', it: 'Topic MQTT', es: 'Topics MQTT', pl: 'Tematy MQTT', uk: 'MQTT-топіки', 'zh-cn': 'MQTT 主题' });
         await this._ensureState(`${this.deviceFolder}.topics.state`, {
-            name: 'State topic prefix',
+            name: { en: 'State topic prefix', de: 'Status-Topic-Präfix', ru: 'Префикс топика состояния', pt: 'Prefixo do tópico de estado', nl: 'Voorvoegsel statustopic', fr: "Préfixe du topic d'état", it: 'Prefisso topic stato', es: 'Prefijo del topic de estado', pl: 'Prefiks tematu stanu', uk: 'Префікс топіка стану', 'zh-cn': '状态主题前缀' },
             type: 'string',
             role: 'text',
             read: true,
@@ -82,7 +82,7 @@ class StateManager {
             def: topicConfig.topicstate,
         });
         await this._ensureState(`${this.deviceFolder}.topics.command`, {
-            name: 'Command topic prefix',
+            name: { en: 'Command topic prefix', de: 'Kommando-Topic-Präfix', ru: 'Префикс топика команд', pt: 'Prefixo do tópico de comando', nl: 'Voorvoegsel opdrachttopic', fr: 'Préfixe du topic de commande', it: 'Prefisso topic comando', es: 'Prefijo del topic de comando', pl: 'Prefiks tematu poleceń', uk: 'Префікс топіка команд', 'zh-cn': '命令主题前缀' },
             type: 'string',
             role: 'text',
             read: true,
@@ -90,7 +90,7 @@ class StateManager {
             def: topicConfig.topiccommand,
         });
         await this._ensureState(`${this.deviceFolder}.topics.setting`, {
-            name: 'Setting topic prefix',
+            name: { en: 'Setting topic prefix', de: 'Einstellungs-Topic-Präfix', ru: 'Префикс топика настроек', pt: 'Prefixo do tópico de configuração', nl: 'Voorvoegsel instellingstopic', fr: 'Préfixe du topic de paramètre', it: 'Prefisso topic impostazioni', es: 'Prefijo del topic de ajuste', pl: 'Prefiks tematu ustawień', uk: 'Префікс топіка налаштувань', 'zh-cn': '设置主题前缀' },
             type: 'string',
             role: 'text',
             read: true,
@@ -98,7 +98,7 @@ class StateManager {
             def: topicConfig.topicsetting,
         });
         await this._ensureState(`${this.deviceFolder}.topics.prefixApp`, {
-            name: 'Prefix app name',
+            name: { en: 'Prefix app name', de: 'Präfix App-Name', ru: 'Префикс имени приложения', pt: 'Prefixo do nome do aplicativo', nl: 'Voorvoegsel app-naam', fr: "Préfixe du nom de l'application", it: 'Prefisso nome app', es: 'Prefijo nombre de app', pl: 'Prefiks nazwy aplikacji', uk: 'Префікс назви програми', 'zh-cn': '前缀应用名称' },
             type: 'boolean',
             role: 'indicator',
             read: true,
@@ -106,7 +106,7 @@ class StateManager {
             def: topicConfig.prefixapp,
         });
         await this._ensureState(`${this.deviceFolder}.topics.prefixHost`, {
-            name: 'Prefix host name',
+            name: { en: 'Prefix host name', de: 'Präfix Host-Name', ru: 'Префикс имени хоста', pt: 'Prefixo do nome do host', nl: 'Voorvoegsel hostnaam', fr: "Préfixe du nom d'hôte", it: 'Prefisso nome host', es: 'Prefijo nombre de host', pl: 'Prefiks nazwy hosta', uk: 'Префікс імені хоста', 'zh-cn': '前缀主机名' },
             type: 'boolean',
             role: 'indicator',
             read: true,
@@ -123,7 +123,7 @@ class StateManager {
                 const isBleSubField = key.startsWith('ble_');
                 if (isBleSubField) {
                     if (!bleChannelCreated) {
-                        await this._ensureChannel(`${this.deviceFolder}.ble`, 'BLE Sensor');
+                        await this._ensureChannel(`${this.deviceFolder}.ble`, { en: 'BLE Sensor', de: 'BLE-Sensor', ru: 'BLE-сенсор', pt: 'Sensor BLE', nl: 'BLE-sensor', fr: 'Capteur BLE', it: 'Sensore BLE', es: 'Sensor BLE', pl: 'Czujnik BLE', uk: 'BLE-сенсор', 'zh-cn': 'BLE 传感器' });
                         bleChannelCreated = true;
                     }
                     const subKey = key.slice(4);
@@ -140,7 +140,7 @@ class StateManager {
             await this._ensureFieldState(`${this.deviceFolder}.${key}`, def);
         }
         if (createConfigStates) {
-            await this._ensureChannel(`${this.deviceFolder}.config`, 'Device Configuration');
+            await this._ensureChannel(`${this.deviceFolder}.config`, { en: 'Device Configuration', de: 'Gerätekonfiguration', ru: 'Конфигурация устройства', pt: 'Configuração do dispositivo', nl: 'Apparaatconfiguratie', fr: "Configuration de l'appareil", it: 'Configurazione dispositivo', es: 'Configuración del dispositivo', pl: 'Konfiguracja urządzenia', uk: 'Конфігурація пристрою', 'zh-cn': '设备配置' });
             for (const [key, def] of Object.entries(fieldDefinitions_1.CONFIG_FIELDS_DEF)) {
                 await this._ensureFieldState(`${this.deviceFolder}.config.${key}`, def);
             }
@@ -249,7 +249,7 @@ class StateManager {
             type: def.type,
             role: def.role ?? (def.type === 'boolean' ? (def.writeTopic ? 'switch' : 'indicator') : 'value'),
             read: !def.writeOnly,
-            write: !!def.writeTopic,
+            write: !!def.writeTopic || !!def.forceWrite,
         };
         if (def.unit) {
             common.unit = def.unit;
@@ -294,7 +294,7 @@ class StateManager {
     async _ensureChannel(id, name) {
         await this.adapter.setObjectNotExistsAsync(id, {
             type: 'channel',
-            common: { name },
+            common: { name: name },
             native: {},
         });
     }

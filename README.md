@@ -70,6 +70,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.94
+- Fix object structure: missing humidity_ctrl channel, read/write flags on config states, 11-language state names
+
 ### 0.1.93
 - Fix CI test setup for repochecker compliance
 

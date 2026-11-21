@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "faikout-ac",
-    "version": "0.1.93",
+    "version": "0.1.94",
     "news": {
+      "0.1.94": {
+        "en": "Fix object structure: missing channel, read/write flags, 11-language state names",
+        "de": "Objektstruktur korrigiert: fehlender Channel, read/write-Flags, 11-sprachige State-Namen",
+        "ru": "Исправлена структура объектов: отсутствующий канал, флаги read/write, 11-язычные имена",
+        "pt": "Correção da estrutura de objetos: canal em falta, flags read/write, nomes em 11 idiomas",
+        "nl": "Objectstructuur gecorrigeerd: ontbrekend kanaal, read/write-vlaggen, 11-talige namen",
+        "fr": "Correction de la structure des objets: canal manquant, indicateurs read/write, noms en 11 langues",
+        "it": "Correzione struttura oggetti: canale mancante, flag read/write, nomi in 11 lingue",
+        "es": "Corrección de la estructura de objetos: canal faltante, indicadores read/write, nombres en 11 idiomas",
+        "pl": "Poprawka struktury obiektów: brakujący kanał, flagi read/write, nazwy w 11 językach",
+        "uk": "Виправлення структури об'єктів: відсутній канал, прапори read/write, назви 11 мовами",
+        "zh-cn": "修复对象结构：缺失通道、读写标志、11语言状态名称"
+      },
       "0.1.93": {
         "en": "Fix CI test setup for repochecker compliance",
         "de": "CI-Test-Setup fuer Repochecker-Konformitaet korrigiert",
