@@ -1,261 +1,250 @@
 {
-  "common": {
-    "name": "faikout-ac",
-    "version": "0.1.94",
-    "news": {
-      "0.1.94": {
-        "en": "Fix object structure: missing channel, read/write flags, 11-language state names",
-        "de": "Objektstruktur korrigiert: fehlender Channel, read/write-Flags, 11-sprachige State-Namen",
-        "ru": "Исправлена структура объектов: отсутствующий канал, флаги read/write, 11-язычные имена",
-        "pt": "Correção da estrutura de objetos: canal em falta, flags read/write, nomes em 11 idiomas",
-        "nl": "Objectstructuur gecorrigeerd: ontbrekend kanaal, read/write-vlaggen, 11-talige namen",
-        "fr": "Correction de la structure des objets: canal manquant, indicateurs read/write, noms en 11 langues",
-        "it": "Correzione struttura oggetti: canale mancante, flag read/write, nomi in 11 lingue",
-        "es": "Corrección de la estructura de objetos: canal faltante, indicadores read/write, nombres en 11 idiomas",
-        "pl": "Poprawka struktury obiektów: brakujący kanał, flagi read/write, nazwy w 11 językach",
-        "uk": "Виправлення структури об'єктів: відсутній канал, прапори read/write, назви 11 мовами",
-        "zh-cn": "修复对象结构：缺失通道、读写标志、11语言状态名称"
-      },
-      "0.1.93": {
-        "en": "Fix CI test setup for repochecker compliance",
-        "de": "CI-Test-Setup fuer Repochecker-Konformitaet korrigiert",
-        "ru": "Исправлена настройка CI-тестов для соответствия репочекеру",
-        "pt": "Correcção da configuração de testes CI para conformidade com repochecker",
-        "nl": "CI-testconfiguratie gecorrigeerd voor repochecker-conformiteit",
-        "fr": "Correction de la configuration des tests CI pour la conformité repochecker",
-        "it": "Correzione configurazione test CI per conformità repochecker",
-        "es": "Corrección de la configuración de pruebas CI para conformidad con repochecker",
-        "pl": "Poprawka konfiguracji testów CI dla zgodności z repochecker",
-        "uk": "Виправлення налаштування CI-тестів для відповідності репочекеру",
-        "zh-cn": "修复CI测试配置以符合repochecker要求"
-      },
-      "0.1.92": {
-        "en": "Fix CI test setup for repochecker compliance",
-        "de": "CI-Test-Setup fuer Repochecker-Konformitaet korrigiert",
-        "ru": "Исправлена настройка CI-тестов для соответствия репочекеру",
-        "pt": "Correcção da configuração de testes CI para conformidade com repochecker",
-        "nl": "CI-testconfiguratie gecorrigeerd voor repochecker-conformiteit",
-        "fr": "Correction de la configuration des tests CI pour la conformité repochecker",
-        "it": "Correzione configurazione test CI per conformità repochecker",
-        "es": "Corrección de la configuración de pruebas CI para conformidad con repochecker",
-        "pl": "Poprawka konfiguracji testów CI dla zgodności z repochecker",
-        "uk": "Виправлення налаштування CI-тестів для відповідності репочекеру",
-        "zh-cn": "修复CI测试配置以符合repochecker要求"
-      },
-      "0.1.91": {
-        "en": "Switch to npm trusted publishing (OIDC)",
-        "de": "Umstellung auf npm Trusted Publishing (OIDC)",
-        "ru": "Переход на npm trusted publishing (OIDC)",
-        "pt": "Mudança para npm trusted publishing (OIDC)",
-        "nl": "Overstap naar npm trusted publishing (OIDC)",
-        "fr": "Migration vers npm trusted publishing (OIDC)",
-        "it": "Passaggio a npm trusted publishing (OIDC)",
-        "es": "Migración a npm trusted publishing (OIDC)",
-        "pl": "Przejście na npm trusted publishing (OIDC)",
-        "uk": "Перехід на npm trusted publishing (OIDC)",
-        "zh-cn": "切换到npm可信发布（OIDC）"
-      },
-      "0.1.9": {
-        "en": "Fix npm trusted publishing",
-        "de": "npm Trusted Publishing behoben",
-        "ru": "Исправлено npm trusted publishing",
-        "pt": "Correção do npm trusted publishing",
-        "nl": "npm trusted publishing gerepareerd",
-        "fr": "Correction npm trusted publishing",
-        "it": "Correzione npm trusted publishing",
-        "es": "Corrección npm trusted publishing",
-        "pl": "Naprawiono npm trusted publishing",
-        "uk": "Виправлено npm trusted publishing",
-        "zh-cn": "修复npm可信发布"
-      },
-      "0.1.7": {
-        "en": "Responsive layout fixes, installation instructions update",
-        "de": "Responsive Layout-Korrekturen, Installationsanleitung aktualisiert",
-        "ru": "Исправления адаптивного макета, обновление инструкций по установке",
-        "pt": "Correções de layout responsivo, actualização das instruções de instalação",
-        "nl": "Responsieve lay-outcorrecties, installatie-instructies bijgewerkt",
-        "fr": "Corrections de mise en page responsive, mise à jour des instructions d'installation",
-        "it": "Correzioni layout responsive, aggiornamento istruzioni di installazione",
-        "es": "Correcciones de diseño adaptable, actualización de instrucciones de instalación",
-        "pl": "Poprawki responsywnego układu, aktualizacja instrukcji instalacji",
-        "uk": "Виправлення адаптивного макету, оновлення інструкцій із встановлення",
-        "zh-cn": "响应式布局修复，更新安装说明"
-      },
-      "0.1.6": {
-        "en": "Repochecker fixes: translations, node:http, this.setTimeout, prettier config",
-        "de": "Repochecker-Korrekturen: Uebersetzungen, node:http, this.setTimeout, Prettier-Konfiguration",
-        "ru": "Исправления репочекера: переводы, node:http, this.setTimeout, конфигурация Prettier",
-        "pt": "Correcções do repochecker: traduções, node:http, this.setTimeout, configuração Prettier",
-        "nl": "Repochecker-correcties: vertalingen, node:http, this.setTimeout, Prettier-configuratie",
-        "fr": "Corrections du repochecker: traductions, node:http, this.setTimeout, configuration Prettier",
-        "it": "Correzioni repochecker: traduzioni, node:http, this.setTimeout, configurazione Prettier",
-        "es": "Correcciones del repochecker: traducciones, node:http, this.setTimeout, configuración Prettier",
-        "pl": "Poprawki repochecker: tłumaczenia, node:http, this.setTimeout, konfiguracja Prettier",
-        "uk": "Виправлення репочекера: переклади, node:http, this.setTimeout, конфігурація Prettier",
-        "zh-cn": "修复repochecker问题：翻译、node:http、this.setTimeout、Prettier配置"
-      },
-      "0.1.5": {
-        "en": "Schedule modes, adapter title fix, language detection fix",
-        "de": "Zeitplan-Modi, Adapter-Titel korrigiert, Spracherkennung behoben",
-        "ru": "Режимы расписания, исправление заголовка адаптера, исправление определения языка",
-        "pt": "Modos de agendamento, correcção do título do adaptador, correcção da detecção de idioma",
-        "nl": "Planningsmodi, correctie adaptertitel, correctie taaldetectie",
-        "fr": "Modes de planification, correction du titre de l'adaptateur, correction de la détection de la langue",
-        "it": "Modalità di pianificazione, correzione del titolo dell'adattatore, correzione del rilevamento della lingua",
-        "es": "Modos de programación, corrección del título del adaptador, corrección de la detección de idioma",
-        "pl": "Tryby harmonogramu, poprawka tytułu adaptera, poprawka wykrywania języka",
-        "uk": "Режими розкладу, виправлення заголовка адаптера, виправлення визначення мови",
-        "zh-cn": "计划模式，适配器标题修复，语言检测修复"
-      }
-    },
-    "titleLang": {
-      "en": "Faikout AC",
-      "de": "Faikout AC",
-      "ru": "Faikout AC",
-      "pt": "Faikout AC",
-      "nl": "Faikout AC",
-      "fr": "Faikout AC",
-      "it": "Faikout AC",
-      "es": "Faikout AC",
-      "pl": "Faikout AC",
-      "uk": "Faikout AC",
-      "zh-cn": "Faikout AC"
-    },
-    "desc": {
-      "en": "Adapter for Faikout Daikin MQTT bridge",
-      "de": "Adapter fuer Faikout Daikin MQTT-Bridge",
-      "ru": "Адаптер для MQTT-моста Faikout Daikin",
-      "pt": "Adaptador para a ponte MQTT Faikout Daikin",
-      "nl": "Adapter voor Faikout Daikin MQTT-brug",
-      "fr": "Adaptateur pour le pont MQTT Faikout Daikin",
-      "it": "Adattatore per il bridge MQTT Faikout Daikin",
-      "es": "Adaptador para el puente MQTT Faikout Daikin",
-      "pl": "Adapter dla mostu MQTT Faikout Daikin",
-      "uk": "Адаптер для MQTT-мосту Faikout Daikin",
-      "zh-cn": "Faikout Daikin MQTT 桥接适配器"
-    },
-    "authors": [
-      "RWS <RWS@nurfuerspam.de>"
-    ],
-    "keywords": [
-      "faikout",
-      "daikin",
-      "climate-control",
-      "mqtt"
-    ],
-    "platform": "Javascript/Node.js",
-    "icon": "faikout.png",
-    "extIcon": "https://raw.githubusercontent.com/RaW79/ioBroker.faikout-ac/main/admin/faikout.png",
-    "enabled": true,
-    "mode": "daemon",
-    "type": "climate-control",
-    "connectionType": "local",
-    "dataSource": "push",
-    "compact": true,
-    "tier": 3,
-    "messagebox": true,
-    "adminUI": {
-      "config": "json"
-    },
-    "readme": "https://github.com/RaW79/ioBroker.faikout-ac#readme",
-    "licenseInformation": {
-      "type": "free",
-      "license": "MIT",
-      "link": "https://opensource.org/licenses/MIT"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=6.0.11"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "admin": ">=7.6.20"
-      }
-    ]
-  },
-  "native": {
-    "mqttHost": "localhost",
-    "mqttPort": 1883,
-    "mqttUser": "",
-    "mqttPassword": "",
-    "devices": [],
-    "demandEnabled": false,
-    "demandDevice": "",
-    "demandOutdoorTempId": "",
-    "demandRoomTempId": "",
-    "demandCurve": [
-      {
-        "temp": -5,
-        "demand": 80
-      },
-      {
-        "temp": 0,
-        "demand": 75
-      },
-      {
-        "temp": 5,
-        "demand": 65
-      },
-      {
-        "temp": 10,
-        "demand": 55
-      },
-      {
-        "temp": 15,
-        "demand": 30
-      }
-    ],
-    "demandLogLevel": "basic",
-    "demandMaxDemand": 95,
-    "demandBoostEnabled": true,
-    "demandBoostStages": [
-      {
-        "deviation": 0.3,
-        "boost": 5
-      },
-      {
-        "deviation": 0.6,
-        "boost": 10
-      }
-    ],
-    "demandTaperEnabled": true,
-    "demandTaperMax": 15,
-    "demandGuardEnabled": true,
-    "demandHeatbackNormal": 3,
-    "demandHeatbackGuard": 6
-  },
-  "encryptedNative": [
-    "mqttPassword"
-  ],
-  "protectedNative": [
-    "mqttPassword"
-  ],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information",
-        "role": "info"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "name": {
-          "en": "Connection",
-          "de": "Verbindung"
+    "common": {
+        "name": "faikout-ac",
+        "version": "0.1.94",
+        "news": {
+            "0.1.94": {
+                "en": "Fix object structure: missing channel, read/write flags, 11-language state names",
+                "de": "Objektstruktur korrigiert: fehlender Channel, read/write-Flags, 11-sprachige State-Namen",
+                "ru": "Исправлена структура объектов: отсутствующий канал, флаги read/write, 11-язычные имена",
+                "pt": "Correção da estrutura de objetos: canal em falta, flags read/write, nomes em 11 idiomas",
+                "nl": "Objectstructuur gecorrigeerd: ontbrekend kanaal, read/write-vlaggen, 11-talige namen",
+                "fr": "Correction de la structure des objets: canal manquant, indicateurs read/write, noms en 11 langues",
+                "it": "Correzione struttura oggetti: canale mancante, flag read/write, nomi in 11 lingue",
+                "es": "Corrección de la estructura de objetos: canal faltante, indicadores read/write, nombres en 11 idiomas",
+                "pl": "Poprawka struktury obiektów: brakujący kanał, flagi read/write, nazwy w 11 językach",
+                "uk": "Виправлення структури об'єктів: відсутній канал, прапори read/write, назви 11 мовами",
+                "zh-cn": "修复对象结构：缺失通道、读写标志、11语言状态名称"
+            },
+            "0.1.93": {
+                "en": "Fix CI test setup for repochecker compliance",
+                "de": "CI-Test-Setup fuer Repochecker-Konformitaet korrigiert",
+                "ru": "Исправлена настройка CI-тестов для соответствия репочекеру",
+                "pt": "Correcção da configuração de testes CI para conformidade com repochecker",
+                "nl": "CI-testconfiguratie gecorrigeerd voor repochecker-conformiteit",
+                "fr": "Correction de la configuration des tests CI pour la conformité repochecker",
+                "it": "Correzione configurazione test CI per conformità repochecker",
+                "es": "Corrección de la configuración de pruebas CI para conformidad con repochecker",
+                "pl": "Poprawka konfiguracji testów CI dla zgodności z repochecker",
+                "uk": "Виправлення налаштування CI-тестів для відповідності репочекеру",
+                "zh-cn": "修复CI测试配置以符合repochecker要求"
+            },
+            "0.1.92": {
+                "en": "Fix CI test setup for repochecker compliance",
+                "de": "CI-Test-Setup fuer Repochecker-Konformitaet korrigiert",
+                "ru": "Исправлена настройка CI-тестов для соответствия репочекеру",
+                "pt": "Correcção da configuração de testes CI para conformidade com repochecker",
+                "nl": "CI-testconfiguratie gecorrigeerd voor repochecker-conformiteit",
+                "fr": "Correction de la configuration des tests CI pour la conformité repochecker",
+                "it": "Correzione configurazione test CI per conformità repochecker",
+                "es": "Corrección de la configuración de pruebas CI para conformidad con repochecker",
+                "pl": "Poprawka konfiguracji testów CI dla zgodności z repochecker",
+                "uk": "Виправлення налаштування CI-тестів для відповідності репочекеру",
+                "zh-cn": "修复CI测试配置以符合repochecker要求"
+            },
+            "0.1.91": {
+                "en": "Switch to npm trusted publishing (OIDC)",
+                "de": "Umstellung auf npm Trusted Publishing (OIDC)",
+                "ru": "Переход на npm trusted publishing (OIDC)",
+                "pt": "Mudança para npm trusted publishing (OIDC)",
+                "nl": "Overstap naar npm trusted publishing (OIDC)",
+                "fr": "Migration vers npm trusted publishing (OIDC)",
+                "it": "Passaggio a npm trusted publishing (OIDC)",
+                "es": "Migración a npm trusted publishing (OIDC)",
+                "pl": "Przejście na npm trusted publishing (OIDC)",
+                "uk": "Перехід на npm trusted publishing (OIDC)",
+                "zh-cn": "切换到npm可信发布（OIDC）"
+            },
+            "0.1.9": {
+                "en": "Fix npm trusted publishing",
+                "de": "npm Trusted Publishing behoben",
+                "ru": "Исправлено npm trusted publishing",
+                "pt": "Correção do npm trusted publishing",
+                "nl": "npm trusted publishing gerepareerd",
+                "fr": "Correction npm trusted publishing",
+                "it": "Correzione npm trusted publishing",
+                "es": "Corrección npm trusted publishing",
+                "pl": "Naprawiono npm trusted publishing",
+                "uk": "Виправлено npm trusted publishing",
+                "zh-cn": "修复npm可信发布"
+            },
+            "0.1.7": {
+                "en": "Responsive layout fixes, installation instructions update",
+                "de": "Responsive Layout-Korrekturen, Installationsanleitung aktualisiert",
+                "ru": "Исправления адаптивного макета, обновление инструкций по установке",
+                "pt": "Correções de layout responsivo, actualização das instruções de instalação",
+                "nl": "Responsieve lay-outcorrecties, installatie-instructies bijgewerkt",
+                "fr": "Corrections de mise en page responsive, mise à jour des instructions d'installation",
+                "it": "Correzioni layout responsive, aggiornamento istruzioni di installazione",
+                "es": "Correcciones de diseño adaptable, actualización de instrucciones de instalación",
+                "pl": "Poprawki responsywnego układu, aktualizacja instrukcji instalacji",
+                "uk": "Виправлення адаптивного макету, оновлення інструкцій із встановлення",
+                "zh-cn": "响应式布局修复，更新安装说明"
+            },
+            "0.1.6": {
+                "en": "Repochecker fixes: translations, node:http, this.setTimeout, prettier config",
+                "de": "Repochecker-Korrekturen: Uebersetzungen, node:http, this.setTimeout, Prettier-Konfiguration",
+                "ru": "Исправления репочекера: переводы, node:http, this.setTimeout, конфигурация Prettier",
+                "pt": "Correcções do repochecker: traduções, node:http, this.setTimeout, configuração Prettier",
+                "nl": "Repochecker-correcties: vertalingen, node:http, this.setTimeout, Prettier-configuratie",
+                "fr": "Corrections du repochecker: traductions, node:http, this.setTimeout, configuration Prettier",
+                "it": "Correzioni repochecker: traduzioni, node:http, this.setTimeout, configurazione Prettier",
+                "es": "Correcciones del repochecker: traducciones, node:http, this.setTimeout, configuración Prettier",
+                "pl": "Poprawki repochecker: tłumaczenia, node:http, this.setTimeout, konfiguracja Prettier",
+                "uk": "Виправлення репочекера: переклади, node:http, this.setTimeout, конфігурація Prettier",
+                "zh-cn": "修复repochecker问题：翻译、node:http、this.setTimeout、Prettier配置"
+            },
+            "0.1.5": {
+                "en": "Schedule modes, adapter title fix, language detection fix",
+                "de": "Zeitplan-Modi, Adapter-Titel korrigiert, Spracherkennung behoben",
+                "ru": "Режимы расписания, исправление заголовка адаптера, исправление определения языка",
+                "pt": "Modos de agendamento, correcção do título do adaptador, correcção da detecção de idioma",
+                "nl": "Planningsmodi, correctie adaptertitel, correctie taaldetectie",
+                "fr": "Modes de planification, correction du titre de l'adaptateur, correction de la détection de la langue",
+                "it": "Modalità di pianificazione, correzione del titolo dell'adattatore, correzione del rilevamento della lingua",
+                "es": "Modos de programación, corrección del título del adaptador, corrección de la detección de idioma",
+                "pl": "Tryby harmonogramu, poprawka tytułu adaptera, poprawka wykrywania języka",
+                "uk": "Режими розкладу, виправлення заголовка адаптера, виправлення визначення мови",
+                "zh-cn": "计划模式，适配器标题修复，语言检测修复"
+            }
         },
-        "role": "indicator.connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
+        "titleLang": {
+            "en": "Faikout AC",
+            "de": "Faikout AC",
+            "ru": "Faikout AC",
+            "pt": "Faikout AC",
+            "nl": "Faikout AC",
+            "fr": "Faikout AC",
+            "it": "Faikout AC",
+            "es": "Faikout AC",
+            "pl": "Faikout AC",
+            "uk": "Faikout AC",
+            "zh-cn": "Faikout AC"
+        },
+        "desc": {
+            "en": "Adapter for Faikout Daikin MQTT bridge",
+            "de": "Adapter fuer Faikout Daikin MQTT-Bridge",
+            "ru": "Адаптер для MQTT-моста Faikout Daikin",
+            "pt": "Adaptador para a ponte MQTT Faikout Daikin",
+            "nl": "Adapter voor Faikout Daikin MQTT-brug",
+            "fr": "Adaptateur pour le pont MQTT Faikout Daikin",
+            "it": "Adattatore per il bridge MQTT Faikout Daikin",
+            "es": "Adaptador para el puente MQTT Faikout Daikin",
+            "pl": "Adapter dla mostu MQTT Faikout Daikin",
+            "uk": "Адаптер для MQTT-мосту Faikout Daikin",
+            "zh-cn": "Faikout Daikin MQTT 桥接适配器"
+        },
+        "authors": ["RWS <RWS@nurfuerspam.de>"],
+        "keywords": ["faikout", "daikin", "climate-control", "mqtt"],
+        "platform": "Javascript/Node.js",
+        "icon": "faikout.png",
+        "extIcon": "https://raw.githubusercontent.com/RaW79/ioBroker.faikout-ac/main/admin/faikout.png",
+        "enabled": true,
+        "mode": "daemon",
+        "type": "climate-control",
+        "connectionType": "local",
+        "dataSource": "push",
+        "compact": true,
+        "tier": 3,
+        "messagebox": true,
+        "adminUI": {
+            "config": "json"
+        },
+        "readme": "https://github.com/RaW79/ioBroker.faikout-ac#readme",
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT",
+            "link": "https://opensource.org/licenses/MIT"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=6.0.11"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=8.0.0"
+            }
+        ]
+    },
+    "native": {
+        "mqttHost": "localhost",
+        "mqttPort": 1883,
+        "mqttUser": "",
+        "mqttPassword": "",
+        "devices": [],
+        "demandEnabled": false,
+        "demandDevice": "",
+        "demandOutdoorTempId": "",
+        "demandRoomTempId": "",
+        "demandCurve": [
+            {
+                "temp": -5,
+                "demand": 80
+            },
+            {
+                "temp": 0,
+                "demand": 75
+            },
+            {
+                "temp": 5,
+                "demand": 65
+            },
+            {
+                "temp": 10,
+                "demand": 55
+            },
+            {
+                "temp": 15,
+                "demand": 30
+            }
+        ],
+        "demandLogLevel": "basic",
+        "demandMaxDemand": 95,
+        "demandBoostEnabled": true,
+        "demandBoostStages": [
+            {
+                "deviation": 0.3,
+                "boost": 5
+            },
+            {
+                "deviation": 0.6,
+                "boost": 10
+            }
+        ],
+        "demandTaperEnabled": true,
+        "demandTaperMax": 15,
+        "demandGuardEnabled": true,
+        "demandHeatbackNormal": 3,
+        "demandHeatbackGuard": 6
+    },
+    "encryptedNative": ["mqttPassword"],
+    "protectedNative": ["mqttPassword"],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information",
+                "role": "info"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "name": {
+                    "en": "Connection",
+                    "de": "Verbindung"
+                },
+                "role": "indicator.connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

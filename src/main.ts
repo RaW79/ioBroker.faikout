@@ -724,7 +724,7 @@ class FaikoutAdapter extends utils.Adapter {
         for (const entry of entries) {
             const deviceName = ((entry.deviceName as string) || '').trim();
             const sensorStateId = ((entry.sensorStateId as string) || '').trim();
-            const intervalSec = Math.max(10, Number(entry.intervalSec ?? 30));
+            const intervalSec = Math.min(Math.max(10, Number(entry.intervalSec ?? 30)), 2_147_483);
             if (!deviceName || !sensorStateId) {
                 continue;
             }
@@ -1637,7 +1637,7 @@ class FaikoutAdapter extends utils.Adapter {
             const realMode = await this.getStateAsync(`${folder}.mode`);
             const realPower = await this.getStateAsync(`${folder}.power`);
             if (realPower?.val !== false && realMode?.val !== 'D') {
-                this.log.warn(`Humidity [${folder}] override – going to NACHLAUF`);
+                this.log.warn(`Humidity [${folder}] override – going to RUN-ON`);
                 await startNachlauf('ueberwachung');
                 await setMode(MODI.NL);
                 return;
