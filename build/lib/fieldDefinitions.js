@@ -73,7 +73,7 @@ exports.FIELDS = {
         },
         type: 'string',
         writeTopic: 'mode',
-        role: 'value.mode',
+        role: 'value.mode.airconditioner',
         states: { H: 'Heat', C: 'Cool', A: 'Auto', D: 'Dry', F: 'Fan' },
     },
     fan: {

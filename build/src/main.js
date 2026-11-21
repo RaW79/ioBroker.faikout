@@ -83,9 +83,9 @@ class FaikoutAdapter extends utils.Adapter {
             setTimeoutFn: (cb, ms) => this.setTimeout(cb, ms),
             clearTimeoutFn: (id) => this.clearTimeout(id),
         }, (topic, payload) => {
-            void this._handleMqttMessage(topic, payload);
+            void this._handleMqttMessage(topic, payload).catch((e) => this.log.error(`MQTT message error: ${e}`));
         }, (connected) => {
-            void this._handleConnectionChange(connected);
+            void this._handleConnectionChange(connected).catch((e) => this.log.error(`Connection change error: ${e}`));
         });
         this.mqttClient.connect();
         for (const topic of this.topicToFolder.keys()) {
@@ -98,7 +98,7 @@ class FaikoutAdapter extends utils.Adapter {
         await this._setupHumidityControls();
         await this.subscribeStatesAsync('*');
         for (const folder of this.demandCtxMap.keys()) {
-            void this._runDemandControl(folder);
+            void this._runDemandControl(folder).catch((e) => this.log.error(`Demand control error: ${e}`));
         }
     }
     _sanitizeDeviceNames(devices) {
@@ -205,23 +205,23 @@ class FaikoutAdapter extends utils.Adapter {
     onStateChange(id, state) {
         {
             const foldersOd = this.outdoorIdToFolders.get(id);
-            if (state && foldersOd) {
+            if (state?.ack && foldersOd) {
                 for (const f of foldersOd) {
                     const ctx = this.demandCtxMap.get(f);
                     if (ctx) {
                         ctx.lastEventTs = Date.now();
-                        void this._runDemandControl(f);
+                        void this._runDemandControl(f).catch((e) => this.log.error(`Demand control error: ${e}`));
                     }
                 }
                 return;
             }
             const foldersRm = this.roomIdToFolders.get(id);
-            if (state && foldersRm) {
+            if (state?.ack && foldersRm) {
                 for (const f of foldersRm) {
                     const ctx = this.demandCtxMap.get(f);
                     if (ctx) {
                         ctx.lastEventTs = Date.now();
-                        void this._runDemandControl(f);
+                        void this._runDemandControl(f).catch((e) => this.log.error(`Demand control error: ${e}`));
                     }
                 }
                 return;
@@ -232,7 +232,7 @@ class FaikoutAdapter extends utils.Adapter {
                 const pfx = `${this.namespace}.${ctx.folder}`;
                 if (id === `${pfx}.power` || id === `${pfx}.mode`) {
                     ctx.lastEventTs = Date.now();
-                    void this._runDemandControl(ctx.folder);
+                    void this._runDemandControl(ctx.folder).catch((e) => this.log.error(`Demand control error: ${e}`));
                     return;
                 }
             }
@@ -243,8 +243,8 @@ class FaikoutAdapter extends utils.Adapter {
                 if (id.startsWith(dp)) {
                     void (async () => {
                         await this.setStateAsync(id.slice(`${this.namespace}.`.length), { val: state.val, ack: true });
-                        void this._runDemandControl(ctx.folder);
-                    })();
+                        void this._runDemandControl(ctx.folder).catch((e) => this.log.error(`Demand control error: ${e}`));
+                    })().catch((e) => this.log.error(`Demand override error: ${e}`));
                     return;
                 }
             }
@@ -254,8 +254,8 @@ class FaikoutAdapter extends utils.Adapter {
                 if (id === `${this.namespace}.${folder}.humidity_ctrl.auto`) {
                     void (async () => {
                         await this.setStateAsync(`${folder}.humidity_ctrl.auto`, { val: state.val, ack: true });
-                        void this._runHumidityControl(folder);
-                    })();
+                        void this._runHumidityControl(folder).catch((e) => this.log.error(`Humidity control error: ${e}`));
+                    })().catch((e) => this.log.error(`Humidity auto error: ${e}`));
                     return;
                 }
             }
@@ -266,7 +266,7 @@ class FaikoutAdapter extends utils.Adapter {
                 const tempId = (st.cfg.humTempStateId || '').trim() || `${ns}${folder}.ble.temp`;
                 const humId = (st.cfg.humHumStateId || '').trim() || `${ns}${folder}.ble.hum`;
                 if (id === tempId || id === humId) {
-                    void this._runHumidityControl(folder);
+                    void this._runHumidityControl(folder).catch((e) => this.log.error(`Humidity control error: ${e}`));
                     break;
                 }
             }
@@ -426,6 +426,24 @@ class FaikoutAdapter extends utils.Adapter {
             this.log.info(`Deleting all states for device "${name}" (${folder})`);
             void (async () => {
                 try {
+                    const allObjs = await this.getObjectListAsync({
+                        startkey: `${this.namespace}.${folder}.`,
+                        endkey: `${this.namespace}.${folder}.\u9999`,
+                    });
+                    const withCustom = (allObjs?.rows ?? []).filter((r) => {
+                        const custom = r.value?.common?.custom;
+                        return custom && Object.keys(custom).length > 0;
+                    });
+                    if (withCustom.length > 0) {
+                        const ids = withCustom.map((r) => r.id).join(', ');
+                        this.log.warn(`Device "${name}": ${withCustom.length} state(s) have custom data (History/InfluxDB) – deletion skipped to preserve it. Affected: ${ids}`);
+                        if (obj.callback) {
+                            this.sendTo(obj.from, obj.command, {
+                                error: `Cannot delete: ${withCustom.length} state(s) have History/InfluxDB custom data. Remove the custom data first.`,
+                            }, obj.callback);
+                        }
+                        return;
+                    }
                     await this.delObjectAsync(folder, { recursive: true });
                     this.stateManagers.delete(folder);
                     const topicsToRemove = [...this.topicToFolder.entries()]
@@ -438,7 +456,7 @@ class FaikoutAdapter extends utils.Adapter {
                     this.folderToTopics.delete(folder);
                     this.log.info(`Deleted all states for device "${name}"`);
                     if (obj.callback) {
-                        this.sendTo(obj.from, obj.command, { result: `Datenpunkte für "${name}" gelöscht` }, obj.callback);
+                        this.sendTo(obj.from, obj.command, { result: `States for "${name}" deleted` }, obj.callback);
                     }
                 }
                 catch (err) {
@@ -830,11 +848,11 @@ class FaikoutAdapter extends utils.Adapter {
             await this.setStateAsync(`${dp}.active`, { val: true, ack: true });
             this.setInterval(() => {
                 if (Date.now() - ctx.lastEventTs >= 180_000) {
-                    void this._runDemandControl(folder);
+                    void this._runDemandControl(folder).catch((e) => this.log.error(`Demand control error: ${e}`));
                 }
             }, 180_000);
             this.log.info(`Demand control active for "${deviceName}" | outdoor: ${outdoorId} | room: ${roomId}`);
-            void this._runDemandControl(folder);
+            void this._runDemandControl(folder).catch((e) => this.log.error(`Demand control error: ${e}`));
         }
     }
     async _runDemandControl(folder) {
@@ -950,7 +968,7 @@ class FaikoutAdapter extends utils.Adapter {
         if (cfg.demandLogLevel === 'extended') {
             const boostStr = boostApplied > 0 ? `+${boostApplied}%(${boostStageDesc})` : '–';
             const taperStr = taperApplied > 0 ? `-${taperApplied.toFixed(1)}%` : '–';
-            const guardStr = ctx.guardActive ? 'EIN' : 'AUS';
+            const guardStr = ctx.guardActive ? 'ON' : 'OFF';
             this.log.info(`Demand [${folder}] outdoor=${outdoor}°C room=${room}°C` +
                 ` | base=${baseDemand.toFixed(0)}% boost=${boostStr} taper=${taperStr}` +
                 ` → target=${demand}% | guard=${guardStr}`);
@@ -1141,7 +1159,7 @@ class FaikoutAdapter extends utils.Adapter {
                     read: true,
                     write: false,
                     def: 0,
-                    states: { 0: 'AUS', 1: 'ÜBERWACHUNG', 2: 'DRY', 3: 'NACHLAUF', 4: 'PAUSE', 5: 'FRESHNESS!' },
+                    states: { 0: 'OFF', 1: 'MONITORING', 2: 'DRY', 3: 'RUN-ON', 4: 'PAUSE', 5: 'FRESHNESS!' },
                 },
             });
             await this.setObjectNotExistsAsync(`${dp}.mode_text`, {
@@ -1164,7 +1182,7 @@ class FaikoutAdapter extends utils.Adapter {
                     role: 'text',
                     read: true,
                     write: false,
-                    def: 'AUS',
+                    def: 'OFF',
                 },
             });
             await this.setObjectNotExistsAsync(`${dp}.dew_point`, {
@@ -1225,9 +1243,9 @@ class FaikoutAdapter extends utils.Adapter {
             });
             this.log.info(`Humidity control active for "${deviceName}"`);
             this.setInterval(() => {
-                void this._runHumidityControl(folder);
+                void this._runHumidityControl(folder).catch((e) => this.log.error(`Humidity control error: ${e}`));
             }, 30_000);
-            void this._runHumidityControl(folder);
+            void this._runHumidityControl(folder).catch((e) => this.log.error(`Humidity control error: ${e}`));
         }
     }
     async _runHumidityControl(folder) {
@@ -1245,7 +1263,7 @@ class FaikoutAdapter extends utils.Adapter {
     }
     async _runHumidityControlCore(folder, st) {
         const MODI = { AUS: 0, UE: 1, DRY: 2, NL: 3, ZP: 4, FF: 5 };
-        const MOD_NAME = ['AUS', 'ÜBERWACHUNG', 'DRY', 'NACHLAUF', 'PAUSE', 'FRESHNESS!'];
+        const MOD_NAME = ['OFF', 'MONITORING', 'DRY', 'RUN-ON', 'PAUSE', 'FRESHNESS!'];
         const cfg = st.cfg;
         const dp = `${folder}.humidity_ctrl`;
         const ns = `${this.namespace}.`;

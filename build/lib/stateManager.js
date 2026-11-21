@@ -426,8 +426,14 @@ class StateManager {
                 try {
                     const existing = await this.adapter.getObjectAsync(statePath);
                     if (existing) {
-                        await this.adapter.delObjectAsync(statePath);
-                        this.adapter.log.debug(`Removed stale state: ${statePath}`);
+                        const custom = existing.common.custom;
+                        if (custom && Object.keys(custom).length > 0) {
+                            this.adapter.log.warn(`Stale state ${statePath} has custom data (History/InfluxDB) – skipping deletion to preserve it`);
+                        }
+                        else {
+                            await this.adapter.delObjectAsync(statePath);
+                            this.adapter.log.debug(`Removed stale state: ${statePath}`);
+                        }
                     }
                 }
                 catch {
