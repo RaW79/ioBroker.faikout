@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "faikout-ac",
-        "version": "0.1.96",
+        "version": "0.1.97",
         "news": {
+            "0.1.97": {
+                "en": "Maintenance release",
+                "de": "Wartungs-Release",
+                "ru": "Технический релиз",
+                "pt": "Versão de manutenção",
+                "nl": "Onderhoud-release",
+                "fr": "Version de maintenance",
+                "it": "Release di manutenzione",
+                "es": "Versión de mantenimiento",
+                "pl": "Wydanie konserwacyjne",
+                "uk": "Технічний реліз",
+                "zh-cn": "维护版本"
+            },
             "0.1.96": {
                 "en": "Fix state roles (fan, mode, env_set, info.connection), update existing objects on upgrade",
                 "de": "State-Rollen korrigiert (fan, mode, env_set, info.connection), bestehende Objekte bei Update aktualisiert",
@@ -80,19 +93,6 @@
                 "pl": "Przejście na npm trusted publishing (OIDC)",
                 "uk": "Перехід на npm trusted publishing (OIDC)",
                 "zh-cn": "切换到npm可信发布（OIDC）"
-            },
-            "0.1.9": {
-                "en": "Fix npm trusted publishing",
-                "de": "npm Trusted Publishing behoben",
-                "ru": "Исправлено npm trusted publishing",
-                "pt": "Correção do npm trusted publishing",
-                "nl": "npm trusted publishing gerepareerd",
-                "fr": "Correction npm trusted publishing",
-                "it": "Correzione npm trusted publishing",
-                "es": "Corrección npm trusted publishing",
-                "pl": "Naprawiono npm trusted publishing",
-                "uk": "Виправлено npm trusted publishing",
-                "zh-cn": "修复npm可信发布"
             }
         },
         "titleLang": {

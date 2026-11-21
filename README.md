@@ -70,6 +70,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.97
+- Maintenance release
+
 ### 0.1.96
 - Fix state roles (fan, mode, env_set, info.connection), update existing objects on upgrade
 
