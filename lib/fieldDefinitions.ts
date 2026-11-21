@@ -732,7 +732,6 @@ export const FIELDS: Record<string, FieldDef> = {
         type: 'number',
         unit: '°C',
         writeTopic: 'control',
-        writeOnly: true,
         role: 'level',
     },
     restart: {

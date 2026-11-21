@@ -674,7 +674,6 @@ exports.FIELDS = {
         type: 'number',
         unit: '°C',
         writeTopic: 'control',
-        writeOnly: true,
         role: 'level',
     },
     restart: {

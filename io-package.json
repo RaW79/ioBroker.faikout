@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "faikout-ac",
-        "version": "0.1.97",
+        "version": "0.1.98",
         "news": {
+            "0.1.98": {
+                "en": "Fix env_set state: read/write, role level",
+                "de": "env_set-State korrigiert: read/write, Rolle level",
+                "ru": "Исправлен env_set: read/write, роль level",
+                "pt": "Correção do estado env_set: read/write, role level",
+                "nl": "env_set-state gecorrigeerd: read/write, rol level",
+                "fr": "Correction état env_set: read/write, rôle level",
+                "it": "Correzione stato env_set: read/write, ruolo level",
+                "es": "Corrección estado env_set: read/write, rol level",
+                "pl": "Poprawka stanu env_set: read/write, rola level",
+                "uk": "Виправлення env_set: read/write, роль level",
+                "zh-cn": "修复env_set状态：read/write，角色level"
+            },
             "0.1.97": {
                 "en": "Maintenance release",
                 "de": "Wartungs-Release",
@@ -80,19 +93,6 @@
                 "pl": "Poprawka konfiguracji testów CI dla zgodności z repochecker",
                 "uk": "Виправлення налаштування CI-тестів для відповідності репочекеру",
                 "zh-cn": "修复CI测试配置以符合repochecker要求"
-            },
-            "0.1.91": {
-                "en": "Switch to npm trusted publishing (OIDC)",
-                "de": "Umstellung auf npm Trusted Publishing (OIDC)",
-                "ru": "Переход на npm trusted publishing (OIDC)",
-                "pt": "Mudança para npm trusted publishing (OIDC)",
-                "nl": "Overstap naar npm trusted publishing (OIDC)",
-                "fr": "Migration vers npm trusted publishing (OIDC)",
-                "it": "Passaggio a npm trusted publishing (OIDC)",
-                "es": "Migración a npm trusted publishing (OIDC)",
-                "pl": "Przejście na npm trusted publishing (OIDC)",
-                "uk": "Перехід на npm trusted publishing (OIDC)",
-                "zh-cn": "切换到npm可信发布（OIDC）"
             }
         },
         "titleLang": {

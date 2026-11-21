@@ -70,6 +70,9 @@ Install via ioBroker Admin:
 
 ## Changelog
 
+### 0.1.98
+- Fix env_set state: read/write flags, role level
+
 ### 0.1.97
 - Maintenance release
 
